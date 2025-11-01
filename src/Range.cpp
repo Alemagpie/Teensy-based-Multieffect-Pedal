@@ -1,7 +1,7 @@
 #include "Range.h"
 
 Range::Range() {
-    start = end = NULL;
+    start = end = delta = 0.0;
 }
 
 Range::Range(float min, float max) {

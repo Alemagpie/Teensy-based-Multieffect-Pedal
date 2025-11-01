@@ -14,11 +14,11 @@ AudioSynthWaveformSine sine1;
 AudioConnection patchCord1(sine1, 0, output, 0);
 AudioConnection patchCord2(sine1, 0, output, 1);
 */
-AudioEffectChorus chorus();
+AudioEffectChorus chorus;
 
 //---------------------------------------------------------------------------------------------
 //Holds pointers to the 5 current effects
-std::vector<AudioStream*> effects(5);
+std::vector<EffectAdapter*> effects(5);
 
 //to refactor
 //1) make a pure virtual class in AudioStream (virtual type function(...) = 0) 
@@ -34,6 +34,8 @@ void setup() {
   sgtl5000.lineOutLevel(8);  
   /*sine1.frequency(440);
   sine1.amplitude(0.8);*/
+
+  effects[0] = &chorus;
 }
 
 void loop() {}
