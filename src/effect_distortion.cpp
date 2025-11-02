@@ -1,5 +1,5 @@
 #include "effect_distortion.h"
-
+/*
 void AudioEffectDistortion::update(void)
 {
     //block containing data
@@ -70,3 +70,4 @@ void AudioEffectDistortion::setParamLevel(int index, float level) {
         break;
     }
 }
+*/

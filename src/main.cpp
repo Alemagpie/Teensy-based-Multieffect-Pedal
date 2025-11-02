@@ -25,7 +25,7 @@ AudioConnection im1_patchCord(input, 0, mixers[0], 0);
 AudioConnection m1m2_patchCord(mixers[0], 0, mixers[1], 0);
 AudioConnection m2o_patchCord(mixers[1], 0, output, 0);
 //run-time connections
-AudioConnection *ie1_patchCord, *e1m1_patchCord, *m1e2_patchCord, *e2m2_patchCord;
+AudioConnection ie1_patchCord, e1m1_patchCord, m1e2_patchCord, e2m2_patchCord;
 /*
          +--Effect1-+         +--Effect2--+
   input--+----------+--mixer1--+-----------+--mixer2--output
@@ -38,7 +38,7 @@ std::vector<EffectAdapter*> effects(effectsCount);
 bool isModifying;
 uint8_t currentEffect = 0;
 
-AudioEffectChorus chorus;
+AudioEffectChorus chorus; //example
 
 void setup() {
   _init();
@@ -54,11 +54,10 @@ void setup() {
 }
 
 void loop() {
-  
   //If is in modifying state set parameter leves
   if(isModifying) {
-    effects[currentEffect]->setParamLevel(0, readParamter(0));
-    effects[currentEffect]->setParamLevel(1, readParamter(1));
+    effects[currentEffect]->setParamLevel(0, readParameter(0));
+    effects[currentEffect]->setParamLevel(1, readParameter(1));
   }
 
   //Reads state of modify button
@@ -67,7 +66,6 @@ void loop() {
   if(modifyButton.fallingEdge()) {
     toggleModify();
   }
-
 }
 
 //-------------------------------------------
@@ -82,16 +80,20 @@ void _init() {
   pinMode(MODIFY_B_PIN, INPUT_PULLUP);
   pinMode(PARAM1_PIN, INPUT);
   pinMode(PARAM2_PIN, INPUT);
+
+  createConnections();
 }
 
 void createConnections() {
-  /*ie1_patchCord = new AudioConnection(input, 0, effects[0], 0);
-  e1m1_patchCord = new AudioConnection(effects[0], 0, mixer1, 1);
-  m1e2_patchCord = new AudioConnection(mixer1, 0, effects[1], 0);
-  e2m2_patchCord = new AudioConnection(effects[1], 0, mixer2, 1);*/
+  AudioNoInterrupts();
+  //ie1_patchCord.connect(input, 0, dynamic_cast<AudioStream&>(*effects[0]), 0);
+  //e1m1_patchCord.connect(dynamic_cast<AudioStream&>(*effects[0]), 0, mixers[0], 1);
+  //m1e2_patchCord.connect(mixers[0], 0, dynamic_cast<AudioStream&>(*effects[1]), 0);
+  //e2m2_patchCord.connect(dynamic_cast<AudioStream&>(*effects[1]), 0, mixers[1], 1);
+  AudioInterrupts();
 }
 
-float readParamter(int index) {
+float readParameter(int index) {
   if(index >= 0 && index < 2) {
     switch(index) {
       case 0:
