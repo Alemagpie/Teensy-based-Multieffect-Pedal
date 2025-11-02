@@ -1,8 +1,8 @@
 #ifndef DISTORTION_H
 #define DISTORTION_H
 
-#include <AudioStream.h> 
 #include <Arduino.h>
+#include <AudioStream.h> 
 #include "EffectAdapter.h"
 
 class AudioEffectDistortion : public AudioStream, public EffectAdapter

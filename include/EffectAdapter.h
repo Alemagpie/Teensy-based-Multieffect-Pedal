@@ -1,8 +1,8 @@
 #ifndef EFFECT_ADAPT_H
 #define EFFECT_ADAPT_H
 
-#include <Range.h>
 #include <string>
+#include <vector>
 #include "Utility.h"
 #include "Range.h"
 

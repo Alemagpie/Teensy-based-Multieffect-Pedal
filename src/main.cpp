@@ -10,6 +10,14 @@
 #define PARAM2_PIN A11
 #define MODIFY_B_PIN A12
 
+void _init();
+void createConnections();
+void toggleModify();
+float readParameter(int index);
+void selectNextEffect();
+void selectPreviousEffect();
+void toggleEffect(int index);
+
 
 AudioInputI2S input;
 AudioOutputI2S output;
@@ -114,11 +122,11 @@ void toggleModify() {
 }
 
 void selectNextEffect() {
-  currentEffect = (currentEffect = effectsCount - 1) ? 0 : currentEffect++;
+  currentEffect = (currentEffect == effectsCount - 1) ? 0 : currentEffect + 1;
 }
 
 void selectPreviousEffect() {
-  currentEffect = (currentEffect = 0) ? effectsCount - 1 : currentEffect--;
+  currentEffect = (currentEffect == 0) ? effectsCount - 1 : currentEffect - 1;
 }
 
 //turns on/off selected effect

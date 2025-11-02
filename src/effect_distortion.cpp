@@ -41,7 +41,8 @@ void AudioEffectDistortion::processSignal(uint32_t &value) {
     float y = gain * tanhf(bias*value) + (gain/2) * tanhf((bias-4)*value);
     //clamp output (clip)
     y = (y < -1.0f) ? -1.0f : (y > 1.0f ? 1.0f : y);
-    //
+    //map back to uint32
+    value = (uint32_t)((y + 1.0f) * 2147483647.5f);
 }
 
 void AudioEffectDistortion::setParamLevel(int index, float level) {
