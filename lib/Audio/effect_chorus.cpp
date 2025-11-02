@@ -66,6 +66,10 @@ void AudioEffectChorus::voices(int n_chorus)
   num_chorus = n_chorus;
 }
 
+void AudioEffectChorus::d_lenght(int lenght) {
+  delay_length = lenght;
+}
+
 //int last_idx = 0;
 void AudioEffectChorus::update(void)
 {
@@ -127,6 +131,31 @@ void AudioEffectChorus::update(void)
   }
 }
 
+//param1 = num_chorus (voices), param2 = delay_lenght (depth), param3 = param4 = null
 void AudioEffectChorus::setParamLevel(int index, float level) {
-  
+  if(index < 0 || index > parameterCount - 1 || level < 0 || level > 1) {
+    return;
+  }
+
+  //update parameters levels
+  levels[index] = level;
+
+  int value = (int)Utility::calculateParamValue(ranges[index], level);
+
+  switch(index) {
+    case 0:
+    //change num_chorus
+    voices(value);
+    break;
+
+    case 1:
+    //change delay_lenght
+    d_lenght(value);
+    break;
+
+    //don't do anything, the last two parameters are inactive
+    case 2: case 3: default:
+    break;
+  }
 }
+
