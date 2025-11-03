@@ -5,11 +5,12 @@
 #include <vector>
 #include "Utility.h"
 #include "CustomRange.h"
+#include <initializer_list>
 
-class EffectHandler {
+class Adapter_EffectHandler {
     public:
-    EffectHandler();
-    EffectHandler(std::initializer_list<CustomRange> r);
+    Adapter_EffectHandler();
+    Adapter_EffectHandler(std::initializer_list<CustomRange> r);
 
     float getParamLevel(int index);
     virtual void setParamLevel(int index, float level) = 0;

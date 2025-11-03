@@ -5,7 +5,7 @@
 #include <SerialFlash.h>
 #include <Bounce.h>
 #include <vector>
-#include "EffectHandler.h"
+#include "Adapter_EffectHandler.h"
 
 #define PARAM1_PIN A10
 #define PARAM2_PIN A11
@@ -43,7 +43,7 @@ AudioConnection ie1_patchCord, e1m1_patchCord, m1e2_patchCord, e2m2_patchCord;
 Bounce modifyButton = Bounce(MODIFY_B_PIN, 15);
 
 //Holds pointers to the 5 current effects
-std::vector<EffectHandler*> effects(effectsCount);
+std::vector<Adapter_EffectHandler*> effects(effectsCount);
 bool isModifying;
 uint8_t currentEffect = 0;
 
