@@ -1,5 +1,5 @@
 #include "effect_distortion.h"
-/*
+
 void AudioEffectDistortion::update(void)
 {
     //block containing data
@@ -38,7 +38,7 @@ void AudioEffectDistortion::processSignal(uint32_t &value) {
     //input value to normalized float (function works between -1.0 and 1.0)
     float x = ((float)value / 2147483647.5f) - 1.0f;
     //to optimize
-    float y = gain * tanhf(bias*value) + (gain/2) * tanhf((bias-4)*value);
+    float y = gain * tanhf(bias*x) + (gain/2) * tanhf((bias-4)*x);
     //clamp output (clip)
     y = (y < -1.0f) ? -1.0f : (y > 1.0f ? 1.0f : y);
     //map back to uint32
@@ -71,4 +71,3 @@ void AudioEffectDistortion::setParamLevel(int index, float level) {
         break;
     }
 }
-*/

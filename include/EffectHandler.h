@@ -1,15 +1,15 @@
-#ifndef EFFECT_ADAPT_H
-#define EFFECT_ADAPT_H
+#ifndef EFFECT_HANDLER_H
+#define EFFECT_HANDLER_H
 
 #include <string>
 #include <vector>
 #include "Utility.h"
 #include "CustomRange.h"
 
-class EffectAdapter {
+class EffectHandler {
     public:
-    EffectAdapter();
-    EffectAdapter(std::initializer_list<CustomRange> r);
+    EffectHandler();
+    EffectHandler(std::initializer_list<CustomRange> r);
 
     float getParamLevel(int index);
     virtual void setParamLevel(int index, float level) = 0;

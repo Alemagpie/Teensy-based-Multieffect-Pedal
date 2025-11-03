@@ -23,9 +23,8 @@
 #ifndef effect_chorus_h_
 #define effect_chorus_h_
 
-#include <Arduino.h>     // github.com/PaulStoffregen/cores/blob/master/teensy4/Arduino.h
 #include <AudioStream.h> // github.com/PaulStoffregen/cores/blob/master/teensy4/AudioStream.h
-#include "EffectAdapter.h"
+#include "EffectHandler.h"
 #include "CustomRange.h"
 
 /******************************************************************/
@@ -37,11 +36,11 @@
 #define CHORUS_DELAY_PASSTHRU -1
 
 class AudioEffectChorus : 
-public AudioStream/*, public EffectAdapter*/
+public AudioStream//, public EffectHandler
 {
 public:
   AudioEffectChorus(void):
-  AudioStream(1,inputQueueArray), /*EffectAdapter({CustomRange(1,4), CustomRange(1,5)}),*/ num_chorus(2)
+  AudioStream(1,inputQueueArray),/* EffectHandler({CustomRange(1,4), CustomRange(1,5)}),*/ num_chorus(2)
   { }
 
   boolean begin(short *delayline,int delay_length,int n_chorus);
@@ -49,7 +48,7 @@ public:
   void voices(int n_chorus);
   void d_lenght(int lenght);
 
-  //void setParamLevel(int index, float level) override;
+  virtual void setParamLevel(int index, float level);
   
 private:
   audio_block_t *inputQueueArray[1];

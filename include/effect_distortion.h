@@ -3,15 +3,15 @@
 
 #include <Arduino.h>
 #include <AudioStream.h> 
-#include "EffectAdapter.h"
+#include "EffectHandler.h"
 
-class AudioEffectDistortion : public AudioStream, public EffectAdapter
+class AudioEffectDistortion : public AudioStream, public EffectHandler
 {
     //distortion function: y = a * tanh(by) + a/2 * tanh((b-4)x) with a->[1, 5], b->[-5, 3] (a=gain, b=bias)
     public:
-    AudioEffectDistortion(void) : AudioStream(1, inputQueueArray), EffectAdapter({CustomRange(1,4), CustomRange(1,5)}) { }
+    AudioEffectDistortion(void) : AudioStream(1, inputQueueArray), EffectHandler({CustomRange(1,4), CustomRange(1,5)}) { }
 
-    void setParamLevel(int index, float level) override;
+    virtual void setParamLevel(int index, float level);
 
     private:
     float gain; //param1
