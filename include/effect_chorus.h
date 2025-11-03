@@ -36,12 +36,14 @@
 #define CHORUS_DELAY_PASSTHRU -1
 
 class AudioEffectChorus : 
-public AudioStream//, public EffectHandler
+public AudioStream, public EffectHandler
 {
 public:
   AudioEffectChorus(void):
-  AudioStream(1,inputQueueArray),/* EffectHandler({CustomRange(1,4), CustomRange(1,5)}),*/ num_chorus(2)
+  AudioStream(1,inputQueueArray), EffectHandler({CustomRange(1,4), CustomRange(8, 16)}), num_chorus(2)
   { }
+
+  ~AudioEffectChorus(void);
 
   boolean begin(short *delayline,int delay_length,int n_chorus);
   virtual void update(void);
@@ -49,6 +51,7 @@ public:
   void d_lenght(int lenght);
 
   virtual void setParamLevel(int index, float level);
+  virtual void init(float p1, float p2, float p3, float p4);
   
 private:
   audio_block_t *inputQueueArray[1];

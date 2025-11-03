@@ -111,7 +111,7 @@ void setup() {
   if(!digitalRead(PASSTHRU_PIN)) {
     Serial.print("PASSTHRU_PIN (");
     Serial.print(PASSTHRU_PIN);
-    Serial.println(") is grounded");
+    Serial.println(") is grounded"); 
   }
 
   // Initialize the effect - left channel
