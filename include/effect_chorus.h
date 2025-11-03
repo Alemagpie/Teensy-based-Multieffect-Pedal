@@ -27,6 +27,7 @@
 #include <AudioStream.h> // github.com/PaulStoffregen/cores/blob/master/teensy4/AudioStream.h
 
 #include "CustomRange.h"
+#include "NewCoolClass.h"
 
 #undef EFFECT
 #undef ADAPTER
@@ -41,11 +42,11 @@
 #define CHORUS_DELAY_PASSTHRU -1
 
 class AudioEffectChorus : 
-public AudioStream, public EffectHandler
+public AudioStream, NewCoolClass//, public EffectHandler
 {
 public:
   AudioEffectChorus(void):
-  AudioStream(1,inputQueueArray), EffectHandler({CustomRange(1,4), CustomRange(8, 16)}), num_chorus(2)
+  AudioStream(1,inputQueueArray), NewCoolClass()/*, EffectHandler({CustomRange(1,4), CustomRange(8, 16)})*/, num_chorus(2)
   { }
 
   ~AudioEffectChorus(void);
@@ -54,6 +55,8 @@ public:
   virtual void update(void);
   void voices(int n_chorus);
   void d_lenght(int lenght);
+
+  //EffectHandler eh;
 
   virtual void setParamLevel(int index, float level);
   virtual void init(float p1, float p2, float p3, float p4);

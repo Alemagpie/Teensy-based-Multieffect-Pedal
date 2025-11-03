@@ -7,14 +7,14 @@
 #include "CustomRange.h"
 #include <initializer_list>
 
-class Adapter_EffectHandler {
+class EffectHandler {
     public:
-    Adapter_EffectHandler();
-    Adapter_EffectHandler(std::initializer_list<CustomRange> r);
+    EffectHandler();
+    EffectHandler(std::initializer_list<CustomRange> r);
 
     float getParamLevel(int index);
-    virtual void setParamLevel(int index, float level) = 0;
-    virtual void init(float p1, float p2, float p3, float p4) = 0;
+    //virtual void setParamLevel(int index, float level) = 0;
+    //virtual void init(float p1, float p2, float p3, float p4) = 0;
 
     protected:
     std::vector<CustomRange> ranges = {CustomRange(), CustomRange()};
