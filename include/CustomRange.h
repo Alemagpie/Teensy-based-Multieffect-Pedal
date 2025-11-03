@@ -3,10 +3,10 @@
 
 #include <Arduino.h>
 
-class Range {
+class CustomRange {
     public:
-    Range();
-    Range(float min, float max);
+    CustomRange();
+    CustomRange(float min, float max);
 
     float getMin();
     float getMax();

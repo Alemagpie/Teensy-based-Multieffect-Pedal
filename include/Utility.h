@@ -3,11 +3,11 @@
 
 #include <Arduino.h>
 #include <Audio.h>
-#include "Range.h"
+#include "CustomRange.h"
 
 class Utility {
     public:
-    static float calculateParamValue(Range& r, float& l);
+    static float calculateParamValue(CustomRange& r, float& l);
 };
 
 #endif

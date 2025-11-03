@@ -1,5 +1,5 @@
 #include "Utility.h"
 
-float Utility::calculateParamValue(Range& r, float& l) {
+float Utility::calculateParamValue(CustomRange& r, float& l) {
   return r.getMin() + l * r.getDelta();
 }

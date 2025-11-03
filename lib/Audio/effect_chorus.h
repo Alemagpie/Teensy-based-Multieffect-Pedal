@@ -23,38 +23,41 @@
 #ifndef effect_chorus_h_
 #define effect_chorus_h_
 
-#include <Arduino.h>
-#include <AudioStream.h>
+#include <Arduino.h>     // github.com/PaulStoffregen/cores/blob/master/teensy4/Arduino.h
+#include <AudioStream.h> // github.com/PaulStoffregen/cores/blob/master/teensy4/AudioStream.h
 #include "EffectAdapter.h"
+#include "CustomRange.h"
 
 /******************************************************************/
 
+//                A u d i o E f f e c t C h o r u s
+// Written by Pete (El Supremo) Jan 2014
+// 140219 - correct storage class (not static)
+
 #define CHORUS_DELAY_PASSTHRU -1
 
-class AudioEffectChorus : public AudioStream, public EffectAdapter
+class AudioEffectChorus : 
+public AudioStream/*, public EffectAdapter*/
 {
 public:
-    // Correct constructor
-    AudioEffectChorus(void)
-      : AudioStream(1, inputQueueArray),          // base AudioStream first
-        EffectAdapter({Range(1,4), Range(1,5)}), // base EffectAdapter second
-        num_chorus(2)
-    { }
+  AudioEffectChorus(void):
+  AudioStream(1,inputQueueArray), /*EffectAdapter({CustomRange(1,4), CustomRange(1,5)}),*/ num_chorus(2)
+  { }
 
-    boolean begin(short *delayline, int delay_length, int n_chorus);
-    virtual void update(void);
-    void voices(int n_chorus);
-    void d_length(int length);
+  boolean begin(short *delayline,int delay_length,int n_chorus);
+  virtual void update(void);
+  void voices(int n_chorus);
+  void d_lenght(int lenght);
 
-    void setParamLevel(int index, float level) override;
-
+  //void setParamLevel(int index, float level) override;
+  
 private:
-    audio_block_t *inputQueueArray[1];
-    short *l_delayline;
-    short l_circ_idx;
+  audio_block_t *inputQueueArray[1];
+  short *l_delayline;
+  short l_circ_idx;
 
-    int num_chorus;      // param1
-    int delay_length;    // param2
+  int num_chorus;   //param1
+  int delay_length; //param1
 };
 
 #endif

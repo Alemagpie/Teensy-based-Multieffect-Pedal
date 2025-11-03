@@ -5,6 +5,7 @@
 #include <SerialFlash.h>
 #include <Bounce.h>
 #include <vector>
+#include "EffectAdapter.h"
 
 #define PARAM1_PIN A10
 #define PARAM2_PIN A11
@@ -46,7 +47,7 @@ std::vector<EffectAdapter*> effects(effectsCount);
 bool isModifying;
 uint8_t currentEffect = 0;
 
-AudioEffectChorus chorus; //example
+//AudioEffectChorus chorus; //example
 
 void setup() {
   _init();
@@ -58,7 +59,7 @@ void setup() {
     mixers[i].gain(0, 1.0);
   }
 
-  effects[0] = &chorus; //example
+  //effects[0] = &chorus; //example
 }
 
 void loop() {
@@ -102,8 +103,11 @@ void createConnections() {
 }
 
 float readParameter(int index) {
-  if(index >= 0 && index < 2) {
-    switch(index) {
+  if(index < 0 || index > 1) {
+    return 0;
+  }
+  
+  switch(index) {
       case 0:
       return analogRead(PARAM1_PIN)/1023;
       break;
@@ -112,8 +116,6 @@ float readParameter(int index) {
       return analogRead(PARAM2_PIN)/1023;
       break;
     }
-  }
-  
 }
 
 //allows/stops the ability to change parameters

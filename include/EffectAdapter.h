@@ -4,18 +4,18 @@
 #include <string>
 #include <vector>
 #include "Utility.h"
-#include "Range.h"
+#include "CustomRange.h"
 
 class EffectAdapter {
     public:
     EffectAdapter();
-    EffectAdapter(std::initializer_list<Range> r);
+    EffectAdapter(std::initializer_list<CustomRange> r);
 
     float getParamLevel(int index);
     virtual void setParamLevel(int index, float level) = 0;
 
     protected:
-    std::vector<Range> ranges = {Range(), Range()};
+    std::vector<CustomRange> ranges = {CustomRange(), CustomRange()};
     std::vector<float> levels = {0, 0};
     std::string name;
     static const int parameterCount = 2;
