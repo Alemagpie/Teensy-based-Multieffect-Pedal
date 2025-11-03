@@ -23,7 +23,7 @@
 #ifndef effect_chorus_h_
 #define effect_chorus_h_
 
-#include "Adapter_EffectHandler.h"
+#include "EffectHandler.h"
 #include <AudioStream.h> // github.com/PaulStoffregen/cores/blob/master/teensy4/AudioStream.h
 
 #include "CustomRange.h"
@@ -41,11 +41,11 @@
 #define CHORUS_DELAY_PASSTHRU -1
 
 class AudioEffectChorus : 
-public AudioStream, public Adapter_EffectHandler
+public AudioStream, public EffectHandler
 {
 public:
   AudioEffectChorus(void):
-  AudioStream(1,inputQueueArray), Adapter_EffectHandler({CustomRange(1,4), CustomRange(8, 16)}), num_chorus(2)
+  AudioStream(1,inputQueueArray), EffectHandler({CustomRange(1,4), CustomRange(8, 16)}), num_chorus(2)
   { }
 
   ~AudioEffectChorus(void);
