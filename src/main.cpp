@@ -5,7 +5,7 @@
 #include <SerialFlash.h>
 #include <Bounce.h>
 #include <vector>
-#include "EffectHandler.h"
+#include "EffectAdapter.h"
 
 #define PARAM1_PIN A10
 #define PARAM2_PIN A11
@@ -43,7 +43,7 @@ AudioConnection ie1_patchCord, e1m1_patchCord, m1e2_patchCord, e2m2_patchCord;
 Bounce modifyButton = Bounce(MODIFY_B_PIN, 15);
 
 //Holds pointers to the 5 current effects
-std::vector<EffectHandler*> effects(effectsCount);
+std::vector<EffectAdapter*> effects(effectsCount);
 bool isModifying;
 uint8_t currentEffect = 0;
 
@@ -65,8 +65,8 @@ void setup() {
 void loop() {
   //If is in modifying state set parameter leves
   if(isModifying) {
-    effects[currentEffect]->setParamLevel(0, readParameter(0));
-    effects[currentEffect]->setParamLevel(1, readParameter(1));
+   // effects[currentEffect]->setParamLevel(0, readParameter(0));
+    //effects[currentEffect]->setParamLevel(1, readParameter(1));
   }
 
   //Reads state of modify button

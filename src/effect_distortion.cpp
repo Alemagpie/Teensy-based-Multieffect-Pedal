@@ -45,6 +45,7 @@ void AudioEffectDistortion::processSignal(uint32_t &value) {
     value = (uint32_t)((y + 1.0f) * 2147483647.5f);
 }
 
+/*
 void AudioEffectDistortion::setParamLevel(int index, float level) {
     if(index < 0 || index > parameterCount - 1 || level < 0 || level > 1) {
         return;
@@ -71,3 +72,4 @@ void AudioEffectDistortion::setParamLevel(int index, float level) {
         break;
     }
 }
+*/
