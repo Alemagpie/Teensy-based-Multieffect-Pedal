@@ -95,6 +95,7 @@ void _init() {
 
 void createConnections() {
   AudioNoInterrupts();
+  //dynamic cast seems not to be allowed, needs further attention
   //ie1_patchCord.connect(input, 0, dynamic_cast<AudioStream&>(*effects[0]), 0);
   //e1m1_patchCord.connect(dynamic_cast<AudioStream&>(*effects[0]), 0, mixers[0], 1);
   //m1e2_patchCord.connect(mixers[0], 0, dynamic_cast<AudioStream&>(*effects[1]), 0);
