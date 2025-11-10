@@ -35,9 +35,7 @@
 
 #define CHORUS_DELAY_PASSTHRU -1
 
-class AudioEffectChorus : 
-public AudioStream , public EffectAdapter
-{
+class AudioEffectChorus : public AudioStream/*, public EffectAdapter*/ {
 public:
   AudioEffectChorus(void):
   AudioStream(1,inputQueueArray), num_chorus(2)
@@ -50,9 +48,9 @@ public:
   void voices(int n_chorus);
   void d_lenght(int lenght);
 
-  float getParamLevel(int index) const override;
-  void setParamLevel(int index, float level) override;
-  void init(float p1, float p2, float p3, float p4) override;
+  //float getParamLevel(int index) const override;
+  //void setParamLevel(int index, float level) override;
+  //void init(float p1, float p2, float p3, float p4) override;
   
 private:
   audio_block_t *inputQueueArray[1];

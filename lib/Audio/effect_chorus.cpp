@@ -132,9 +132,9 @@ void AudioEffectChorus::update(void)
 }
 
 
-void AudioEffectChorus::setParamLevel(int index, float level) {}
+//void AudioEffectChorus::setParamLevel(int index, float level) {}
 
-void AudioEffectChorus::init(float p1, float p2, float p3, float p4) {}
+//void AudioEffectChorus::init(float p1, float p2, float p3, float p4) {}
 
 float getParamLevel(int index) {return 0;}
 
