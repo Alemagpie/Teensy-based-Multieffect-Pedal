@@ -5,6 +5,7 @@
 #include <AudioStream.h> 
 #include "CustomRange.h"
 #include "EffectAdapter.h"
+#include "Utility.h"
 
 class AudioEffectDistortion : public AudioStream, public EffectAdapter
 {

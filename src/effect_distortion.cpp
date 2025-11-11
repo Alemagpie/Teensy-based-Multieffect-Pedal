@@ -37,8 +37,7 @@ void AudioEffectDistortion::update(void)
 void AudioEffectDistortion::processSignal(uint32_t &value) {
     //input value to normalized float (function works between -1.0 and 1.0)
     float x = ((float)value / 2147483647.5f) - 1.0f;
-    //to optimize
-    float y = gain * tanhf(bias*x) + (gain/2) * tanhf((bias-4)*x);
+    float y = gain * Utility::fastTanh(bias*x) + (gain/2) * Utility::fastTanh((bias-4)*x);  //optimized with LUT
     //clamp output (clip)
     y = (y < -1.0f) ? -1.0f : (y > 1.0f ? 1.0f : y);
     //map back to uint32
