@@ -1,6 +1,6 @@
-#include "effect_distortion.h"
+#include "distortion_effect.h"
 
-void AudioEffectDistortion::update(void)
+void DistortionEffect::update(void)
 {
     //block containing data
 	audio_block_t *block;
@@ -34,7 +34,7 @@ void AudioEffectDistortion::update(void)
 }
 
 
-void AudioEffectDistortion::processSignal(uint32_t &value) {
+void DistortionEffect::processSignal(uint32_t &value) {
     //input value to normalized float (function works between -1.0 and 1.0)
     float x = ((float)value / 2147483647.5f) - 1.0f;
     float y = gain * Utility::fastTanh(bias*x) + (gain/2) * Utility::fastTanh((bias-4)*x);  //optimized with LUT
@@ -44,8 +44,8 @@ void AudioEffectDistortion::processSignal(uint32_t &value) {
     value = (uint32_t)((y + 1.0f) * 2147483647.5f);
 }
 
-/*
-void AudioEffectDistortion::setParamLevel(int index, float level) {
+
+void DistortionEffect::setParamLevel(int index, float level) {
     if(index < 0 || index > parameterCount - 1 || level < 0 || level > 1) {
         return;
     }
@@ -71,10 +71,5 @@ void AudioEffectDistortion::setParamLevel(int index, float level) {
         break;
     }
 }
-*/
 
-//void AudioEffectChorus::setParamLevel(int index, float level) {}
-
-//void AudioEffectChorus::init(float p1, float p2, float p3, float p4) {}
-
-//float getParamLevel(int index) {return 0;}
+void DistortionEffect::init(float p1, float p2, float p3, float p4) {}

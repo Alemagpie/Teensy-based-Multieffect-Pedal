@@ -47,7 +47,6 @@ std::vector<EffectAdapter*> effects(effectsCount);
 bool isModifying;
 uint8_t currentEffect = 0;
 
-//AudioEffectChorus chorus; //example
 
 void setup() {
   _init();
@@ -65,8 +64,8 @@ void setup() {
 void loop() {
   //If is in modifying state set parameter leves
   if(isModifying) {
-   // effects[currentEffect]->setParamLevel(0, readParameter(0));
-    //effects[currentEffect]->setParamLevel(1, readParameter(1));
+    effects[currentEffect]->setParamLevel(0, readParameter(0));
+    effects[currentEffect]->setParamLevel(1, readParameter(1));
   }
 
   //Reads state of modify button
@@ -96,18 +95,14 @@ void _init() {
 void createConnections() {
   AudioNoInterrupts();
   //dynamic cast seems not to be allowed, needs further attention
-  //ie1_patchCord.connect(input, 0, dynamic_cast<AudioStream&>(*effects[0]), 0);
-  //e1m1_patchCord.connect(dynamic_cast<AudioStream&>(*effects[0]), 0, mixers[0], 1);
-  //m1e2_patchCord.connect(mixers[0], 0, dynamic_cast<AudioStream&>(*effects[1]), 0);
-  //e2m2_patchCord.connect(dynamic_cast<AudioStream&>(*effects[1]), 0, mixers[1], 1);
+  ie1_patchCord.connect(input, 0, *(effects[0]->getAudioStreamComponent()), 0);
+  e1m1_patchCord.connect(*(effects[0]->getAudioStreamComponent()), 0, mixers[0], 1);
+  m1e2_patchCord.connect(mixers[0], 0, *(effects[1]->getAudioStreamComponent()), 0);
+  e2m2_patchCord.connect(*(effects[1]->getAudioStreamComponent()), 0, mixers[1], 1);
   AudioInterrupts();
 }
 
-float readParameter(int index) {
-  if(index < 0 || index > 1) {
-    return 0;
-  }
-  
+float readParameter(int index) {  
   switch(index) {
       case 0:
       return analogRead(PARAM1_PIN)/1023;
@@ -116,7 +111,11 @@ float readParameter(int index) {
       case 1:
       return analogRead(PARAM2_PIN)/1023;
       break;
-    }
+
+      default:
+      return 0;
+      break;
+  }
 }
 
 //allows/stops the ability to change parameters
