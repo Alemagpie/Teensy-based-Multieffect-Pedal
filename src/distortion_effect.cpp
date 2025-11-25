@@ -30,11 +30,25 @@ void DistortionEffect::update(void)
         int16_t sample3 = (int16_t)(word2 & 0xFFFF);
         int16_t sample4 = (word2 >> 16) & 0xFFFF;
 
-        //processing
+        //distortion function
         processSignal(sample1);
         processSignal(sample2);
         processSignal(sample3);
         processSignal(sample4);
+
+        /*
+        //block dc bias
+        hpF.filter(&sample1);
+        hpF.filter(&sample2);
+        hpF.filter(&sample3);
+        hpF.filter(&sample4);
+
+        //shape tone
+        lpF.filter(&sample1);
+        lpF.filter(&sample2);
+        lpF.filter(&sample3);
+        lpF.filter(&sample4);
+        */
 
         //repack four int_16 processed samples into two uint32
         d1 = pack_16b_16b(sample1, sample2);

@@ -6,6 +6,8 @@
 #include "CustomRange.h"
 #include "EffectAdapter.h"
 #include "Utility.h"
+#include "HighPassFilter.h"
+#include "LowPassFilter.h"
 
 class DistortionEffect : public AudioStream, public EffectAdapter
 {
@@ -18,6 +20,9 @@ class DistortionEffect : public AudioStream, public EffectAdapter
     AudioStream* getAudioStreamComponent() override {return this;}
 
     private:
+    HighPassFilter hpF;
+    LowPassFilter lpF;
+
     float gain; //param1
     float curve; //param2
     float bias; //param3 (range from -0.2 to 0.2) - currently unused
