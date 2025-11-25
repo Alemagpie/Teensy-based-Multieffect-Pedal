@@ -5,9 +5,9 @@
 #include <Audio.h>
 #include "CustomRange.h"
 
-constexpr float TANH_MAX = 3.0f;
-constexpr float INV_TANH_STEP = 1/0.05f;
-constexpr int TANH_ENTRIES = int(TANH_MAX * INV_TANH_STEP) + 1;
+constexpr int16_t TANH_MAX = 3;
+constexpr int TANH_ENTRIES = 61;
+constexpr int16_t INV_TANH_STEP = (TANH_ENTRIES)/TANH_MAX;
 constexpr float INV_TANH_SCALE = 1.0f/32767.0f;
 PROGMEM
 static const int16_t tanhLUT[TANH_ENTRIES] = {
@@ -20,8 +20,8 @@ static const int16_t tanhLUT[TANH_ENTRIES] = {
 
 class Utility {
     public:
-    static float calculateParamValue(CustomRange& r, float& l);
-    static float fastTanh(float x);
+    static float inline calculateParamValue(CustomRange& r, float& l) { return r.getMin() + l * r.getDelta(); }
+    static float fastTanh(int16_t x);
 };
 
 #endif

@@ -19,12 +19,17 @@ class DistortionEffect : public AudioStream, public EffectAdapter
 
     private:
     float gain; //param1
-    float bias; //param2
+    float curve; //param2
+    float bias; //param3 (range from -0.2 to 0.2) - currently unused
+
+    //internal simplified parameters for performance
+    int16_t gain1, gain2, curve1, curve2;
+    void setInternalParams();
 
     audio_block_t *inputQueueArray[1];
 
     virtual void update(void);
-    void processSignal(uint32_t &value);
+    void processSignal(int16_t &value);
 };
 
 #endif

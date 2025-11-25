@@ -131,46 +131,6 @@ void AudioEffectChorus::update(void)
   }
 }
 
-
-//void AudioEffectChorus::setParamLevel(int index, float level) {}
-
-//void AudioEffectChorus::init(float p1, float p2, float p3, float p4) {}
-
-float getParamLevel(int index) {return 0;}
-
-/*
-//param1 = num_chorus (voices), param2 = delay_lenght (depth), param3 = param4 = null
-void AudioEffectChorus::setParamLevel(int index, float level) {
-  if(index < 0 || index > parameterCount - 1 || level < 0 || level > 1) {
-    return;
-  }
-
-  levels[index] = level;
-  int value = (int)Utility::calculateParamValue(ranges[index], level);
-
-  switch(index) {
-    case 0:
-    //change num voices
-    voices(value);
-    break;
-
-    case 1:
-    //change delay lenght
-    d_lenght(value);
-    break;
-
-    case 2: case 3: default:
-    break;
-  }
-}
-
-
-void AudioEffectChorus::init(float p1, float p2, float p3, float p4) {
-  short *dl = new short;
-  this->begin(dl, (int)p2, (int)p1);
-}
-*/
-
 AudioEffectChorus::~AudioEffectChorus(void) {
   delete(l_delayline);
   l_delayline = nullptr;

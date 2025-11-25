@@ -58,7 +58,7 @@ void AudioEffectMultiply::update(void)
 		//b56 = *pb++;
 		//b78 = *pb++;
 		a12 = pack_16b_16b(
-			signed_saturate_rshift(multiply_16tx16t(a12, b12), 16, 15), 
+			signed_saturate_rshift(multiply_16tx16t(a12, b12), 16, 15),  
 			signed_saturate_rshift(multiply_16bx16b(a12, b12), 16, 15));
 		a34 = pack_16b_16b(
 			signed_saturate_rshift(multiply_16tx16t(a34, b34), 16, 15), 

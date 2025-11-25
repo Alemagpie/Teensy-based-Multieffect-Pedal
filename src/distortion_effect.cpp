@@ -2,6 +2,7 @@
 
 void DistortionEffect::update(void)
 {
+    //each block has 128 int_16 samples, packed in 64 uint_32
     //block containing data
 	audio_block_t *block;
     uint32_t *start, *end;
@@ -19,11 +20,25 @@ void DistortionEffect::update(void)
 
     while(start < end) {
         d1 = *start;
-        d2 =*(start+1);
+        d2 = *(start+1);
+
+        //unpack two uint32 into four int_16 samples
+        uint32_t word1 = d1;
+        uint32_t word2 = d2;
+        int16_t sample1 = (int16_t)(word1 & 0xFFFF);
+        int16_t sample2 = (word1 >> 16) & 0xFFFF;
+        int16_t sample3 = (int16_t)(word2 & 0xFFFF);
+        int16_t sample4 = (word2 >> 16) & 0xFFFF;
 
         //processing
-        processSignal(d1);
-        processSignal(d2);
+        processSignal(sample1);
+        processSignal(sample2);
+        processSignal(sample3);
+        processSignal(sample4);
+
+        //repack four int_16 processed samples into two uint32
+        d1 = pack_16b_16b(sample1, sample2);
+        d1 = pack_16b_16b(sample3, sample4);
 
         *start++ = d1;
         *start++ = d2;
@@ -34,14 +49,22 @@ void DistortionEffect::update(void)
 }
 
 
-void DistortionEffect::processSignal(uint32_t &value) {
-    //input value to normalized float (function works between -1.0 and 1.0)
-    float x = ((float)value / 2147483647.5f) - 1.0f;
-    float y = gain * Utility::fastTanh(bias*x) + (gain/2) * Utility::fastTanh((bias-4)*x);  //optimized with LUT
-    //clamp output (clip)
-    y = (y < -1.0f) ? -1.0f : (y > 1.0f ? 1.0f : y);
-    //map back to uint32
-    value = (uint32_t)((y + 1.0f) * 2147483647.5f);
+void DistortionEffect::processSignal(int16_t &value) {
+    //working with Q15 for performance
+    int16_t p1, p2;
+    //b*x
+    p1 = signed_saturate_rshift((int32_t)value * curve1, 16, 15);
+    //(b-4)*x
+    p2 = signed_saturate_rshift((int32_t)value * curve2, 16, 15);
+    //tanh(bx)
+    p1 = Utility::fastTanh(p1);
+    //tanh((b-4)x)
+    p2 = Utility::fastTanh(p2);
+    //a*tanh(bx)
+    p1 = signed_saturate_rshift((int32_t)p1 * gain1, 16, 15);
+    //a/2*tanh((b-4)x)
+    p2 = signed_saturate_rshift((int32_t)p2 * gain2, 16, 15);
+    value = saturate16((int32_t)p1 + (int32_t)p2);
 }
 
 
@@ -53,7 +76,7 @@ void DistortionEffect::setParamLevel(int index, float level) {
     //update parameters levels
     levels[index] = level;
 
-    int value = (int)Utility::calculateParamValue(ranges[index], level);
+    int16_t value = (int16_t)Utility::calculateParamValue(ranges[index], level);
 
     switch(index) {
         case 0:
@@ -62,14 +85,23 @@ void DistortionEffect::setParamLevel(int index, float level) {
         break;
 
         case 1:
-        //change bias
-        bias = value;
+        //change curve
+        curve = value;
         break;
 
         //don't do anything, the last two parameters are inactive
         case 2: case 3: default:
         break;
     }
+
+    setInternalParams();
+}
+
+void DistortionEffect::setInternalParams() {
+    gain1 = (int16_t)(gain * 32767.0f);
+    gain2 = (int16_t)((gain * 0.5f) * 32767.0f);
+    curve1 = (int16_t)(bias * 32767.0f);
+    curve2 = (int16_t)((bias - 4.0f) * 32767.0f);
 }
 
 void DistortionEffect::init(float p1, float p2, float p3, float p4) {}

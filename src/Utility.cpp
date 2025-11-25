@@ -1,10 +1,7 @@
 #include "Utility.h"
 
-float Utility::calculateParamValue(CustomRange& r, float& l) {
-  return r.getMin() + l * r.getDelta();
-}
-
-float Utility::fastTanh(float x) {
+float Utility::fastTanh(int16_t x) {
+  /*
   //clamp results between 0 and 3.0f
   bool isNegative = x < 0.0f;
   float value = fabsf(x);
@@ -21,4 +18,18 @@ float Utility::fastTanh(float x) {
   float y = prevValue + delta * (nextValue - prevValue);
 
   return isNegative? -y : y;
+  */
+
+  bool isNeg = x < 0;
+  uint16_t absValue = (x < 0) ? -x : x;
+
+  uint32_t index = ((uint32_t)absValue * (TANH_ENTRIES - 1)) >> 15;
+  uint16_t index_int  = index >> 15;                          
+  uint16_t index_frac = index & 0x7FFF;    
+
+  int32_t delta = (int32_t)tanhLUT[index_int + 1] - (int32_t)tanhLUT[index_int];
+  int32_t interp = (delta * index_frac) >> 15;
+  int16_t y = tanhLUT[index_int] + interp;
+
+  return isNeg ? -y : y;
 }
