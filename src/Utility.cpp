@@ -1,6 +1,6 @@
 #include "Utility.h"
 
-float Utility::fastTanh(int16_t x) {
+int16_t Utility::fastTanh(int16_t x) {
   /*
   //clamp results between 0 and 3.0f
   bool isNegative = x < 0.0f;

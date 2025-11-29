@@ -83,14 +83,14 @@ void DistortionEffect::processSignal(int16_t &value) {
 
 
 void DistortionEffect::setParamLevel(int index, float level) {
-    if(index < 0 || index > parameterCount - 1 || level < 0 || level > 1) {
+    if(index < 0 || index > parameterCount - 1 || level < 0.0f || level > 1.0f) {
         return;
     }
 
     //update parameters levels
     levels[index] = level;
 
-    int16_t value = (int16_t)Utility::calculateParamValue(ranges[index], level);
+    float value = Utility::calculateParamValue(ranges[index], level);
 
     switch(index) {
         case 0:

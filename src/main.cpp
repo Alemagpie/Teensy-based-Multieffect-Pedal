@@ -8,7 +8,6 @@
 #include "EffectAdapter.h"
 
 #include "distortion_effect.h"
-#include "placeholder_effect.h"
 
 AudioInputI2S input;
 AudioOutputI2S output;
