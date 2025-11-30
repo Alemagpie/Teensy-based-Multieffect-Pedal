@@ -64,21 +64,34 @@ void DistortionEffect::update(void)
 
 
 void DistortionEffect::processSignal(int16_t &value) {
-    //working with Q15 for performance
+    /*//working with Q15 for performance
     int16_t p1, p2;
     //b*x
-    p1 = signed_saturate_rshift((int32_t)value * curve1, 16, 15);
+    p1 = signed_saturate_rshift(value * curve1, 16, 15);
     //(b-4)*x
-    p2 = signed_saturate_rshift((int32_t)value * curve2, 16, 15);
+    p2 = signed_saturate_rshift(value * curve2, 16, 15);
     //tanh(bx)
     p1 = Utility::fastTanh(p1);
     //tanh((b-4)x)
     p2 = Utility::fastTanh(p2);
     //a*tanh(bx)
-    p1 = signed_saturate_rshift((int32_t)p1 * gain1, 16, 15);
+    p1 = signed_saturate_rshift(p1 * gain1, 16, 15);
     //a/2*tanh((b-4)x)
-    p2 = signed_saturate_rshift((int32_t)p2 * gain2, 16, 15);
-    value = saturate16((int32_t)p1 + (int32_t)p2);
+    p2 = signed_saturate_rshift(p2 * gain2, 16, 15);
+    value = saturate16((int32_t)p1 + (int32_t)p2);*/
+
+
+    //incredibly harsh distortion
+    /*if(abs(value) > 100) {
+        bool isNeg = value < 0;
+        value = isNeg ? -30000 : 30000;
+    }*/
+
+    
+    /*int16_t p1 = saturate16(Utility::fastTanh(saturate16(5*value)));
+    int16_t p2 = saturate16(Utility::fastTanh(saturate16(3*value)))>>1;
+    value = saturate16(p1 + p2);*/
+    value = saturate16(Utility::fastTanh(saturate16(5*(value))));
 }
 
 
@@ -108,7 +121,7 @@ void DistortionEffect::setParamLevel(int index, float level) {
         break;
     }
 
-    setInternalParams();
+    //setInternalParams();
 }
 
 void DistortionEffect::setInternalParams() {

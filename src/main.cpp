@@ -8,12 +8,14 @@
 #include "EffectAdapter.h"
 
 #include "distortion_effect.h"
+#include "tremolo_effect.h"
 
 AudioInputI2S input;
 AudioOutputI2S output;
 AudioControlSGTL5000 sgtl5000;
 
 DistortionEffect dist;
+TremoloEffect trem;
 AudioMixer4 mixer;
 AudioConnection im(input, 0, mixer, 0);
 AudioConnection ie1(input, 0, dist, 0);

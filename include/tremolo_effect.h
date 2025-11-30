@@ -9,7 +9,7 @@
 class TremoloEffect : public AudioStream, public EffectAdapter {
     public:
     TremoloEffect(void) : AudioStream(1, inputQueueArray), EffectAdapter({CustomRange(0, 20), CustomRange(0, 1)}) {
-        LFO.frequency(1);
+        LFO.frequency(5);
         LFO.amplitude(1.0f);
         lfoConnection.connect(LFO, 0, *this, 1);
     }

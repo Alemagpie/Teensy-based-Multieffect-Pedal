@@ -13,7 +13,14 @@ class DistortionEffect : public AudioStream, public EffectAdapter
 {
     //distortion function: y = a * tanh(by) + a/2 * tanh((b-4)x) with a->[5, 15], b->[-5, 3] (a=gain, b=bias)
     public:
-    DistortionEffect(void) : AudioStream(1, inputQueueArray), EffectAdapter({CustomRange(5, 15), CustomRange(-5, 3)}) {gain = 10.0f; curve = 3.0f; setInternalParams(); }
+    DistortionEffect(void) : AudioStream(1, inputQueueArray), EffectAdapter({CustomRange(5, 15), CustomRange(-5, 3)}) {
+        curve1 = 5;
+        curve2 = 3;
+        gain1 = 15;
+        gain2 = 7;
+        lpF.setCutoff(20000);
+        hpF.setCutoff(2);
+    }
 
     void setParamLevel(int index, float level) override;
     void init(float p1, float p2, float p3, float p4) override;
