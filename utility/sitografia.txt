@@ -2,3 +2,4 @@ https://www.embeddedrelated.com/showarticle/779.php
 
 https://www.earlevel.com/main/2012/12/15/a-one-pole-filter/
 
+"Designing Audio Effect Plug-Ins in C++" by Will Pirkle

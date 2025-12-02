@@ -9,6 +9,9 @@ class HighPassFilter : public Filter {
         virtual void setCutoff(float freq) override;
         virtual void reset() override;
         virtual void filter(int16_t *sample) override;
+
+    private:
+    int16_t beta;
 };
 
 #endif

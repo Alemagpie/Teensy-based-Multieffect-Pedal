@@ -2809,7 +2809,7 @@
 				(justify left)
 			)
 		)
-		(property "Value" "20k"
+		(property "Value" "1M"
 			(at 76.2 35.5599 0)
 			(effects
 				(font
@@ -3155,7 +3155,7 @@
 				(justify left)
 			)
 		)
-		(property "Value" "20k"
+		(property "Value" "1M"
 			(at 69.85 104.1399 0)
 			(effects
 				(font
@@ -3294,7 +3294,7 @@
 				)
 			)
 		)
-		(property "Value" "1k"
+		(property "Value" "1M"
 			(at 60.96 38.1 90)
 			(effects
 				(font
@@ -3563,7 +3563,7 @@
 				(justify left)
 			)
 		)
-		(property "Value" "20k"
+		(property "Value" "1M"
 			(at 67.31 88.8999 0)
 			(effects
 				(font
@@ -5723,7 +5723,7 @@
 				(justify left)
 			)
 		)
-		(property "Value" "20k"
+		(property "Value" "1M"
 			(at 71.12 50.7999 0)
 			(effects
 				(font
