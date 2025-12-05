@@ -13,14 +13,14 @@ class EffectAdapter {
     EffectAdapter(std::initializer_list<CustomRange> r) : ranges(r) {};
 
     float getParamLevel(int index) const {return (index < 0 || index > parameterCount - 1) ? 0 : levels[index];}
-    virtual void setParamLevel(int index, float level) = 0;
+    virtual void setParamLevel(int index, uint16_t level) = 0;
     virtual void init(float p1, float p2, float p3, float p4) = 0;
 
     virtual AudioStream* getAudioStreamComponent() = 0;
 
     protected:
     std::vector<CustomRange> ranges;
-    std::vector<float> levels;
+    std::vector<uint16_t> levels = {0, 0, 0, 0};
     std::string name;
 
     static const int parameterCount = 2;

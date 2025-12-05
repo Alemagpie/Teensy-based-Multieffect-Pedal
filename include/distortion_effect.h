@@ -11,18 +11,15 @@
 
 class DistortionEffect : public AudioStream, public EffectAdapter
 {
-    //distortion function: y = a * tanh(by) + a/2 * tanh((b-4)x) with a->[5, 15], b->[-5, 3] (a=gain, b=bias)
     public:
-    DistortionEffect(void) : AudioStream(1, inputQueueArray), EffectAdapter({CustomRange(5, 15), CustomRange(-5, 3)}) {
-        curve1 = 5;
-        curve2 = 3;
-        gain1 = 15;
-        gain2 = 7;
-        lpF.setCutoff(20000);
-        hpF.setCutoff(2);
+    DistortionEffect(void) : AudioStream(1, inputQueueArray), EffectAdapter({CustomRange(3, 12), CustomRange(0, 7000)}) {
+        gain = 10;
+        bias = 0;
+        lpF.setCutoff(8000);
+        hpF.setCutoff(10);
     }
 
-    void setParamLevel(int index, float level) override;
+    void setParamLevel(int index, uint16_t level) override;
     void init(float p1, float p2, float p3, float p4) override;
     AudioStream* getAudioStreamComponent() override {return this;}
 
@@ -30,13 +27,8 @@ class DistortionEffect : public AudioStream, public EffectAdapter
     HighPassFilter hpF;
     LowPassFilter lpF;
 
-    float gain = 5.0f; //param1
-    float curve = 2.0f; //param2
-    float bias; //param3 (range from -0.2 to 0.2) - currently unused
-
-    //internal simplified parameters for performance
-    int16_t gain1, gain2, curve1, curve2;
-    void setInternalParams();
+    int16_t gain;
+    int16_t bias;
 
     audio_block_t *inputQueueArray[1];
 

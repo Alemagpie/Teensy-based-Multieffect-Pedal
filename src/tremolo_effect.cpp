@@ -44,7 +44,7 @@ void TremoloEffect::update(void)
     release(lfoBlock);
 }
 
-void TremoloEffect::setParamLevel(int index, float level) {
+void TremoloEffect::setParamLevel(int index, uint16_t level) {
     if(index < 0 || index > parameterCount - 1 || level < 0 || level > 1) {
         return;
     }
@@ -52,7 +52,7 @@ void TremoloEffect::setParamLevel(int index, float level) {
     //update parameters levels
     levels[index] = level;
 
-    int16_t value = (int16_t)Utility::calculateParamValue(ranges[index], level);
+    int16_t value = (int16_t) Utility::calculateParamValue(ranges[index], level>>15);
 
     switch(index) {
         case 0:

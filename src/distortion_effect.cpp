@@ -36,19 +36,19 @@ void DistortionEffect::update(void)
         processSignal(sample3);
         processSignal(sample4);
 
-        /*
+        
         //block dc bias
         hpF.filter(&sample1);
         hpF.filter(&sample2);
         hpF.filter(&sample3);
         hpF.filter(&sample4);
-
+        
         //shape tone
         lpF.filter(&sample1);
         lpF.filter(&sample2);
         lpF.filter(&sample3);
         lpF.filter(&sample4);
-        */
+    
 
         //repack four int_16 processed samples into two uint32
         d1 = pack_16b_16b(sample1, sample2);
@@ -64,19 +64,20 @@ void DistortionEffect::update(void)
 
 
 void DistortionEffect::processSignal(int16_t &value) {
-    value = saturate16(Utility::fastTanh(saturate16(5*(value))));
+    //value = saturate16(Utility::fastTanh(saturate16(5*(value))));
+    value = saturate16(Utility::fastTanh(saturate16(gain * value + bias)));
 }
 
 
-void DistortionEffect::setParamLevel(int index, float level) {
-    if(index < 0 || index > parameterCount - 1 || level < 0.0f || level > 1.0f) {
+void DistortionEffect::setParamLevel(int index, uint16_t level) {
+    if(index < 0 || index > parameterCount - 1) {
         return;
     }
 
     //update parameters levels
     levels[index] = level;
 
-    float value = Utility::calculateParamValue(ranges[index], level);
+    int16_t value = (int16_t) Utility::calculateParamValue(ranges[index], level>>15);
 
     switch(index) {
         case 0:
@@ -86,22 +87,14 @@ void DistortionEffect::setParamLevel(int index, float level) {
 
         case 1:
         //change curve
-        curve = value;
+        bias = value;
         break;
 
         //don't do anything, the last two parameters are inactive
         case 2: case 3: default:
         break;
     }
-
-    //setInternalParams();
 }
 
-void DistortionEffect::setInternalParams() {
-    gain1 = (int16_t)(gain * 32767.0f);
-    gain2 = (int16_t)((gain * 0.5f) * 32767.0f);
-    curve1 = (int16_t)(bias * 32767.0f);
-    curve2 = (int16_t)((bias - 4.0f) * 32767.0f);
-}
 
 void DistortionEffect::init(float p1, float p2, float p3, float p4) {}

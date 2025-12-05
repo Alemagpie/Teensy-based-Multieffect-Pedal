@@ -14,7 +14,7 @@ class TremoloEffect : public AudioStream, public EffectAdapter {
         lfoConnection.connect(LFO, 0, *this, 1);
     }
 
-    void setParamLevel(int index, float level) override;
+    void setParamLevel(int index, uint16_t level) override;
     void init(float p1, float p2, float p3, float p4) override;
     AudioStream* getAudioStreamComponent() override {return this;}
 

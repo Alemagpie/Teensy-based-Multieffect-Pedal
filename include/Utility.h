@@ -22,7 +22,7 @@ class Utility {
     public:
     //static int16_t inline calculateParamValue(CustomRange& r, int16_t& l) { return (l>= 0) ? saturate16(r.getMin() + signed_saturate_rshift(l * r.getDelta(), 16, 15)) : 0; }
     
-    static float inline calculateParamValue(CustomRange& r, float& l) {return r.getMin() + l * r.getDelta();}
+    static float inline calculateParamValue(CustomRange& r, float l) {return r.getMin() + l * r.getDelta();}
     static int16_t fastTanh(int16_t x);
 };
 
