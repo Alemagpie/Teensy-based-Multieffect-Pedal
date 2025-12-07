@@ -20,6 +20,8 @@
 AudioInputI2S input;
 AudioOutputI2S output;
 AudioControlSGTL5000 sgtl5000;
+AudioSynthWaveformSine s;
+
 
 DistortionEffect dist;
 TremoloEffect trem;

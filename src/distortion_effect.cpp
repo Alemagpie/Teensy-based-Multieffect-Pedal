@@ -91,7 +91,11 @@ void DistortionEffect::setParamLevel(int index, uint16_t level) {
         break;
 
         //don't do anything, the last two parameters are inactive
-        case 2: case 3: default:
+        case 2: 
+        lpF.setCutoff(value);
+        break;
+
+        case 3: default:
         break;
     }
 }
