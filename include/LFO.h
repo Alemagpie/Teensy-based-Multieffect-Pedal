@@ -19,14 +19,16 @@ class LFO {
     audio_block_t* sendReadOnly();
     void setFrequency(float f);
     void setAmplitude(float a);
+    void setPhase(float angle);
+    void setShape(short s);
 
     private:
     audio_block_t block;
 
-    int16_t amplitude;
+    uint16_t amplitude;
     short shapeSelect = 0;
-    int32_t phase;
-    int32_t phaseStep;
+    uint32_t phase;
+    uint32_t phaseStep;
     int16_t ph; //ph = phase >> 17;
     
     int16_t sine();
