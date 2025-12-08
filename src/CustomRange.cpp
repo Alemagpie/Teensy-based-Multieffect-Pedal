@@ -18,3 +18,5 @@ CustomRange::CustomRange(float min, float max) {
 float CustomRange::getMin() {return start;}
 float CustomRange::getMax() {return end;}
 float CustomRange::getDelta() {return delta;}
+
+bool CustomRange::isValid() {return start == end;}

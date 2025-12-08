@@ -5,6 +5,7 @@
 #include <AudioStream.h> 
 #include "CustomRange.h"
 #include <dspinst.h>
+#include "Utility.h"
 
 class LFO {
     public:
@@ -16,7 +17,7 @@ class LFO {
         RAMP = 4
 	};
 
-    audio_block_t* sendReadOnly();
+    audio_block_t* getReadOnly();
     void setFrequency(float f);
     void setAmplitude(float a);
     void setPhase(float angle);

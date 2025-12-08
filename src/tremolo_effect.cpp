@@ -10,9 +10,9 @@ void TremoloEffect::update(void)
     uint32_t d1, d2, d3, d4;
 
     block = receiveWritable(0);
-    lfoBlock = receiveReadOnly(1);
+    lfoBlock = lfo.getReadOnly();
 
-    if(!block) {
+    if(!block || !lfoBlock) {
         return;
     }
 
@@ -25,6 +25,26 @@ void TremoloEffect::update(void)
         d2 = *(start+1);
         d3 = *lfoStart++;
         d4 = *lfoStart++;
+
+        int16_t sample1 = (int16_t)(d3 & 0xFFFF);
+        int16_t sample2 = (d3 >> 16) & 0xFFFF;
+        int16_t sample3 = (int16_t)(d4 & 0xFFFF);
+        int16_t sample4 = (d4 >> 16) & 0xFFFF;
+
+        //convert LFO to be within [0, 1]
+        sample1 = (sample1 >> 1) + 16384;
+        sample2 = (sample2 >> 1) + 16384;
+        sample3 = (sample3 >> 1) + 16384;
+        sample4 = (sample4 >> 1) + 16384;
+
+        //multiply LFO samples by depth
+        sample1 = signed_saturate_rshift(depth * sample1, 16, 15);
+        sample2 = signed_saturate_rshift(depth * sample2, 16, 15);
+        sample3 = signed_saturate_rshift(depth * sample3, 16, 15);
+        sample4 = signed_saturate_rshift(depth * sample4, 16, 15);
+
+        d3 = pack_16b_16b(sample1, sample2);
+        d4 = pack_16b_16b(sample3, sample4);
 
         d1 = pack_16b_16b(
             signed_saturate_rshift(multiply_16tx16t(d1, d3), 16, 15),
@@ -45,28 +65,32 @@ void TremoloEffect::update(void)
 }
 
 void TremoloEffect::setParamLevel(int index, uint16_t level) {
-    if(index < 0 || index > parameterCount - 1 || level < 0 || level > 1) {
+    if(index < 0 || index > parameterCount - 1) {
         return;
     }
 
     //update parameters levels
     levels[index] = level;
 
-    int16_t value = (int16_t) Utility::calculateParamValue(ranges[index], level>>15);
+    float value = Utility::calculateParamValue(ranges[index], (float) level / 65535.0f);
 
     switch(index) {
         case 0:
         //change freq
-        LFO.frequency(value);
+        lfo.setFrequency(value);
         break;
 
         case 1:
         //change shape
-
+        lfo.setShape((short) value);
         break;
 
-        //don't do anything, the last two parameters are inactive
-        case 2: case 3: default:
+        case 2: 
+        //change depth
+        depth = (int16_t) value * 32767.0f;
+        break;
+
+        case 3: default:
         break;
     }
 }

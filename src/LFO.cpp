@@ -1,9 +1,10 @@
 #include "LFO.h"
 
-audio_block_t* LFO::sendReadOnly() {
+audio_block_t* LFO::getReadOnly() {
     audio_block_t *waveBlock = &block;
 
     for(int i = 0; i < AUDIO_BLOCK_SAMPLES; i++) {
+        ph = phase >> 17;
         switch(shapeSelect) {
             case 0:
             waveBlock->data[i] = sine();
@@ -64,22 +65,23 @@ void LFO::setShape(short s) {
 }
 
 int16_t LFO::sine() {
-    //use LUT and interpolation
+    Utility::fastSin(ph);
 }
 
 int16_t LFO::square() {
-    return ph < 16384 ? amplitude : 0;  //no full swing, just on or off //convert to use uint32
+    int16_t value = amplitude >> 1;
+    return ph < 16384 ? value : -value;  
 }
 
 int16_t LFO::triang() {
-    int32_t t = ph < 16384 ? ph : (32767 - ph);
-    return signed_saturate_rshift(((t<<2) - 32767) * amplitude, 16, 15);    //convert to use uint32
+    int32_t t = (ph < 16384) ? ph : (32767 - ph);
+    return (((t << 2) - 32768) * amplitude) >> 16;
 }
 
 int16_t LFO::saw() {
-    return signed_saturate_rshift((32767 - (ph<<1)) * amplitude, 16, 15);   //convert to use uint32
+    return (((ph << 1) - 32768) * amplitude) >> 16;
 }
 
 int16_t LFO::ramp() {
-    return signed_saturate_rshift(((ph<<1) - 32767) * amplitude, 16, 15);   //convert to use uint32
+    return ((32768 - (ph << 1)) * amplitude) >> 16;
 }

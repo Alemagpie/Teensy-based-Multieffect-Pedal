@@ -11,6 +11,7 @@ class CustomRange {
     float getMin();
     float getMax();
     float getDelta();
+    bool isValid();
 
     private:
     float start;

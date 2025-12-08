@@ -1,17 +1,18 @@
-#ifndef tremolo_effect_h
-#define tremolo_effect_h
+#ifndef TREMOLO_EFFECT_H
+#define TREMOLO_EFFECT_H
 
 #include <Arduino.h>
 #include <AudioStream.h> 
 #include "CustomRange.h"
 #include "EffectAdapter.h"
+#include "LFO.h"
 
 class TremoloEffect : public AudioStream, public EffectAdapter {
     public:
-    TremoloEffect(void) : AudioStream(1, inputQueueArray), EffectAdapter({CustomRange(0, 20), CustomRange(0, 1)}) {
-        LFO.frequency(5);
-        LFO.amplitude(1.0f);
-        lfoConnection.connect(LFO, 0, *this, 1);
+    TremoloEffect(void) : AudioStream(1, inputQueueArray), EffectAdapter({CustomRange(0, 20), CustomRange(0, 4), CustomRange(0, 1), CustomRange()}) {
+        lfo.setAmplitude(1.0);
+        lfo.setFrequency(10);
+        lfo.setShape(0);
     }
 
     void setParamLevel(int index, uint16_t level) override;
@@ -21,9 +22,8 @@ class TremoloEffect : public AudioStream, public EffectAdapter {
     private:
     int frequency;
     float shape;
-
-    AudioSynthWaveformSine LFO;
-    AudioConnection lfoConnection;
+    int16_t depth;
+    LFO lfo;
 
     audio_block_t *inputQueueArray[2];
     virtual void update(void);

@@ -9,15 +9,32 @@ int16_t Utility::fastTanh(int16_t x) {
   // Integer part (top bits)
   uint16_t index_int  = index >> 15;
   // Fractional part (low 15 bits)
-  uint16_t index_frac = index & 0x7FFF;
+  uint16_t index_index_frac = index & 0x7FFF;
 
   if (index_int >= TANH_ENTRIES - 1) {
-      index_int = TANH_ENTRIES - 2;
+    index_int = TANH_ENTRIES - 2;
   }
 
   int32_t delta  = (int32_t)tanhLUT[index_int + 1] - (int32_t)tanhLUT[index_int];
-  int32_t interp = (delta * index_frac) >> 15;
+  int32_t interp = (delta * index_index_frac) >> 15;
   int16_t y = tanhLUT[index_int] + interp;
 
   return isNeg ? -y : y;
+}
+
+int16_t Utility::fastSin(int16_t x)
+{
+  uint32_t idx = ((uint32_t)(uint16_t)x * (SIN_ENTRIES - 1));
+
+  uint16_t index_int  = idx >> 15;
+  uint16_t index_frac = idx & 0x7FFF;
+
+  if (index_int >= SIN_ENTRIES - 1) {
+    index_int = SIN_ENTRIES - 2;
+  }
+
+  int32_t delta = (int32_t)sinLUT[index_int + 1] - (int32_t)sinLUT[index_int];
+  int32_t interp = (delta * index_frac) >> 15;
+
+  return (int16_t)(sinLUT[index_int] + interp);
 }
