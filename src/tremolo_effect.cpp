@@ -9,10 +9,14 @@ void TremoloEffect::update(void)
     //two parts of block->data
     uint32_t d1, d2, d3, d4;
 
-    block = receiveWritable(0);
-    lfoBlock = lfo.getReadOnly();
+    block = receiveWritable();
+    if(!block) {
+        return;
+    }
 
-    if(!block || !lfoBlock) {
+    lfoBlock = lfo.getReadOnly();
+    if (!lfoBlock) {
+        release(block);
         return;
     }
 
@@ -31,11 +35,17 @@ void TremoloEffect::update(void)
         int16_t sample3 = (int16_t)(d4 & 0xFFFF);
         int16_t sample4 = (d4 >> 16) & 0xFFFF;
 
-        //convert LFO to be within [0, 1]
-        sample1 = (sample1 >> 1) + 16384;
-        sample2 = (sample2 >> 1) + 16384;
-        sample3 = (sample3 >> 1) + 16384;
-        sample4 = (sample4 >> 1) + 16384;
+        //convert LFO to be within [0, 1] (unipolar)
+        sample1 = (sample1 + 32768) >> 1;
+        sample2 = (sample2 + 32768) >> 1;
+        sample3 = (sample3 + 32768) >> 1;
+        sample4 = (sample4 + 32768) >> 1;
+
+        //filter LFO to prevent pops due to LFO discontinuity (square, saw, ramp)
+        lp.filter(&sample1);
+        lp.filter(&sample2);
+        lp.filter(&sample3);
+        lp.filter(&sample4);
 
         //multiply LFO samples by depth
         sample1 = signed_saturate_rshift(depth * sample1, 16, 15);
@@ -72,7 +82,7 @@ void TremoloEffect::setParamLevel(int index, uint16_t level) {
     //update parameters levels
     levels[index] = level;
 
-    float value = Utility::calculateParamValue(ranges[index], (float) level / 65535.0f);
+    float value = Utility::calculateParamValue(ranges[index], (float) level / 65536.0f);
 
     switch(index) {
         case 0:
@@ -87,7 +97,9 @@ void TremoloEffect::setParamLevel(int index, uint16_t level) {
 
         case 2: 
         //change depth
-        depth = (int16_t) value * 32767.0f;
+        depth = (int16_t) (value * 32767.0f);
+        Serial.print(depth);
+        Serial.printf("\n");
         break;
 
         case 3: default:

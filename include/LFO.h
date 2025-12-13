@@ -9,6 +9,8 @@
 
 class LFO {
     public:
+    //LFO(float f, float a, short s) { setFrequency(f); setAmplitude(a); setShape(s); }
+
     enum shape {
 		SINE    = 0,
 		SQUARE   = 1,

@@ -27,8 +27,14 @@ DistortionEffect dist;
 TremoloEffect trem;
 AudioMixer4 mixer;
 AudioConnection im(input, 0, mixer, 0);
+
 AudioConnection ie1(input, 0, dist, 0);
 AudioConnection e1m(dist, 0, mixer, 1); //effects always on channel 1
+
+/*
+AudioConnection ie1(input, 0, trem, 0);
+AudioConnection e1m(trem, 0, mixer, 1); //effects always on channel 1
+*/
 AudioConnection mo(mixer, 0, output, 0);
 
 bool isModifying = false;
@@ -66,6 +72,13 @@ void loop() {
         dist.setParamLevel(1, readParameter(1));
         dist.setParamLevel(2, readParameter(2));
         dist.setParamLevel(3, readParameter(3));
+        
+        /*
+        trem.setParamLevel(0, readParameter(0));
+        trem.setParamLevel(1, readParameter(1));
+        trem.setParamLevel(2, readParameter(2));
+        trem.setParamLevel(3, readParameter(3));
+        */
     }
   }
 }

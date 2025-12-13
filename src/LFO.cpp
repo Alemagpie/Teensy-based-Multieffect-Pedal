@@ -65,7 +65,7 @@ void LFO::setShape(short s) {
 }
 
 int16_t LFO::sine() {
-    Utility::fastSin(ph);
+    return Utility::fastSin(ph);
 }
 
 int16_t LFO::square() {

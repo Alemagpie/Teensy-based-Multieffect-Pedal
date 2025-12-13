@@ -23,7 +23,7 @@ class EffectAdapter {
     std::vector<uint16_t> levels = {0, 0, 0, 0};
     std::string name;
 
-    static const int parameterCount = 2;
+    static const int parameterCount = 4;
 };
 
 #endif

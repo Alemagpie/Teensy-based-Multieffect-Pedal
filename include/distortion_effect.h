@@ -13,10 +13,11 @@ class DistortionEffect : public AudioStream, public EffectAdapter
 {
     public:
     DistortionEffect(void) : AudioStream(1, inputQueueArray), EffectAdapter({CustomRange(3, 12), CustomRange(0, 7000), CustomRange(2500, 8000), CustomRange()}) {
-        gain = 10;
-        bias = 0;
-        lpF.setCutoff(8000);
-        hpF.setCutoff(10);
+        gain = 7;
+        bias = 3500;
+        lpF.setCutoff(5250);
+
+        hpF.setCutoff(10); //permanent
     }
 
     void setParamLevel(int index, uint16_t level) override;

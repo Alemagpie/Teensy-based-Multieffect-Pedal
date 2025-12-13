@@ -54,7 +54,7 @@ void DistortionEffect::update(void)
         d1 = pack_16b_16b(sample1, sample2);
         d1 = pack_16b_16b(sample3, sample4);
 
-        *start++ = d1;
+        *start++ = d1; 
         *start++ = d2;
     }
 
@@ -77,7 +77,7 @@ void DistortionEffect::setParamLevel(int index, uint16_t level) {
     //update parameters levels
     levels[index] = level;
 
-    int16_t value = (int16_t) Utility::calculateParamValue(ranges[index], level>>15);
+    int16_t value = (int16_t) Utility::calculateParamValue(ranges[index], (float)level/65536.0f );
 
     switch(index) {
         case 0:
