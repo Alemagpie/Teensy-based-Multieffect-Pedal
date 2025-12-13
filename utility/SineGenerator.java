@@ -1,6 +1,5 @@
 import java.io.FileWriter;
 import java.io.IOException;
-import java.math.*;
 
 public class SineGenerator {
     public static void main(String[] args) {

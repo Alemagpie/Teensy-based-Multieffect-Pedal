@@ -12,7 +12,8 @@
 class DistortionEffect : public AudioStream, public EffectAdapter
 {
     public:
-    DistortionEffect(void) : AudioStream(1, inputQueueArray), EffectAdapter({CustomRange(3, 12), CustomRange(0, 7000), CustomRange(2500, 8000), CustomRange()}) {
+    DistortionEffect(void) : AudioStream(1, inputQueueArray), EffectAdapter({CustomRange(3, 12), CustomRange(0, 7000), CustomRange(2500, 8000), CustomRange(0, 32767)}) {
+        volume = 16384;
         gain = 7;
         bias = 3500;
         lpF.setCutoff(5250);
@@ -27,6 +28,7 @@ class DistortionEffect : public AudioStream, public EffectAdapter
     HighPassFilter hpF;
     LowPassFilter lpF;
 
+    int16_t volume;
     int16_t gain;
     int16_t bias;
 

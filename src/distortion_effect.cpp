@@ -36,7 +36,6 @@ void DistortionEffect::update(void)
             processSignal(sample2);
             processSignal(sample3);
             processSignal(sample4);
-
             
             //block dc bias
             hpF.filter(&sample1);
@@ -50,6 +49,11 @@ void DistortionEffect::update(void)
             lpF.filter(&sample3);
             lpF.filter(&sample4);
         
+            //scale by volume
+            /*signed_saturate_rshift(volume * sample1, 16, 15);
+            signed_saturate_rshift(volume * sample2, 16, 15);
+            signed_saturate_rshift(volume * sample3, 16, 15);
+            signed_saturate_rshift(volume * sample4, 16, 15);*/
 
             //repack four int_16 processed samples into two uint32
             d1 = pack_16b_16b(sample1, sample2);
@@ -66,8 +70,7 @@ void DistortionEffect::update(void)
 
 
 void DistortionEffect::processSignal(int16_t &value) {
-    //value = saturate16(Utility::fastTanh(saturate16(5*(value))));
-    value = saturate16(Utility::fastTanh(saturate16(gain * value + bias)));
+    value = signed_saturate_rshift( volume * saturate16(Utility::fastTanh(saturate16(gain * value + bias))), 16, 15);
 }
 
 
@@ -97,7 +100,11 @@ void DistortionEffect::setParamLevel(int index, uint16_t level) {
         lpF.setCutoff(value);
         break;
 
-        case 3: default:
+        case 3: 
+        volume = value;
+        break;
+        
+        default:
         break;
     }
 }
