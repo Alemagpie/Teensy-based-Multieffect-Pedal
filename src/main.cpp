@@ -16,6 +16,9 @@
 #define PARAM4_PIN A17
 #define MODIFY_B_PIN A12
 #define MODIFY_L_PIN A13
+#define EFFECT_L 28
+#define EFFECT_SWITCH 29
+#define EFFECT_R 30
 
 AudioInputI2S input;
 AudioOutputI2S output;
@@ -25,20 +28,20 @@ AudioSynthWaveformSine s;
 
 DistortionEffect dist;
 TremoloEffect trem;
+EffectAdapter* effects[] = {&dist, &trem};
+int currentEffect = 0;
+
 AudioMixer4 mixer;
-AudioConnection im(input, 0, mixer, 0);
+AudioConnection ie1(input, 0, *(effects[0]->getAudioStreamComponent()), 0);
+AudioConnection e1e2(*(effects[0]->getAudioStreamComponent()), 0, *(effects[1]->getAudioStreamComponent()), 0);
+AudioConnection e2o(*(effects[1]->getAudioStreamComponent()), 0, output, 0);
 
-AudioConnection ie1(input, 0, dist, 0);
-AudioConnection e1m(dist, 0, mixer, 1); //effects always on channel 1
-
-/*
-AudioConnection ie1(input, 0, trem, 0);
-AudioConnection e1m(trem, 0, mixer, 1); //effects always on channel 1
-*/
-AudioConnection mo(mixer, 0, output, 0);
 
 bool isModifying = false;
 Bounce modifyButton = Bounce(MODIFY_B_PIN, 15);
+Bounce L_EffectButton = Bounce(EFFECT_L, 15);
+Bounce R_EffectButton = Bounce(EFFECT_R, 15);
+Bounce effectSwitchButton = Bounce(EFFECT_SWITCH, 15);
 
 unsigned long lastUpdate = 0;
 const unsigned long updateInterval = 100;
@@ -60,6 +63,29 @@ void loop() {
     toggleModify();
   }
 
+  L_EffectButton.update();
+  if(L_EffectButton.risingEdge()) {
+    currentEffect--;
+
+    if(currentEffect < 0) {
+      currentEffect = 1;  //4th effect
+    }
+  }
+
+  R_EffectButton.update();
+  if(R_EffectButton.risingEdge()) {
+    currentEffect++;
+
+    if(currentEffect > 1) {
+      currentEffect = 0;  //1st effect
+    }
+  }
+
+  effectSwitchButton.update();
+  if(effectSwitchButton.risingEdge()) {
+    effects[currentEffect] -> toggleEnable();
+  }
+
   //set modify led
   digitalWrite(MODIFY_L_PIN, isModifying ? HIGH : LOW);
 
@@ -67,18 +93,11 @@ void loop() {
     unsigned long now = millis();
     if (now - lastUpdate >= updateInterval) {
         lastUpdate = now;
-        
-        dist.setParamLevel(0, readParameter(0));
-        dist.setParamLevel(1, readParameter(1));
-        dist.setParamLevel(2, readParameter(2));
-        dist.setParamLevel(3, readParameter(3));
-        
-        /*
-        trem.setParamLevel(0, readParameter(0));
-        trem.setParamLevel(1, readParameter(1));
-        trem.setParamLevel(2, readParameter(2));
-        trem.setParamLevel(3, readParameter(3));
-        */
+
+        effects[currentEffect] -> setParamLevel(0, readParameter(0));
+        effects[currentEffect] -> setParamLevel(1, readParameter(1));   
+        effects[currentEffect] -> setParamLevel(2, readParameter(2));
+        effects[currentEffect] -> setParamLevel(3, readParameter(3));
     }
   }
 }
@@ -96,10 +115,15 @@ void initAudioBoard() {
 void initPins() {
   pinMode(MODIFY_B_PIN, INPUT_PULLDOWN);
   pinMode(MODIFY_L_PIN, OUTPUT);
+
   pinMode(PARAM1_PIN, INPUT);
   pinMode(PARAM2_PIN, INPUT);
   pinMode(PARAM3_PIN, INPUT);
   pinMode(PARAM4_PIN, INPUT);
+
+  pinMode(EFFECT_L, INPUT_PULLDOWN);
+  pinMode(EFFECT_SWITCH, INPUT_PULLDOWN);
+  pinMode(EFFECT_R, INPUT_PULLDOWN);
 }
 
 //Read parameter pot
