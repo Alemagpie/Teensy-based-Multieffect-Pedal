@@ -30,6 +30,7 @@ DistortionEffect dist;
 TremoloEffect trem;
 EffectAdapter* effects[] = {&dist, &trem};
 int currentEffect = 0;
+int effectCount = 2;
 
 AudioMixer4 mixer;
 AudioConnection ie1(input, 0, *(effects[0]->getAudioStreamComponent()), 0);
@@ -68,7 +69,7 @@ void loop() {
     currentEffect--;
 
     if(currentEffect < 0) {
-      currentEffect = 1;  //4th effect
+      currentEffect = effectCount - 1;  //last effect
     }
   }
 
@@ -76,7 +77,7 @@ void loop() {
   if(R_EffectButton.risingEdge()) {
     currentEffect++;
 
-    if(currentEffect > 1) {
+    if(currentEffect > effectCount - 1) {
       currentEffect = 0;  //1st effect
     }
   }

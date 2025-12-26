@@ -6,6 +6,7 @@
 //one-pole high pass filter
 class HighPassFilter : public Filter {
     public:
+        HighPassFilter() { reset(); }
         virtual void setCutoff(float freq) override;
         virtual void reset() override;
         virtual void filter(int16_t *sample) override;

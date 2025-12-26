@@ -1,0 +1,35 @@
+#INTRO
+1) Introduzione all'elaborazione audio digitale
+2) Descrizione generale del progetto
+
+#ELETTRONICA
+1) Circuito buffer in
+2) Circuito buffer out
+3) Circuito alimentazione
+4) Realizzazione su basette
+
+#MICROCONTROLLORE
+1) Scelta microcontrollore
+2) Descrizione microcontrollore
+
+#SOFTWARE
+1) Adattatore effetti e funzionamento AudioStream
+2) Effetto distorsione
+    - Filtri
+    - Funzionamento
+    - Aliasing e Nyquist
+3) Effetto tremolo
+    - LFO
+    - Funzionamento
+4) Effetto delay
+    -
+5) Ottimizzazioni pratiche (LUT)
+6) gestione input utente su main
+    - Lettura parametri
+    - Uso classe Bounce
+7) Menzione libreria
+
+#OUTRO
+1) Verifica e controllo del funzionamento
+
+#BIBLIOGRAFIA
