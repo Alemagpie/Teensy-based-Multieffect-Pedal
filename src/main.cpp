@@ -14,8 +14,8 @@
 #define PARAM2_PIN A15
 #define PARAM3_PIN A16
 #define PARAM4_PIN A17
-#define MODIFY_B_PIN A12
-#define MODIFY_L_PIN A13
+#define MODIFY_B_PIN A12  //change to digital pin 35
+#define MODIFY_L_PIN A13  ////change to digital pin 36
 #define EFFECT_L 28
 #define EFFECT_SWITCH 29
 #define EFFECT_R 30

@@ -12,6 +12,7 @@
 
 #define DELAY_QUEUE_SIZE  (176512 / AUDIO_BLOCK_SAMPLES) //max for teensy 4.1
 
+//Effect that creates an "echo"
 class DelayEffect : public AudioStream, public EffectAdapter {
     public:
     DelayEffect() : AudioStream(1, inputQueueArray), EffectAdapter({CustomRange(3, 12), CustomRange(0, 7000), CustomRange(2500, 8000), CustomRange(0, 32767)}) {

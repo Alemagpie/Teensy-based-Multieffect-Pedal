@@ -1,35 +1,60 @@
 #INTRO
 1) Introduzione all'elaborazione audio digitale
+- campionamento e ricostruzione del segnale
+- Aliasing e Nyquist
+- rappresentazione in Q15
 2) Descrizione generale del progetto
+- obiettivi
+- componenti e materiali
 
 #ELETTRONICA
-1) Circuito buffer in
-2) Circuito buffer out
-3) Circuito alimentazione
-4) Realizzazione su basette
+1) Circuito buffer in/out
+- Unity gain buffer
+- Specifiche in/out
+2) Circuito alimentazione
+- Protezione voltaggio inverso
+- Regolatori 3.3v, 5v
+3) Realizzazione su basette
 
 #MICROCONTROLLORE
 1) Scelta microcontrollore
+- Confronto Teensy 4.1 con altre piattaforme
+- Scheda AudioShield
 2) Descrizione microcontrollore
+- Processore
+- I2C, I2S
+- Memoria (espandibile)
+- Slave AudioShield
 
 #SOFTWARE
 1) Adattatore effetti e funzionamento AudioStream
+- AudioStream
+- EffectAdapter
 2) Effetto distorsione
-    - Filtri
-    - Funzionamento
-    - Aliasing e Nyquist
+- Filtri
+- Funzionamento
 3) Effetto tremolo
-    - LFO
-    - Funzionamento
-4) Effetto delay
-    -
-5) Ottimizzazioni pratiche (LUT)
-6) gestione input utente su main
-    - Lettura parametri
-    - Uso classe Bounce
-7) Menzione libreria
+- LFO
+- Funzionamento
+4) Effetto bitcrusher
+- Quantizzatore uniforme
+- Funzionamento
+5) Effetto delay
+- Buffering del segnale e sampling
+- Funzionamento
+6) Ottimizzazioni pratiche 
+- Funzioni con LUT
+7) Gestione input utente 
+- Lettura parametri (potenziometri)
+- Uso classe Bounce (pulsanti)
+- UI 
+8) Menzione libreria
 
 #OUTRO
 1) Verifica e controllo del funzionamento
+- Spettrogrammi (filtri)
+- Oscilloscopi (LFO, distorsione, tremolo)
+- Grafici generici (Delay)
 
 #BIBLIOGRAFIA
+“Designing audio effect plug-ins in c++” - Will Pirkles

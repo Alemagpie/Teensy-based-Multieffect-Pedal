@@ -3,6 +3,7 @@
 
 #include <Arduino.h>
 
+//A class used to aid the process of parameter mapping parameter values
 class CustomRange {
     public:
     CustomRange();
