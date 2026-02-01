@@ -24,7 +24,8 @@ class EffectAdapter {
     protected:
     std::vector<CustomRange> ranges;
     std::vector<uint16_t> levels = {0, 0, 0, 0};
-    std::string name;
+    std::string effectName;
+    std::vector<std::string> paramName;
     bool enabled = false;
 
     static const int parameterCount = 4;

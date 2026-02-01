@@ -100,8 +100,6 @@ void TremoloEffect::setParamLevel(int index, uint16_t level) {
         case 2: 
         //change depth
         depth = (int16_t) (value * 32767.0f);
-        Serial.print(depth);
-        Serial.printf("\n");
         break;
 
         case 3: default:

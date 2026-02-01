@@ -19,6 +19,9 @@ class DistortionEffect : public AudioStream, public EffectAdapter
         lpF.setCutoff(5250);
 
         hpF.setCutoff(10); //permanent
+
+        effectName = "Distortion";
+        paramName = {"GN ", "BS ", "TRB", "VOL"};
     }
 
     void setParamLevel(int index, uint16_t level) override;

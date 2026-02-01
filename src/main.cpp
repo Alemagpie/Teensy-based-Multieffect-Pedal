@@ -9,13 +9,14 @@
 
 #include "distortion_effect.h"
 #include "tremolo_effect.h"
+#include "bitcrusher_effect.h"
 
 #define PARAM1_PIN A14
 #define PARAM2_PIN A15
 #define PARAM3_PIN A16
 #define PARAM4_PIN A17
-#define MODIFY_B_PIN A12  //change to digital pin 35
-#define MODIFY_L_PIN A13  ////change to digital pin 36
+#define MODIFY_B_PIN 33 
+#define MODIFY_L_PIN 34  
 #define EFFECT_L 28
 #define EFFECT_SWITCH 29
 #define EFFECT_R 30
@@ -28,14 +29,17 @@ AudioSynthWaveformSine s;
 
 DistortionEffect dist;
 TremoloEffect trem;
-EffectAdapter* effects[] = {&dist, &trem};
+BitCrusherEffect bitcrush;
+
+EffectAdapter* effects[] = {&bitcrush, &dist, &trem};
 int currentEffect = 0;
-int effectCount = 2;
+int effectCount = 3;
 
 AudioMixer4 mixer;
 AudioConnection ie1(input, 0, *(effects[0]->getAudioStreamComponent()), 0);
 AudioConnection e1e2(*(effects[0]->getAudioStreamComponent()), 0, *(effects[1]->getAudioStreamComponent()), 0);
-AudioConnection e2o(*(effects[1]->getAudioStreamComponent()), 0, output, 0);
+AudioConnection e2e3(*(effects[1]->getAudioStreamComponent()), 0, *(effects[2]->getAudioStreamComponent()), 0);
+AudioConnection e3o(*(effects[2]->getAudioStreamComponent()), 0, output, 0);
 
 
 bool isModifying = false;
