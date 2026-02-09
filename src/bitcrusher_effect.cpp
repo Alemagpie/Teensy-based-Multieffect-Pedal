@@ -105,7 +105,7 @@ void BitCrusherEffect::setParamLevel(int index, uint16_t level) {
     //update parameters levels
     levels[index] = level;
 
-    int16_t value = (int16_t) Utility::calculateParamValue(ranges[index], (float)level/65535.0f );
+    int16_t value = (int16_t) Utility::calculateParamValue(ranges[index], (float)level/65536.0f );
 
     switch(index) {
         case 0:

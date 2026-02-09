@@ -2,33 +2,41 @@
 
 audio_block_t* LFO::getReadOnly() {
     audio_block_t *waveBlock = &block;
+    int16_t sample;
 
+    //fill buffer
     for(int i = 0; i < AUDIO_BLOCK_SAMPLES; i++) {
         ph = phase >> 17;
         switch(shapeSelect) {
             case 0:
-            waveBlock->data[i] = sine();
+            sample = sine();
             break;
 
             case 1:
-            waveBlock->data[i] = square();
+            sample = square();
             break;
 
             case 2:
-            waveBlock->data[i] = triang();
+            sample = triang();
             break;
 
             case 3:
-            waveBlock->data[i] = saw();
+            sample = saw();
             break;
 
             case 4:
-            waveBlock->data[i] = ramp();
+            sample = ramp();
             break;
 
             default:
             break;
         }
+
+        if(modeSelect == UNIPOLAR) {
+            sample = (sample + 32768) >> 1;
+        }
+
+        waveBlock->data[i] = sample;
 
         phase += phaseStep;
     }
@@ -62,6 +70,10 @@ void LFO::setPhase(float angle) {
 
 void LFO::setShape(short s) {
     shapeSelect = s;
+}
+
+void LFO::setMode(short m) {
+    modeSelect = m;
 }
 
 int16_t LFO::sine() {

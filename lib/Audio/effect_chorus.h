@@ -24,8 +24,6 @@
 #define effect_chorus_h_
 
 #include <AudioStream.h> // github.com/PaulStoffregen/cores/blob/master/teensy4/AudioStream.h
-#include "CustomRange.h"
-#include "EffectAdapter.h"
 
 /******************************************************************/
 
@@ -35,7 +33,7 @@
 
 #define CHORUS_DELAY_PASSTHRU -1
 
-class AudioEffectChorus : public AudioStream/*, public EffectAdapter*/ {
+class AudioEffectChorus : public AudioStream {
 public:
   AudioEffectChorus(void):
   AudioStream(1,inputQueueArray), num_chorus(2)
@@ -47,18 +45,14 @@ public:
   virtual void update(void);
   void voices(int n_chorus);
   void d_lenght(int lenght);
-
-  //float getParamLevel(int index) const override;
-  //void setParamLevel(int index, float level) override;
-  //void init(float p1, float p2, float p3, float p4) override;
   
 private:
   audio_block_t *inputQueueArray[1];
   short *l_delayline;
   short l_circ_idx;
 
-  int num_chorus;   //param1
-  int delay_length; //param1
+  int num_chorus;   
+  int delay_length; 
 };
 
 #endif

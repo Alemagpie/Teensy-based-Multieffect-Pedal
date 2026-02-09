@@ -36,12 +36,6 @@ void TremoloEffect::update(void)
             int16_t sample3 = (int16_t)(d4 & 0xFFFF);
             int16_t sample4 = (d4 >> 16) & 0xFFFF;
 
-            //convert LFO to be within [0, 1] (unipolar)
-            sample1 = (sample1 + 32768) >> 1;
-            sample2 = (sample2 + 32768) >> 1;
-            sample3 = (sample3 + 32768) >> 1;
-            sample4 = (sample4 + 32768) >> 1;
-
             //filter LFO to prevent pops due to LFO discontinuity (square, saw, ramp)
             lp.filter(&sample1);
             lp.filter(&sample2);

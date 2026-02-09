@@ -1,6 +1,6 @@
-#include "delay_effect.h"
+#include "vibrato_effect.h"
 
-void DelayEffect::update(void) {
+void VibratoEffect::update(void) {
     audio_block_t *block;
     uint32_t *start, *end;
     uint32_t d1, d2;
@@ -12,14 +12,26 @@ void DelayEffect::update(void) {
     }
 
     if(enabled) {
-        //magic delay stuff here
+        //magic vibrato stuff here
+    } else {
+        //store in queue
+        samplePtr = block->data;
+        for(int i = 0;i < AUDIO_BLOCK_SAMPLES;i++) {
+            index++;
+
+            if(index >= DELAY_LENGHT) {
+            index = 0;
+            }
+
+            sampleQueue[index] = *samplePtr++;
+        }
     }
 
     transmit(block);
     release(block);
 }
 
-void DelayEffect::setParamLevel(int index, uint16_t level) {
+void VibratoEffect::setParamLevel(int index, uint16_t level) {
     if(index < 0 || index > parameterCount - 1) {
         return;
     }

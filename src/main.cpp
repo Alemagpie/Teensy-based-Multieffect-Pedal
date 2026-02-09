@@ -24,7 +24,6 @@
 AudioInputI2S input;
 AudioOutputI2S output;
 AudioControlSGTL5000 sgtl5000;
-AudioSynthWaveformSine s;
 
 
 DistortionEffect dist;
@@ -35,8 +34,11 @@ EffectAdapter* effects[] = {&bitcrush, &dist, &trem};
 int currentEffect = 0;
 int effectCount = 3;
 
-AudioMixer4 mixer;
-AudioConnection ie1(input, 0, *(effects[0]->getAudioStreamComponent()), 0);
+// Debug
+AudioSynthWaveformSine s1;
+AudioConnection s1e1(s1, 0, *(effects[0]->getAudioStreamComponent()), 0);
+
+//AudioConnection ie1(input, 0, *(effects[0]->getAudioStreamComponent()), 0);
 AudioConnection e1e2(*(effects[0]->getAudioStreamComponent()), 0, *(effects[1]->getAudioStreamComponent()), 0);
 AudioConnection e2e3(*(effects[1]->getAudioStreamComponent()), 0, *(effects[2]->getAudioStreamComponent()), 0);
 AudioConnection e3o(*(effects[2]->getAudioStreamComponent()), 0, output, 0);
@@ -113,8 +115,9 @@ void initAudioBoard() {
   sgtl5000.volume(0.8);      
   sgtl5000.lineInLevel(8);
   sgtl5000.lineOutLevel(8); 
-  mixer.gain(0, 0.0f);
-  mixer.gain(1, 1.0f);
+
+  s1.amplitude(0.5);
+  s1.frequency(200);
 }
 
 void initPins() {

@@ -19,17 +19,24 @@ class LFO {
         RAMP = 4
 	};
 
+    enum mode {
+        BIPOLAR = 0,
+        UNIPOLAR = 1
+    };
+
     audio_block_t* getReadOnly();
     void setFrequency(float f);
     void setAmplitude(float a);
     void setPhase(float angle);
     void setShape(short s);
+    void setMode(short m);
 
     private:
     audio_block_t block;
 
     uint16_t amplitude;
     short shapeSelect = 0;
+    short modeSelect = 0;
     uint32_t phase;
     uint32_t phaseStep;
     int16_t ph; //ph = phase >> 17;

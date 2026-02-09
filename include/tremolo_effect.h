@@ -10,17 +10,20 @@
 
 class TremoloEffect : public AudioStream, public EffectAdapter {
     public:
-    TremoloEffect(void) : AudioStream(1, inputQueueArray), EffectAdapter({CustomRange(0, 20), CustomRange(0, 4), CustomRange(0, 1), CustomRange()}) {
+    TremoloEffect(void) : AudioStream(1, inputQueueArray), EffectAdapter({CustomRange(0, 20), CustomRange(0, 5), CustomRange(0, 1), CustomRange()}) {
         depth = 32767;
         
         lfo.setAmplitude(1.0);
         lfo.setFrequency(8);
         lfo.setShape(3);
 
+        //Mode set to unipolar (permanent)
+        lfo.setMode(1);
+
         lp.setCutoff(100);  //permanent
 
         effectName = "Tremolo";
-        paramName = {"FRQ", "SHP", "DPT", "   "};
+        paramName = {"FRQ", "SHP", "DPT", "---"}; 
     }
 
     void setParamLevel(int index, uint16_t level) override;

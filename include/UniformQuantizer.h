@@ -14,7 +14,7 @@ class UniformQuantizer {
 
     private:
         uint8_t bitResolution = 1;
-        uint16_t intervalLenght = 16384;
+        uint16_t intervalLenght = 16383;
 };
 
 #endif
