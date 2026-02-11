@@ -36,6 +36,7 @@ BitCrusherEffect bitcrush;
 VibratoEffect vib;
 
 EffectAdapter* effects[] = {&vib, &bitcrush, &dist, &trem};
+std::vector<bool> isOn = {false, false, false, false, false};
 int currentEffect = 0;
 int effectCount = 4;
 
@@ -104,7 +105,8 @@ void loop() {
 
   effectSwitchButton.update();
   if(effectSwitchButton.risingEdge()) {
-    effects[currentEffect] -> toggleEnable();
+    isOn[currentEffect] = effects[currentEffect] -> toggleEnable();
+    onEffectChange();
   }
 
   //set modify led
@@ -179,5 +181,10 @@ void toggleModify() {
 }
 
 void onEffectChange() {
-    sm.drawEffect(currentEffect + 1, effects[currentEffect]->getEffectName(), *(effects[currentEffect]->getParamNames()));
+    sm.drawUI(
+      currentEffect + 1, 
+      effects[currentEffect]->getEffectName(), 
+      *(effects[currentEffect]->getParamNames()), 
+      isOn
+    );
 }
