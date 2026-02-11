@@ -12,6 +12,7 @@
 #include "tremolo_effect.h"
 #include "bitcrusher_effect.h"
 #include "vibrato_effect.h"
+#include "chorus_effect.h"
 
 #define PARAM1_PIN A14
 #define PARAM2_PIN A15
@@ -34,11 +35,12 @@ DistortionEffect dist;
 TremoloEffect trem;
 BitCrusherEffect bitcrush;
 VibratoEffect vib;
+ChorusEffect ch;
 
-EffectAdapter* effects[] = {&vib, &bitcrush, &dist, &trem};
+EffectAdapter* effects[] = {&ch, &vib, &bitcrush, &dist, &trem};
 std::vector<bool> isOn = {false, false, false, false, false};
 int currentEffect = 0;
-int effectCount = 4;
+int effectCount = 5;
 
 // Debug
 AudioSynthWaveformSine s1;

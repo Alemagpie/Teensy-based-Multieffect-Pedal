@@ -48,12 +48,6 @@ void DistortionEffect::update(void)
             lpF.filter(&sample2);
             lpF.filter(&sample3);
             lpF.filter(&sample4);
-        
-            //scale by volume
-            /*signed_saturate_rshift(volume * sample1, 16, 15);
-            signed_saturate_rshift(volume * sample2, 16, 15);
-            signed_saturate_rshift(volume * sample3, 16, 15);
-            signed_saturate_rshift(volume * sample4, 16, 15);*/
 
             //repack four int_16 processed samples into two uint32
             d1 = pack_16b_16b(sample1, sample2);
@@ -70,7 +64,13 @@ void DistortionEffect::update(void)
 
 
 void DistortionEffect::processSignal(int16_t &value) {
-    value = signed_saturate_rshift( volume * saturate16(Utility::fastTanh(saturate16(gain * value + bias))), 16, 15);
+    value = signed_saturate_rshift( 
+        volume * Utility::fastTanh(
+            saturate16(
+                (int32_t)gain * value + bias
+            )
+        ), 
+    16, 15);
 }
 
 

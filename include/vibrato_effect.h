@@ -11,7 +11,7 @@
 #include "HighPassFilter.h"
 #include "LowPassFilter.h"
 
-#define DELAY_BUFFER_LENGHT  (16*AUDIO_BLOCK_SAMPLES)
+#define VIBRATO_BUFFER_LENGHT  (16*AUDIO_BLOCK_SAMPLES)
 
 class VibratoEffect : public AudioStream, public EffectAdapter {
     public:
@@ -46,7 +46,7 @@ class VibratoEffect : public AudioStream, public EffectAdapter {
     uint16_t freq;
     uint16_t depth;
 
-    int16_t sampleQueue[DELAY_BUFFER_LENGHT];
+    int16_t sampleQueue[VIBRATO_BUFFER_LENGHT];
 	audio_block_t *inputQueueArray[1];
 
     virtual void update(void);

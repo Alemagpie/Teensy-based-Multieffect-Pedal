@@ -18,22 +18,20 @@ void VibratoEffect::update(void) {
         for(int i = 0;i < AUDIO_BLOCK_SAMPLES;i++) {
             writeIndex++;
 
-            if(writeIndex >= DELAY_BUFFER_LENGHT) {
+            if(writeIndex >= VIBRATO_BUFFER_LENGHT) {
             writeIndex = 0;
             }
 
             sampleQueue[writeIndex] = *inputSamplePtr;
 
             lfoOffset = signed_saturate_rshift(depth * (*lfoSamplePtr), 16, 15);
-            Serial.print(lfoOffset);
-            Serial.printf("\n");
             readIndex = writeIndex - (baseDelay - lfoOffset);
 
-            if(readIndex < 0) { readIndex += DELAY_BUFFER_LENGHT; }
+            if(readIndex < 0) { readIndex += VIBRATO_BUFFER_LENGHT; }
 
             *inputSamplePtr = sampleQueue[readIndex];
-            *inputSamplePtr++;
-            *lfoSamplePtr++;
+            inputSamplePtr++;
+            lfoSamplePtr++;
         }
     } else {
         //store in queue
@@ -41,7 +39,7 @@ void VibratoEffect::update(void) {
         for(int i = 0;i < AUDIO_BLOCK_SAMPLES;i++) {
             writeIndex++;
 
-            if(writeIndex >= DELAY_BUFFER_LENGHT) {
+            if(writeIndex >= VIBRATO_BUFFER_LENGHT) {
             writeIndex = 0;
             }
 
