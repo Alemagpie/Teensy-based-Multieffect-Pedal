@@ -1,29 +1,51 @@
 #include "vibrato_effect.h"
 
 void VibratoEffect::update(void) {
-    audio_block_t *block;
-    uint32_t *start, *end;
-    uint32_t d1, d2;
+    audio_block_t *block, *lfo_block;
+    int16_t lfoOffset, readIndex;
 
     block = receiveWritable();
+    lfo_block = lfo.getReadOnly();
 
     if(!block) {
         return;
     }
 
     if(enabled) {
-        //magic vibrato stuff here
-    } else {
-        //store in queue
-        samplePtr = block->data;
-        for(int i = 0;i < AUDIO_BLOCK_SAMPLES;i++) {
-            index++;
+        inputSamplePtr = block->data;
+        lfoSamplePtr = lfo_block->data;
 
-            if(index >= DELAY_LENGHT) {
-            index = 0;
+        for(int i = 0;i < AUDIO_BLOCK_SAMPLES;i++) {
+            writeIndex++;
+
+            if(writeIndex >= DELAY_BUFFER_LENGHT) {
+            writeIndex = 0;
             }
 
-            sampleQueue[index] = *samplePtr++;
+            sampleQueue[writeIndex] = *inputSamplePtr;
+
+            lfoOffset = signed_saturate_rshift(depth * (*lfoSamplePtr), 16, 15);
+            Serial.print(lfoOffset);
+            Serial.printf("\n");
+            readIndex = writeIndex - (baseDelay - lfoOffset);
+
+            if(readIndex < 0) { readIndex += DELAY_BUFFER_LENGHT; }
+
+            *inputSamplePtr = sampleQueue[readIndex];
+            *inputSamplePtr++;
+            *lfoSamplePtr++;
+        }
+    } else {
+        //store in queue
+        inputSamplePtr = block->data;
+        for(int i = 0;i < AUDIO_BLOCK_SAMPLES;i++) {
+            writeIndex++;
+
+            if(writeIndex >= DELAY_BUFFER_LENGHT) {
+            writeIndex = 0;
+            }
+
+            sampleQueue[writeIndex] = *inputSamplePtr++;
         }
     }
 
@@ -31,23 +53,24 @@ void VibratoEffect::update(void) {
     release(block);
 }
 
-void VibratoEffect::setParamLevel(int index, uint16_t level) {
-    if(index < 0 || index > parameterCount - 1) {
+void VibratoEffect::setParamLevel(int writeIndex, uint16_t level) {
+    if(writeIndex < 0 || writeIndex > parameterCount - 1) {
         return;
     }
 
     //update parameters levels
-    levels[index] = level;
+    levels[writeIndex] = level;
 
-    int16_t value = (int16_t) Utility::calculateParamValue(ranges[index], (float)level/65536.0f );
+    float value = Utility::calculateParamValue(ranges[writeIndex], (float)level/65536.0f );
 
-    switch(index) {
+    switch(writeIndex) {
         case 0:
-
+            freq = value;
+            lfo.setFrequency(freq);
         break;
 
         case 1:
-
+            depth = (uint16_t) value;
         break;
 
         case 2: 

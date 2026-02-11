@@ -21,11 +21,14 @@ class EffectAdapter {
     }
     virtual AudioStream* getAudioStreamComponent() = 0;
 
+    const char* getEffectName() { return effectName; }
+    std::vector<const char*>* getParamNames() { return &paramName; }
+
     protected:
     std::vector<CustomRange> ranges;
     std::vector<uint16_t> levels = {0, 0, 0, 0};
-    std::string effectName;
-    std::vector<std::string> paramName;
+    const char* effectName;
+    std::vector<const char*> paramName;
     bool enabled = false;
 
     static const int parameterCount = 4;

@@ -30,7 +30,7 @@ class TremoloEffect : public AudioStream, public EffectAdapter {
     AudioStream* getAudioStreamComponent() override {return this;}
 
     private:
-    int frequency;
+    float frequency;
     float shape;
     int16_t depth;
     LFO lfo;
