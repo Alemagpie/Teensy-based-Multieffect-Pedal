@@ -4,7 +4,7 @@
 
 void ChorusEffect::update(void) {
     audio_block_t *block;
-    int16_t lfoOffset, voicesOffset, readIndex;
+    int16_t lfoOffset, readIndex;
     int32_t voicesSum;
 
     block = receiveWritable();
@@ -17,9 +17,8 @@ void ChorusEffect::update(void) {
         return;
     }
 
-    if(enabled && voices > 1) {
+    if(enabled) {
         inputSamplePtr = block->data;
-        voicesOffset = baseDelay / voices;
 
         for(int i = 0;i < AUDIO_BLOCK_SAMPLES;i++) {
             writeIndex++;
@@ -29,26 +28,26 @@ void ChorusEffect::update(void) {
             }
 
             sampleQueue[writeIndex] = *inputSamplePtr;
+            voicesSum = 0;
 
             //for each voice find the detuned sample
             for(int j = 0; j < voices; j++) {
-                lfoOffset = signed_saturate_rshift(
-                (int32_t)depth * (*lfoSamplePtrs[j]),
-                16,
-                15);
+                lfoOffset = signed_saturate_rshift((int32_t)depth * (*lfoSamplePtrs[j]), 16, 15);
 
-            int16_t delay = baseDelay + voicesOffset * j + lfoOffset;
+                int16_t delay = baseDelay - voicesOffset * j + lfoOffset;
 
-            readIndex = writeIndex - delay;
+                readIndex = writeIndex - delay;
 
-            if(readIndex < 0)
-                readIndex += CHORUS_BUFFER_LENGHT;
+                if(readIndex < 0)
+                    readIndex += CHORUS_BUFFER_LENGHT;
 
                 voicesSum += sampleQueue[readIndex];
             }
 
             //normalize sum of voices 
-            *inputSamplePtr = (*inputSamplePtr * (255 - mix) + (voicesSum / voices) * mix)>>8;
+            //*inputSamplePtr = (*inputSamplePtr + voicesSum);
+            //*inputSamplePtr = voicesSum / (MAX_CHORUS_VOICES - 1);
+            *inputSamplePtr = (*inputSamplePtr * (255 - mix) + (voicesSum / (MAX_CHORUS_VOICES - 1)) * mix)>>8;
             inputSamplePtr++;
 
             for(int k = 0; k < MAX_CHORUS_VOICES; k++) {
@@ -85,7 +84,7 @@ void ChorusEffect::setParamLevel(int writeIndex, uint16_t level) {
 
     switch(writeIndex) {
         case 0:
-            freq = value;
+            freq = value + random(-2, +2);
             for (auto &&i : lfos)
             {
                 i.setFrequency(freq);
@@ -93,15 +92,15 @@ void ChorusEffect::setParamLevel(int writeIndex, uint16_t level) {
         break;
 
         case 1:
-            depth = (uint16_t) value;
+            depth = (uint8_t) value;
         break;
 
         case 2: 
-            voices = (uint16_t) value;
+            voices = (uint8_t) value;
         break;
 
         case 3: 
-            mix = value;
+            mix = (uint8_t) value;
         break;
         
         default:

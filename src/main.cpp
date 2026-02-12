@@ -50,7 +50,8 @@ AudioConnection ie1(input, 0, *(effects[0]->getAudioStreamComponent()), 0);
 AudioConnection e1e2(*(effects[0]->getAudioStreamComponent()), 0, *(effects[1]->getAudioStreamComponent()), 0);
 AudioConnection e2e3(*(effects[1]->getAudioStreamComponent()), 0, *(effects[2]->getAudioStreamComponent()), 0);
 AudioConnection e3e4(*(effects[2]->getAudioStreamComponent()), 0, *(effects[3]->getAudioStreamComponent()), 0);
-AudioConnection e4o(*(effects[3]->getAudioStreamComponent()), 0, output, 0);
+AudioConnection e4e5(*(effects[3]->getAudioStreamComponent()), 0, *(effects[4]->getAudioStreamComponent()), 0);
+AudioConnection e5o(*(effects[4]->getAudioStreamComponent()), 0, output, 0);
 
 
 bool isModifying = false;
