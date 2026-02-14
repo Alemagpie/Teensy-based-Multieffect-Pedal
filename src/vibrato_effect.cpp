@@ -29,6 +29,7 @@ void VibratoEffect::update(void) {
 
             if(readIndex < 0) { readIndex += VIBRATO_BUFFER_LENGHT; }
 
+            lp.filter(&sampleQueue[readIndex]);
             *inputSamplePtr = sampleQueue[readIndex];
             inputSamplePtr++;
             lfoSamplePtr++;
@@ -72,11 +73,11 @@ void VibratoEffect::setParamLevel(int writeIndex, uint16_t level) {
         break;
 
         case 2: 
-        
+            lp.setCutoff(value);
         break;
-
+            
         case 3: 
-        
+            
         break;
         
         default:

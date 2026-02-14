@@ -15,12 +15,14 @@
 
 class VibratoEffect : public AudioStream, public EffectAdapter {
     public:
-    VibratoEffect() : AudioStream(1, inputQueueArray), EffectAdapter({CustomRange(1, 10), CustomRange(1 , 220), CustomRange(0, 255), CustomRange(0, 1)}) {
+    VibratoEffect() : AudioStream(1, inputQueueArray), EffectAdapter({CustomRange(1, 10), CustomRange(1 , 220), CustomRange(2000, 12000), CustomRange(0, 1)}) {
 		effectName = "Vibrato";
-        paramName = {"RT", "DPT", "---", "---"};
+        paramName = {"RT", "DPT", "TN", "---"};
 
         freq = 5;
         depth = 132;
+        
+        lp.setCutoff(7000);
 
         //setup bipolar sine LFO
         lfo.setAmplitude(1);
@@ -42,6 +44,7 @@ class VibratoEffect : public AudioStream, public EffectAdapter {
 
     bool active = false;
     LFO lfo;    //the LFO offset goes from 1 to 5 ms (roughly 44 to 220 samples)
+    LowPassFilter lp;
 
     uint16_t freq;
     uint16_t depth;

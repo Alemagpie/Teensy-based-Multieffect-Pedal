@@ -24,6 +24,8 @@
 #define EFFECT_SWITCH 29
 #define EFFECT_R 30
 
+#define DEBUG false
+
 ScreenManager sm;
 
 AudioInputI2S input;
@@ -44,9 +46,13 @@ int effectCount = 5;
 
 // Debug
 AudioSynthWaveformSine s1;
-//AudioConnection s1e1(s1, 0, *(effects[0]->getAudioStreamComponent()), 0);
 
+#if DEBUG
+AudioConnection s1e1(s1, 0, *(effects[0]->getAudioStreamComponent()), 0);
+#else 
 AudioConnection ie1(input, 0, *(effects[0]->getAudioStreamComponent()), 0);
+#endif
+
 AudioConnection e1e2(*(effects[0]->getAudioStreamComponent()), 0, *(effects[1]->getAudioStreamComponent()), 0);
 AudioConnection e2e3(*(effects[1]->getAudioStreamComponent()), 0, *(effects[2]->getAudioStreamComponent()), 0);
 AudioConnection e3e4(*(effects[2]->getAudioStreamComponent()), 0, *(effects[3]->getAudioStreamComponent()), 0);
@@ -65,6 +71,7 @@ const unsigned long updateInterval = 100;
 
 uint16_t readParameter(int index);
 void toggleModify();
+void disableModify();
 void initAudioBoard();
 void initPins();
 void onEffectChange();
@@ -93,6 +100,7 @@ void loop() {
     }
 
     onEffectChange();
+    disableModify();
   }
 
   R_EffectButton.update();
@@ -104,6 +112,7 @@ void loop() {
     }
 
     onEffectChange();
+    disableModify();
   }
 
   effectSwitchButton.update();
@@ -136,7 +145,7 @@ void initAudioBoard() {
   sgtl5000.lineOutLevel(8); 
 
   s1.amplitude(0.5);
-  s1.frequency(200);
+  s1.frequency(500);
 }
 
 void initPins() {
@@ -181,6 +190,10 @@ uint16_t readParameter(int index) {
 //allows/stops the ability to change parameters
 void toggleModify() {
   isModifying = !isModifying;
+}
+
+void disableModify() {
+  isModifying = false;
 }
 
 void onEffectChange() {
