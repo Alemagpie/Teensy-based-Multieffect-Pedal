@@ -1,16 +1,17 @@
 #ifndef SAH_MODULE
 #define SAH_MODULE
 
-#include <Arduino.h>
-#include <dspinst.h>
-#include <AudioStream.h> 
+#include "Module.h"
 
-class SampleAndHoldModule {
+class SampleAndHoldModule : Module {
     SampleAndHoldModule() { hold = 1; }
     SampleAndHoldModule(uint8_t h) { setHold(h); }
 
-    void process(int16_t &value);
+    void process(int16_t &value) override;
+
     inline void setHold(uint8_t h) { hold = h != 0 ? h : 1; }
+
+    inline void reset() override { holdSampleCount = 0; }
 
     private:
     uint8_t hold;

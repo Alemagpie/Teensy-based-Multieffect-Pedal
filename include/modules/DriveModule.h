@@ -1,11 +1,9 @@
-#ifndef OD_MODULE
-#define OD_MODULE
+#ifndef DRIVE_MODULE
+#define DRIVE_MODULE
 
-#include <Arduino.h>
-#include <AudioStream.h> 
-#include "Utility.h"
+#include "Module.h"
 
-class DriveModule {
+class DriveModule : Module {
     DriveModule() { gain = bias = 0; }
 
     DriveModule(int16_t g, int16_t b) {
@@ -13,9 +11,11 @@ class DriveModule {
         bias = b;
     }
 
-    inline void process(int16_t &value) {
+    inline void process(int16_t &value) override {
         value = Utility::fastTanh(saturate16( (int32_t)gain * value + bias ));
     }
+
+    inline void reset() override { gain = bias = 0; }
 
     inline void setGain(int16_t value) { gain = value; }
     inline void setBias(int16_t value) { bias = value; }

@@ -1,18 +1,18 @@
-#include <Arduino.h>
-#include <dspinst.h>
-#include <AudioStream.h> 
+#include "Module.h"
 
-class QuantizerModule {
+class QuantizerModule : Module {
     public:
-        QuantizerModule() { bitResolution = 14; intervalLenght = 1; }
+        QuantizerModule() { setResolution(14); }
         QuantizerModule(uint8_t b) { setResolution(b); }
+
+        void process(int16_t &value) override;
 
         inline void setResolution(uint8_t r) { 
             bitResolution = r; 
             intervalLenght = 1 << (15 - bitResolution);
         }
-        
-        void process(int16_t &value);
+
+        inline void reset() override { setResolution(14); }
 
     private:
         uint8_t bitResolution;

@@ -41,7 +41,7 @@ void VibratoEffect::update(void) {
             writeIndex++;
 
             if(writeIndex >= VIBRATO_BUFFER_LENGHT) {
-            writeIndex = 0;
+                writeIndex = 0;
             }
 
             sampleQueue[writeIndex] = *inputSamplePtr++;
