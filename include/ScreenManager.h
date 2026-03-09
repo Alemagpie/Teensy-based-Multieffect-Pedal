@@ -35,7 +35,7 @@ uint8_t paramNameSize = 21;
 class ScreenManager {
     public:
         void start() {
-            Wire.begin();          // Uses SDA=18, SCL=19 on Teensy 4.1
+            Wire.begin();          //SDA=18, SCL=19 on Teensy 4.1
             u8g2.begin();
 
             u8g2.clearBuffer();
@@ -49,7 +49,7 @@ class ScreenManager {
         void setEffectNumber(uint8_t index) {
             char c[2];
             c[0] = '0' + index;
-            c[1] = '\0';  //a null-terminated string is needed
+            c[1] = '\0';  //null-terminated string
             u8g2.setFont(u8g2_font_profont15_mr);
             u8g2.drawStr(effectNumber_padding_x, effectNumber_padding_y, c);
             u8g2.setFont(u8g2_font_profont12_mr);

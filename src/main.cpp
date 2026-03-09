@@ -20,11 +20,13 @@
 #define PARAM4_PIN A17
 #define MODIFY_B_PIN 33 
 #define MODIFY_L_PIN 34  
-#define EFFECT_L 28
+#define EFFECT_L 30
 #define EFFECT_SWITCH 29
-#define EFFECT_R 30
+#define EFFECT_R 28
+#define MODE1_PIN 25
+#define MODE2_PIN 26
 
-#define DEBUG false
+#define DEBUG true
 
 ScreenManager sm;
 
@@ -76,12 +78,35 @@ void initAudioBoard();
 void initPins();
 void onEffectChange();
 
+void testPerformance() {
+  currentEffect = 0;
+  for(int i = 0; i < 5; i++) {
+    effects[currentEffect] -> toggleEnable();
+    delay(1000);
+    Serial.println(effects[currentEffect]->getEffectName());
+    Serial.print("CPU usage: ");
+    Serial.print(AudioProcessorUsage());
+    Serial.print("%, max: ");
+    Serial.println(AudioProcessorUsageMax());
+    Serial.print("RAM usage: ");
+    Serial.print(AudioMemoryUsage());
+    Serial.print("%, max: ");
+    Serial.println(AudioMemoryUsageMax());
+    AudioProcessorUsageMaxReset();
+    AudioMemoryUsageMaxReset();
+    effects[currentEffect] -> toggleEnable();
+    currentEffect++;
+  }
+}
+
 void setup() {
   initAudioBoard();
   initPins();
   sm.start();
   delay(1000);
   onEffectChange();
+  //delay(10000);
+  //testPerformance();
 }
 
 void loop() {
@@ -138,7 +163,7 @@ void loop() {
 }
 
 void initAudioBoard() {
-  AudioMemory(12);
+  AudioMemory(20);
   sgtl5000.enable();
   sgtl5000.volume(0.8);      
   sgtl5000.lineInLevel(8);
@@ -204,3 +229,35 @@ void onEffectChange() {
       isOn
     );
 }
+
+/*
+#include <Wire.h>
+
+void setup() {
+  Serial.begin(115200);
+  while (!Serial);
+  Wire.begin();
+  delay(1000);
+  Serial.println("I2C scan starting");
+}
+
+void loop() {
+  byte error, address;
+  int count = 0;
+  for(address = 1; address < 127; address++) {
+    Wire.beginTransmission(address);
+    error = Wire.endTransmission();
+
+    if(error == 0) {
+      Serial.print("Device found at 0x");
+      if(address < 16) Serial.print("0");
+      Serial.println(address, HEX);
+      count++;
+    }
+  }
+
+  if(count == 0) Serial.println("No I2C devices found");
+  Serial.println("Scan complete");
+  delay(5000);
+}
+*/

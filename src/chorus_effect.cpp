@@ -45,8 +45,6 @@ void ChorusEffect::update(void) {
             }
 
             //normalize sum of voices 
-            //*inputSamplePtr = (*inputSamplePtr + voicesSum);
-            //*inputSamplePtr = voicesSum / (MAX_CHORUS_VOICES - 1);
             *inputSamplePtr = (*inputSamplePtr * (255 - mix) + (voicesSum / (MAX_CHORUS_VOICES - 1)) * mix)>>8;
             inputSamplePtr++;
 

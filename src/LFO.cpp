@@ -33,7 +33,9 @@ audio_block_t* LFO::getReadOnly() {
         }
 
         if(modeSelect == UNIPOLAR) {
-            sample = (sample + 32768) >> 1;
+            sample = 32767 - signed_saturate_rshift(depth * (int32_t)(sample + 32768), 16, 16);
+        } else {
+            sample = 32767 - signed_saturate_rshift(depth * sample, 16, 15);
         }
 
         waveBlock->data[i] = sample;
@@ -74,6 +76,10 @@ void LFO::setShape(short s) {
 
 void LFO::setMode(short m) {
     modeSelect = m;
+}
+
+void LFO::setDepth(int16_t d) {
+    depth = d;
 }
 
 int16_t LFO::sine() {

@@ -30,6 +30,7 @@ class LFO {
     void setPhase(float angle);
     void setShape(short s);
     void setMode(short m);
+    void setDepth(int16_t d);
 
     private:
     audio_block_t block;
@@ -37,6 +38,7 @@ class LFO {
     uint16_t amplitude;
     short shapeSelect = 0;
     short modeSelect = 0;
+    int16_t depth = 32767;
     uint32_t phase;
     uint32_t phaseStep;
     int16_t ph; //ph = phase >> 17;
