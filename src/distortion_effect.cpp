@@ -2,6 +2,18 @@
 
 void DistortionEffect::update(void)
 {
+    /*
+    GainModule g_m;
+    g_m.setGain(volume);
+    DriveModule d_m;
+    d_m.setGain(gain);
+    d_m.setBias(bias);
+    HighPassFilterModule hp_m;
+    hp_m.setCutoff(10);
+    LowPassFilterModule lp_m;
+    lp_m.setCutoff(...);
+    */
+
     //each block has 128 int_16 samples, packed in 64 uint_32
     //block containing data
 	audio_block_t *block;
@@ -30,6 +42,20 @@ void DistortionEffect::update(void)
             int16_t sample2 = (word1 >> 16) & 0xFFFF;
             int16_t sample3 = (int16_t)(word2 & 0xFFFF);
             int16_t sample4 = (word2 >> 16) & 0xFFFF;
+
+            /*
+            inputSamplePtr = block->data;
+
+            for(int i = 0;i < AUDIO_BLOCK_SAMPLES;i++) {
+                int16_t sample = *inputSamplePtr;
+                d_m.process(sample);
+                g_m.process(sample);
+                hp_m.process(sample);
+                lp_m.process(sample);
+                *inputSamplePtr = sample;
+                *inputSamplePtr++;
+            }
+            */
 
             //distortion function
             processSignal(sample1);

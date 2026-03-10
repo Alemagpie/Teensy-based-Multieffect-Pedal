@@ -32,6 +32,31 @@ void BitCrusherEffect::update(void) {
             int16_t drySample2 = sample2;
             int16_t drySample3 = sample3;
             int16_t drySample4 = sample4;
+
+            /*
+            SampleAndHoldModule sh_m;
+            sh_m.setHold(holdSamples);
+            QuantizerModule q_m;
+            q_m.setResolution(bitResolution);
+            MixerModule mx_m;
+            mx_m.setGain(0, 256); ... mx_m.setGain(2, 0); ...
+            LowPassFilterModule lp_m;
+            */
+
+            /*
+            inputSamplePtr = block->data;
+
+            for(int i = 0;i < AUDIO_BLOCK_SAMPLES;i++) {
+                int16_t sample, originalSample = *inputSamplePtr;
+                sh_m.process(sample);
+                q_m.process(sample);
+                sample = mx_m.process(sample, originalSample, 0, 0);
+                lp_m.process(sample);
+
+                *inputSamplePtr = sample;
+                *inputSamplePtr++;
+            }
+            */
             
             //Downsampling
             if(downSample > 1) {

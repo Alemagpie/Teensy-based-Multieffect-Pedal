@@ -43,7 +43,7 @@ class ChorusEffect : public AudioStream, public EffectAdapter {
     uint16_t baseDelay = 150; //base distance (without LFO) in samples between read and write index
     int16_t* inputSamplePtr;
     int16_t* lfoSamplePtrs[MAX_CHORUS_VOICES];
-    int16_t voicesOffset = 30;
+    int16_t voicesOffset = 30;  //distance between each tap
 
     bool active = false;
     LFO lfos[MAX_CHORUS_VOICES];    //the LFO offset goes from 1 to 5 ms (roughly 44 to 220 samples)

@@ -11,6 +11,31 @@ void VibratoEffect::update(void) {
         return;
     }
 
+    /*
+    LFOModule lfo_m;
+    DelayLineModule dl_m;
+    LowPassFilterModule lp_m;
+
+    if(enable) {
+        inputSamplePtr = block->data;
+        lfoSamplePtr = lfo_block->data;
+        for(int i = 0;i < AUDIO_BLOCK_SAMPLES;i++) {
+            dl_m.write(*inputSamplePtr++);
+            lfoOffset = *lfoSamplePtr;
+            readOffset = baseDelay - lfoOffset;
+            *inputSamplePtr = dl_m.read(readOffset);
+            lp_m.filter(*inputSamplePtr);
+            inputSamplePtr++;
+            lfoSamplePtr++;
+        }
+    } else {
+        inputSamplePtr = block->data;
+        for(int i = 0;i < AUDIO_BLOCK_SAMPLES;i++) {
+            dl_m.write(*inputSamplePtr++);
+        }
+    }
+    */
+
     if(enabled) {
         inputSamplePtr = block->data;
         lfoSamplePtr = lfo_block->data;

@@ -4,6 +4,7 @@
 #include "Module.h"
 
 class DriveModule : Module {
+    public:
     DriveModule() { gain = bias = 0; }
 
     DriveModule(int16_t g, int16_t b) {
@@ -20,6 +21,7 @@ class DriveModule : Module {
     inline void setGain(int16_t value) { gain = value; }
     inline void setBias(int16_t value) { bias = value; }
 
+    private:
     int16_t gain;
     int16_t bias;
 };

@@ -9,6 +9,14 @@ void TremoloEffect::update(void)
     //two parts of block->data
     uint32_t d1, d2, d3, d4;
 
+    /*
+    GainModule g_m;
+    LowPassFilterModule lp_m;
+    lp_m.setCutoff(100);
+    LFOMOdule lfo_m;
+    lfo_m.set...
+    */
+
     block = receiveWritable();
     if(!block) {
         return;
@@ -35,6 +43,22 @@ void TremoloEffect::update(void)
             int16_t sample2 = (d3 >> 16) & 0xFFFF;
             int16_t sample3 = (int16_t)(d4 & 0xFFFF);
             int16_t sample4 = (d4 >> 16) & 0xFFFF;
+
+            /*
+            inputSamplePtr = block->data;
+            lfoSamplePtr = lfoBlock->data;
+
+            for(int i = 0;i < AUDIO_BLOCK_SAMPLES;i++) {
+                int16_t sample = *inputSamplePtr;
+                int16_t lfoSample = *lfoSamplePtr;
+
+                lp_m.process(lfoSample);
+                g_m.process(lfoSample, sample);
+
+                *inputSamplePtr = sample;
+                *inputSamplePtr++;
+                *lfoSamplePtr++;
+            */
 
             //filter LFO to prevent pops due to LFO discontinuity (square, saw, ramp)
             lp.filter(&sample1);

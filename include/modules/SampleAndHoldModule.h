@@ -4,6 +4,7 @@
 #include "Module.h"
 
 class SampleAndHoldModule : Module {
+    public:
     SampleAndHoldModule() { hold = 1; }
     SampleAndHoldModule(uint8_t h) { setHold(h); }
 

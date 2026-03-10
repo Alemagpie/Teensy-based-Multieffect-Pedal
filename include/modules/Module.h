@@ -6,6 +6,7 @@
 #include "Utility.h"
 
 class Module {
+    public:
     virtual inline void process(int16_t &value);
     virtual inline void reset();
 

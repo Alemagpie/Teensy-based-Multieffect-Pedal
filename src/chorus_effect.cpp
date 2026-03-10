@@ -9,6 +9,42 @@ void ChorusEffect::update(void) {
 
     block = receiveWritable();
 
+    /*
+    LFOModule[] lfo_m;
+    DelayLineModule dl_m;
+    MixerModule mx_m;
+
+    for(int k = 0; k < MAX_CHORUS_VOICES; k++) {
+        lfoSamplePtrs[k] = lfo_m[k].getReadOnly()->data;
+    }
+
+    if(enabled) {
+        for(int i = 0;i < AUDIO_BLOCK_SAMPLES;i++) {
+            dl_m.write(*inputSamplePtr++);
+            voicesSum = 0;
+
+            for(int j = 0; j < voices; j++) {
+                lfoOffset = *lfoSamplePtrs[j];
+                int delay = baseDelay - voicesOffset * j + lfoOffset;
+                voicesSum += dl_m.read(delay);
+            }
+                
+            *inputSamplePtr = mx_m.process(*inputSamplePtr++, (voicesSum / (MAX_CHORUS_VOICES - 1)), 0, 0);
+            inputSamplePtr++;
+
+            for(int k = 0; k < MAX_CHORUS_VOICES; k++) {
+                lfoSamplePtrs[k]++;
+            }
+        }
+
+    } else {
+        inputSamplePtr = block->data;
+        for(int i = 0;i < AUDIO_BLOCK_SAMPLES;i++) {
+            dl_m.write(*inputSamplePtr++);
+        }
+    }
+    */
+
     for(int k = 0; k < MAX_CHORUS_VOICES; k++) {
         lfoSamplePtrs[k] = lfos[k].getReadOnly()->data;
     }
