@@ -25,12 +25,12 @@ class EffectAdapter {
     std::vector<const char*>* getParamNames() { return &paramName; }
 
     protected:
+    uint8_t ID;
     std::vector<CustomRange> ranges;
     std::vector<uint16_t> levels = {0, 0, 0, 0};
     const char* effectName;
     std::vector<const char*> paramName;
     bool enabled = false;
-
     static const int parameterCount = 4;
 };
 

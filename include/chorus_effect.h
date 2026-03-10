@@ -14,6 +14,8 @@
 class ChorusEffect : public AudioStream, public EffectAdapter {
     public:
     ChorusEffect(void) : AudioStream(1, inputQueueArray), EffectAdapter({CustomRange(1, 5), CustomRange(1, 30), CustomRange(1, 5), CustomRange(0, 255)}) {
+        ID = 4;
+        
         effectName = "Chorus";
         paramName = {"RT", "DPT", "VOC", "MIX"};
 

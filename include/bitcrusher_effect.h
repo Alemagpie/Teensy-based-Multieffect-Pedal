@@ -13,6 +13,8 @@
 class BitCrusherEffect : public AudioStream, public EffectAdapter{
     public:
     BitCrusherEffect(void) : AudioStream(1, inputQueueArray), EffectAdapter({CustomRange(3, 14), CustomRange(1, 32), CustomRange(0, 255), CustomRange(1000, 12000)}) {
+        ID = 2;
+        
         bitRes = 8;
         quant.setResolution(bitRes);
         lp.setCutoff(8000);

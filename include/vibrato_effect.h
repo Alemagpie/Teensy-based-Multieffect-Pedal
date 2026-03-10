@@ -16,7 +16,9 @@
 class VibratoEffect : public AudioStream, public EffectAdapter {
     public:
     VibratoEffect() : AudioStream(1, inputQueueArray), EffectAdapter({CustomRange(1, 10), CustomRange(1 , 220), CustomRange(2000, 12000), CustomRange(0, 1)}) {
-		effectName = "Vibrato";
+		ID = 3;
+        
+        effectName = "Vibrato";
         paramName = {"RT", "DPT", "TN", "---"};
 
         freq = 5;

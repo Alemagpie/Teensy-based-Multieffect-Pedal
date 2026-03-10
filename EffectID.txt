@@ -1,0 +1,5 @@
+0 - Soft-clip distortion
+1 - Tremolo
+2 - Bitcrusher
+3 - Vibrato
+4 - Chorus

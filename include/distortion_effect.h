@@ -13,6 +13,8 @@ class DistortionEffect : public AudioStream, public EffectAdapter
 {
     public:
     DistortionEffect(void) : AudioStream(1, inputQueueArray), EffectAdapter({CustomRange(3, 12), CustomRange(0, 16380), CustomRange(1000, 8000), CustomRange(0, 32767)}) {
+        ID = 0;
+
         volume = 16384;
         gain = 7;
         bias = 0;
