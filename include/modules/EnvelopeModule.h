@@ -13,6 +13,9 @@ class EnvelopeModule : Module {
         release = r;
     }
 
+    void setAttack(uint16_t a) { attack = a; }
+    void setRelease(uint16_t r) { release = r; }
+
     int16_t getEnvelope(int16_t &value) {
         lp_m.process(value);
         int16_t pwr = signed_saturate_rshift(value * value, 16, 15);

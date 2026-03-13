@@ -30,6 +30,7 @@ class EffectAdapter {
     std::vector<uint16_t> levels = {0, 0, 0, 0};
     const char* effectName;
     std::vector<const char*> paramName;
+    std::vector<bool> isParamLog = {0, 0, 0, 0};
     bool enabled = false;
     static const int parameterCount = 4;
 };

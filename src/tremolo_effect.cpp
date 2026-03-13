@@ -102,7 +102,7 @@ void TremoloEffect::setParamLevel(int index, uint16_t level) {
     //update parameters levels
     levels[index] = level;
 
-    float value = Utility::calculateParamValue(ranges[index], (float) level / 65536.0f);
+    float value = Utility::calculateParamValueLin(ranges[index], (float) level / 65536.0f);
 
     switch(index) {
         case 0:

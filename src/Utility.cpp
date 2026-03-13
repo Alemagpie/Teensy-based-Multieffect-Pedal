@@ -38,3 +38,19 @@ int16_t Utility::fastSin(int16_t x)
 
   return (int16_t)(sinLUT[index_int] + interp);
 }
+
+int16_t Utility::fastExp(int16_t x) {
+  uint32_t idx = ((uint32_t)(uint16_t)x * (EXP_ENTRIES - 1));
+
+  uint16_t index_int  = idx >> 15;
+  uint16_t index_frac = idx & 0x7FFF;
+
+  if (index_int >= EXP_ENTRIES - 1) {
+    index_int = EXP_ENTRIES - 2;
+  }
+
+  int32_t delta = (int32_t)expLUT[index_int + 1] - (int32_t)expLUT[index_int];
+  int32_t interp = (delta * index_frac) >> 15;
+
+  return (int16_t)(expLUT[index_int] + interp);
+}

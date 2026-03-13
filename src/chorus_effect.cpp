@@ -114,7 +114,7 @@ void ChorusEffect::setParamLevel(int writeIndex, uint16_t level) {
     //update parameters levels
     levels[writeIndex] = level;
 
-    float value = Utility::calculateParamValue(ranges[writeIndex], (float)level/65536.0f );
+    float value = Utility::calculateParamValueLin(ranges[writeIndex], (float)level/65536.0f );
 
     switch(writeIndex) {
         case 0:
