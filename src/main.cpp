@@ -26,7 +26,7 @@
 #define MODE1_PIN 25
 #define MODE2_PIN 26
 
-#define DEBUG true
+#define DEBUG false
 
 ScreenManager sm;
 

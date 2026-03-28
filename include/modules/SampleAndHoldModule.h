@@ -5,20 +5,20 @@
 
 class SampleAndHoldModule : Module {
     public:
-    SampleAndHoldModule() { hold = 1; }
+    SampleAndHoldModule() { setHold(1); }
     SampleAndHoldModule(uint8_t h) { setHold(h); }
 
     void process(int16_t &value) override;
 
-    inline void setHold(uint8_t h) { hold = h != 0 ? h : 1; }
+    inline void setHold(uint8_t h) { holdSampleCount = (h != 0) ? h : 1;  hold = holdSampleCount;}
 
-    inline void reset() override { holdSampleCount = 0; }
+    inline void reset() override { setHold(1); }
 
     private:
     uint8_t hold;
     uint8_t holdSampleCount;
     uint8_t remainingSamples;
-    int16_t holdSample = 0;
+    int16_t holdSample = 0; 
 };
 
 #endif
