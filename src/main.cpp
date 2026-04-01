@@ -20,13 +20,13 @@
 #define PARAM4_PIN A17
 #define MODIFY_B_PIN 33 
 #define MODIFY_L_PIN 34  
-#define EFFECT_L 30
+#define EFFECT_L 28
 #define EFFECT_SWITCH 29
-#define EFFECT_R 28
+#define EFFECT_R 30
 #define MODE1_PIN 25
 #define MODE2_PIN 26
 
-#define DEBUG false
+#define DEBUG true
 
 ScreenManager sm;
 
@@ -64,9 +64,9 @@ AudioConnection e5o(*(effects[4]->getAudioStreamComponent()), 0, output, 0);
 
 bool isModifying = false;
 Bounce modifyButton = Bounce(MODIFY_B_PIN, 15);
-Bounce L_EffectButton = Bounce(EFFECT_L, 15);
-Bounce R_EffectButton = Bounce(EFFECT_R, 15);
-Bounce effectSwitchButton = Bounce(EFFECT_SWITCH, 15);
+Bounce L_EffectButton = Bounce(EFFECT_L, 30);
+Bounce R_EffectButton = Bounce(EFFECT_R, 30);
+Bounce effectSwitchButton = Bounce(EFFECT_SWITCH, 30);
 
 unsigned long lastUpdate = 0;
 const unsigned long updateInterval = 100;
