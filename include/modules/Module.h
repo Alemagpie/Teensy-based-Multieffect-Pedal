@@ -7,8 +7,8 @@
 
 class Module {
     public:
-    virtual inline void process(int16_t &value);
-    virtual inline void reset();
+    virtual inline void process(int16_t &value) {};
+    virtual inline void reset() {};
 
     protected:
     bool active = true;

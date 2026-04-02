@@ -2,24 +2,7 @@
 
 void DistortionEffect::update(void)
 {
-    /*
-    GainModule g_m;
-    g_m.setGain(volume);
-    DriveModule d_m;
-    d_m.setGain(gain);
-    d_m.setBias(bias);
-    HighPassFilterModule hp_m;
-    hp_m.setCutoff(10);
-    LowPassFilterModule lp_m;
-    lp_m.setCutoff(...);
-    */
-
-    //each block has 128 int_16 samples, packed in 64 uint_32
-    //block containing data
 	audio_block_t *block;
-    uint32_t *start, *end;
-    //two parts of block->data
-    uint32_t d1, d2;
 
     block = receiveWritable();
 
@@ -28,59 +11,16 @@ void DistortionEffect::update(void)
     }
 
     if(enabled) {
-        start = (uint32_t *)(block->data);
-        end = start + AUDIO_BLOCK_SAMPLES/2;
+        inputSamplePtr = block->data;
 
-        while(start < end) {
-            d1 = *start;
-            d2 = *(start+1);
-
-            //unpack two uint32 into four int_16 samples
-            uint32_t word1 = d1;
-            uint32_t word2 = d2;
-            int16_t sample1 = (int16_t)(word1 & 0xFFFF);
-            int16_t sample2 = (word1 >> 16) & 0xFFFF;
-            int16_t sample3 = (int16_t)(word2 & 0xFFFF);
-            int16_t sample4 = (word2 >> 16) & 0xFFFF;
-
-            /*
-            inputSamplePtr = block->data;
-
-            for(int i = 0;i < AUDIO_BLOCK_SAMPLES;i++) {
-                int16_t sample = *inputSamplePtr;
-                d_m.process(sample);
-                g_m.process(sample);
-                hp_m.process(sample);
-                lp_m.process(sample);
-                *inputSamplePtr = sample;
-                *inputSamplePtr++;
-            }
-            */
-
-            //distortion function
-            processSignal(sample1);
-            processSignal(sample2);
-            processSignal(sample3);
-            processSignal(sample4);
-            
-            //block dc bias
-            hpF.filter(&sample1);
-            hpF.filter(&sample2);
-            hpF.filter(&sample3);
-            hpF.filter(&sample4);
-            
-            //shape tone
-            lpF.filter(&sample1);
-            lpF.filter(&sample2);
-            lpF.filter(&sample3);
-            lpF.filter(&sample4);
-
-            //repack four int_16 processed samples into two uint32
-            d1 = pack_16b_16b(sample1, sample2);
-            d1 = pack_16b_16b(sample3, sample4);
-
-            *start++ = d1; 
-            *start++ = d2;
+        for(int i = 0;i < AUDIO_BLOCK_SAMPLES;i++) {
+            int16_t sample = *inputSamplePtr;
+            d_m.process(sample);
+            g_m.process(sample);
+            hp_m.process(sample);
+            lp_m.process(sample);
+            *inputSamplePtr = sample;
+            *inputSamplePtr++;
         }
     }
     
@@ -114,20 +54,22 @@ void DistortionEffect::setParamLevel(int index, uint16_t level) {
         case 0:
         //change gain
         gain = value;
+        d_m.setGain(gain);
         break;
 
         case 1:
         //change curve
         bias = value;
+        d_m.setBias(bias);
         break;
 
-        //don't do anything, the last two parameters are inactive
         case 2: 
-        lpF.setCutoff(value);
+        lp_m.setCutoff(value);
         break;
 
         case 3: 
         volume = value;
+        g_m.setGain(volume);
         break;
         
         default:

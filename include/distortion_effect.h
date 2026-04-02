@@ -6,8 +6,11 @@
 #include "CustomRange.h"
 #include "EffectAdapter.h"
 #include "Utility.h"
-#include "HighPassFilter.h"
-#include "LowPassFilter.h"
+
+#include "modules/DriveModule.h"
+#include "modules/GainModule.h"
+#include "modules/HighPassFilterModule.h"
+#include "modules/LowPassFilterModule.h"
 
 class DistortionEffect : public AudioStream, public EffectAdapter
 {
@@ -18,9 +21,11 @@ class DistortionEffect : public AudioStream, public EffectAdapter
         volume = 16384;
         gain = 7;
         bias = 0;
-        lpF.setCutoff(5250);
-
-        hpF.setCutoff(10); //permanent
+        d_m.setGain(gain);
+        d_m.setBias(bias);
+        g_m.setGain(volume);
+        hp_m.setCutoff(10);
+        lp_m.setCutoff(5250);
 
         effectName = "Distortion";
         paramName = {"GN ", "BS ", "TRB", "VOL"};
@@ -30,14 +35,18 @@ class DistortionEffect : public AudioStream, public EffectAdapter
     AudioStream* getAudioStreamComponent() override {return this;}
 
     private:
-    HighPassFilter hpF;
-    LowPassFilter lpF;
+
+    DriveModule d_m;
+    GainModule g_m;
+    HighPassFilterModule hp_m;
+    LowPassFilterModule lp_m;
 
     int16_t volume;
     int16_t gain;
     int16_t bias;
 
     audio_block_t *inputQueueArray[1];
+    int16_t *inputSamplePtr;
 
     virtual void update(void);
     void processSignal(int16_t &value);

@@ -8,6 +8,10 @@
 #include "LFO.h"
 #include "LowPassFilter.h"
 
+#include "modules/GainModule.h"
+#include "modules/LowPassFilterModule.h"
+#include "modules/LFOModule.h"
+
 class TremoloEffect : public AudioStream, public EffectAdapter {
     public:
     TremoloEffect(void) : AudioStream(1, inputQueueArray), EffectAdapter({CustomRange(0, 20), CustomRange(0, 5), CustomRange(0, 1), CustomRange()}) {
@@ -15,14 +19,14 @@ class TremoloEffect : public AudioStream, public EffectAdapter {
         
         depth = 32767;
         
-        lfo.setAmplitude(1.0);
-        lfo.setFrequency(8);
-        lfo.setShape(3);
+        lfo_m.setAmplitude(1.0);
+        lfo_m.setFrequency(8);
+        lfo_m.setShape(3);
 
         //Mode set to unipolar (permanent)
-        lfo.setMode(1);
+        lfo_m.setMode(1);
 
-        lp.setCutoff(100);  //permanent
+        lp_m.setCutoff(100);  //permanent
 
         effectName = "Tremolo";
         paramName = {"FRQ", "SHP", "DPT", "---"}; 
@@ -35,11 +39,15 @@ class TremoloEffect : public AudioStream, public EffectAdapter {
     float frequency;
     float shape;
     int16_t depth;
-    LFO lfo;
-    LowPassFilter lp;
+
+    LFOModule lfo_m;
+    GainModule g_m;
+    LowPassFilterModule lp_m;
 
     audio_block_t *inputQueueArray[1];
+    int16_t *inputSamplePtr;
+    int16_t *lfoSamplePtr;
     virtual void update(void);
-};
+}; 
 
 #endif
