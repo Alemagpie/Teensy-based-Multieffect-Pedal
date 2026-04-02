@@ -2,7 +2,7 @@
 
 void VibratoEffect::update(void) {
     audio_block_t *block, *lfo_block;
-    int16_t lfoOffset, readIndex;
+    int32_t lfoOffset, readIndex;
 
     block = receiveWritable();
     lfo_block = lfo.getReadOnly();
@@ -50,12 +50,15 @@ void VibratoEffect::update(void) {
             sampleQueue[writeIndex] = *inputSamplePtr;
 
             lfoOffset = signed_saturate_rshift(depth * (*lfoSamplePtr), 16, 15);
+            
+                Serial.println(lfoOffset);
             readIndex = writeIndex - (baseDelay - lfoOffset);
 
-            if(readIndex < 0) { readIndex += VIBRATO_BUFFER_LENGHT; }
+            while(readIndex < 0) { readIndex += VIBRATO_BUFFER_LENGHT; }
 
-            lp.filter(&sampleQueue[readIndex]);
-            *inputSamplePtr = sampleQueue[readIndex];
+            int16_t output = sampleQueue[readIndex];
+            lp.filter(&output);
+            *inputSamplePtr = output;
             inputSamplePtr++;
             lfoSamplePtr++;
         }

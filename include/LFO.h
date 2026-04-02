@@ -41,7 +41,7 @@ class LFO {
     int16_t depth = 32767;
     uint32_t phase;
     uint32_t phaseStep;
-    int16_t ph; //ph = phase >> 17;
+    uint16_t ph; //ph = phase >> 17;
     
     int16_t sine();
     int16_t square();

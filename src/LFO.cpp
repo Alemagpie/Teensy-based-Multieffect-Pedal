@@ -33,9 +33,10 @@ audio_block_t* LFO::getReadOnly() {
         }
 
         if(modeSelect == UNIPOLAR) {
-            sample = 32767 - signed_saturate_rshift(depth * (int32_t)(sample + 32768), 16, 16);
+            sample = ((int32_t)(sample + 32767)>>1);
+            //sample = 32767 - signed_saturate_rshift(depth * (int32_t)(sample + 32768), 16, 16);
         } else {
-            sample = 32767 - signed_saturate_rshift(depth * sample, 16, 15);
+            //sample = 32767 - signed_saturate_rshift(depth * sample, 16, 15);
         }
 
         waveBlock->data[i] = sample;
@@ -83,7 +84,8 @@ void LFO::setDepth(int16_t d) {
 }
 
 int16_t LFO::sine() {
-    return Utility::fastSin(ph);
+    //return Utility::fastSin(ph);
+    return  (int16_t)(sin((float)ph / 32767.0f * TWO_PI) * 32767.0f);
 }
 
 int16_t LFO::square() {

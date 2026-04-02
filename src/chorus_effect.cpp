@@ -4,7 +4,7 @@
 
 void ChorusEffect::update(void) {
     audio_block_t *block;
-    int16_t lfoOffset, readIndex;
+    int32_t lfoOffset, readIndex;
     int32_t voicesSum;
 
     block = receiveWritable();
