@@ -11,9 +11,9 @@ void DelayLineModule::write(int16_t &value) {
 }
 
 int16_t DelayLineModule::read(uint16_t offset) {
-    int16_t readIndex = writeIndex - offset;
+    int32_t readIndex = writeIndex - offset;
 
-    if(readIndex < 0) { readIndex += DELAY_BUFFER_LENGHT; }
+    while(readIndex < 0) { readIndex += DELAY_BUFFER_LENGHT; }
 
     return sampleQueue[readIndex];
 }

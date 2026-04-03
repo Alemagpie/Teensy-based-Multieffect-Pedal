@@ -3,21 +3,27 @@
 
 #include <Arduino.h>
 #include <AudioStream.h> 
-#include "CustomRange.h"
 #include "EffectAdapter.h"
-#include "Utility.h"
-#include "HighPassFilter.h"
-#include "LowPassFilter.h"
-#include "UniformQuantizer.h"
+
+#include "modules/SampleAndHoldModule.h"
+#include "modules/QuantizerModule.h"
+#include "modules/MixerModule.h"
+#include "modules/LowPassFilterModule.h"
 
 class BitCrusherEffect : public AudioStream, public EffectAdapter{
     public:
     BitCrusherEffect(void) : AudioStream(1, inputQueueArray), EffectAdapter({CustomRange(3, 14), CustomRange(1, 32), CustomRange(0, 255), CustomRange(1000, 12000)}) {
         ID = 2;
-        
+
+        holdSample = 16;
+        sh_m.setHold(16);
         bitRes = 8;
-        quant.setResolution(bitRes);
-        lp.setCutoff(8000);
+        q_m.setResolution(bitRes);
+        mix = 128;
+        mx_m.setGain(0, 256 - mix);
+        mx_m.setGain(1, mix);
+        lp_m.setCutoff(8000);
+
         effectName = "Bitcrusher";
         paramName = {"RES", "DWS", "MIX", "LPF"};
     }
@@ -29,15 +35,20 @@ class BitCrusherEffect : public AudioStream, public EffectAdapter{
     uint8_t bitRes;
     uint8_t downSample = 1;
     uint8_t mix = 128;
-    audio_block_t *inputQueueArray[1];
-    LowPassFilter lp;
+    
 
-    UniformQuantizer quant;
+    SampleAndHoldModule sh_m;
+    QuantizerModule q_m;
+    MixerModule mx_m;
+    LowPassFilterModule lp_m;
 
     //number of samples outside a cycle to hold
     uint8_t holdSampleCount = 0;
     //sample to hold
     int16_t holdSample = 0;
+
+    audio_block_t *inputQueueArray[1];
+    int16_t *inputSamplePtr;
 
     virtual void update(void);
 };

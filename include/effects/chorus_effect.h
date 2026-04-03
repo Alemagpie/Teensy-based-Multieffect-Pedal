@@ -3,10 +3,11 @@
 
 #include <Arduino.h>
 #include <AudioStream.h> 
-#include "CustomRange.h"
 #include "EffectAdapter.h"
-#include "LFO.h"
-#include "LowPassFilter.h"
+
+#include "modules/LFOModule.h"
+#include "modules/DelayLineModule.h"
+#include "modules/MixerModule.h"
 
 #define CHORUS_BUFFER_LENGHT  (20*AUDIO_BLOCK_SAMPLES)
 #define MAX_CHORUS_VOICES 4
@@ -15,26 +16,28 @@ class ChorusEffect : public AudioStream, public EffectAdapter {
     public:
     ChorusEffect(void) : AudioStream(1, inputQueueArray), EffectAdapter({CustomRange(1, 5), CustomRange(1, 30), CustomRange(1, 5), CustomRange(0, 255)}) {
         ID = 4;
-        
-        effectName = "Chorus";
-        paramName = {"RT", "DPT", "VOC", "MIX"};
 
         freq = 2;
         depth = 10;
         voices = 2;
         mix = 128;
+        mx_m.setGain(0, 128);
+        mx_m.setGain(1, 128);
 
         //setup 4 bipolar sine LFO with differente phases
         for (int i = 0; i < MAX_CHORUS_VOICES; i++)
         {
-            lfos[i].setAmplitude(1);
-            lfos[i].setFrequency(2.5f + random(-2, +2));
-            lfos[i].setShape(0);
-            lfos[i].setMode(0);
-            lfos[i].setPhase(i * 90);
+            lfos_m[i].setAmplitude(1);
+            lfos_m[i].setFrequency(2.5f + random(-2, +2));
+            lfos_m[i].setShape(0);
+            lfos_m[i].setMode(0);
+            lfos_m[i].setPhase(i * 90);
         }
 
         memset(sampleQueue, 0, sizeof(sampleQueue));
+
+        effectName = "Chorus";
+        paramName = {"RT", "DPT", "VOC", "MIX"}; 
 	}
 
     void setParamLevel(int index, uint16_t level) override;
@@ -48,7 +51,9 @@ class ChorusEffect : public AudioStream, public EffectAdapter {
     int16_t voicesOffset = 30;  //distance between each tap
 
     bool active = false;
-    LFO lfos[MAX_CHORUS_VOICES];    //the LFO offset goes from 1 to 5 ms (roughly 44 to 220 samples)
+    LFOModule lfos_m[MAX_CHORUS_VOICES];    //the LFO offset goes from 1 to 5 ms (roughly 44 to 220 samples)
+    DelayLineModule dl_m;
+    MixerModule mx_m;
 
     float freq;
     uint8_t depth;

@@ -7,12 +7,13 @@
 #include <vector>
 #include "EffectAdapter.h"
 #include "ScreenManager.h"
+#include "SaveManager.h"
 
-#include "distortion_effect.h"
-#include "tremolo_effect.h"
-#include "bitcrusher_effect.h"
-#include "vibrato_effect.h"
-#include "chorus_effect.h"
+#include "effects/distortion_effect.h"
+#include "effects/tremolo_effect.h"
+#include "effects/bitcrusher_effect.h"
+#include "effects/vibrato_effect.h"
+#include "effects/chorus_effect.h"
 
 #define PARAM1_PIN A14
 #define PARAM2_PIN A15
@@ -28,18 +29,24 @@
 
 #define DEBUG false
 
-ScreenManager sm;
+//Managers
+ScreenManager scrMan;
+SaveManager svMan;
+Save saveIDs;
 
+//Hardware
 AudioInputI2S input;
 AudioOutputI2S output;
 AudioControlSGTL5000 sgtl5000;
 
-
+//Effects
 DistortionEffect dist;
 TremoloEffect trem;
 BitCrusherEffect bitcrush;
 VibratoEffect vib;
 ChorusEffect ch;
+
+EffectAdapter* availableEffects[] = {&dist, &trem, &bitcrush, &vib, &ch};
 
 EffectAdapter* effects[] = {&ch, &vib, &bitcrush, &dist, &trem};
 std::vector<bool> isOn = {false, false, false, false, false};
@@ -55,6 +62,7 @@ AudioConnection s1e1(s1, 0, *(effects[0]->getAudioStreamComponent()), 0);
 AudioConnection ie1(input, 0, *(effects[0]->getAudioStreamComponent()), 0);
 #endif
 
+//Connections
 AudioConnection e1e2(*(effects[0]->getAudioStreamComponent()), 0, *(effects[1]->getAudioStreamComponent()), 0);
 AudioConnection e2e3(*(effects[1]->getAudioStreamComponent()), 0, *(effects[2]->getAudioStreamComponent()), 0);
 AudioConnection e3e4(*(effects[2]->getAudioStreamComponent()), 0, *(effects[3]->getAudioStreamComponent()), 0);
@@ -68,8 +76,21 @@ Bounce L_EffectButton = Bounce(EFFECT_L, 30);
 Bounce R_EffectButton = Bounce(EFFECT_R, 30);
 Bounce effectSwitchButton = Bounce(EFFECT_SWITCH, 30);
 
+//Timing stuff
 unsigned long lastUpdate = 0;
 const unsigned long updateInterval = 100;
+const uint16_t SHORT_PRESS_TIME = 1500; //in ms
+unsigned long switchDown = 0;
+unsigned long switchUp = 0;
+bool switchPressed = false;
+
+enum State {
+  PLAY,
+  MODIFY,
+  EDIT
+};
+
+State currentState = PLAY;
 
 uint16_t readParameter(int index);
 void toggleModify();
@@ -102,11 +123,9 @@ void testPerformance() {
 void setup() {
   initAudioBoard();
   initPins();
-  sm.start();
+  scrMan.start();
   delay(1000);
   onEffectChange();
-  //delay(10000);
-  //testPerformance();
 }
 
 void loop() {
@@ -142,14 +161,29 @@ void loop() {
 
   effectSwitchButton.update();
   if(effectSwitchButton.risingEdge()) {
-    isOn[currentEffect] = effects[currentEffect] -> toggleEnable();
-    onEffectChange();
+    switchDown = millis();
+  }
+
+  if(effectSwitchButton.fallingEdge()) {
+    switchUp = millis();
+    switchPressed = true;
+  }
+
+  if(switchPressed) {
+    if(switchUp - switchDown <= SHORT_PRESS_TIME) {
+      isOn[currentEffect] = effects[currentEffect] -> toggleEnable();
+      onEffectChange();
+    } else {
+      Serial.println("EDIT MODE ON");
+    }
+
+    switchPressed = false;
   }
 
   //set modify led
-  digitalWrite(MODIFY_L_PIN, isModifying ? HIGH : LOW);
+  digitalWrite(MODIFY_L_PIN, currentState == MODIFY ? HIGH : LOW);
 
-  if(isModifying) {
+  if(currentState == MODIFY) {
     unsigned long now = millis();
     if (now - lastUpdate >= updateInterval) {
         lastUpdate = now;
@@ -214,50 +248,22 @@ uint16_t readParameter(int index) {
 
 //allows/stops the ability to change parameters
 void toggleModify() {
-  isModifying = !isModifying;
+  if(currentState != MODIFY) {
+    currentState = MODIFY;
+  } else {
+    currentState = PLAY;
+  }
 }
 
 void disableModify() {
-  isModifying = false;
+  currentState = PLAY;
 }
 
 void onEffectChange() {
-    sm.drawUI(
+    scrMan.drawUI(
       currentEffect + 1, 
       effects[currentEffect]->getEffectName(), 
       *(effects[currentEffect]->getParamNames()), 
       isOn
     );
 }
-
-/*
-#include <Wire.h>
-
-void setup() {
-  Serial.begin(115200);
-  while (!Serial);
-  Wire.begin();
-  delay(1000);
-  Serial.println("I2C scan starting");
-}
-
-void loop() {
-  byte error, address;
-  int count = 0;
-  for(address = 1; address < 127; address++) {
-    Wire.beginTransmission(address);
-    error = Wire.endTransmission();
-
-    if(error == 0) {
-      Serial.print("Device found at 0x");
-      if(address < 16) Serial.print("0");
-      Serial.println(address, HEX);
-      count++;
-    }
-  }
-
-  if(count == 0) Serial.println("No I2C devices found");
-  Serial.println("Scan complete");
-  delay(5000);
-}
-*/

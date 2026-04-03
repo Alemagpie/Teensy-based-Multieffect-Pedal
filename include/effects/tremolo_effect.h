@@ -3,10 +3,7 @@
 
 #include <Arduino.h>
 #include <AudioStream.h> 
-#include "CustomRange.h"
 #include "EffectAdapter.h"
-#include "LFO.h"
-#include "LowPassFilter.h"
 
 #include "modules/GainModule.h"
 #include "modules/LowPassFilterModule.h"
@@ -37,7 +34,7 @@ class TremoloEffect : public AudioStream, public EffectAdapter {
 
     private:
     float frequency;
-    float shape;
+    int shape;
     int16_t depth;
 
     LFOModule lfo_m;

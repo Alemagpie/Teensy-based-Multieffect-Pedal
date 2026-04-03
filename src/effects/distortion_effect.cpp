@@ -1,4 +1,4 @@
-#include "distortion_effect.h"
+#include "effects/distortion_effect.h"
 
 void DistortionEffect::update(void)
 {
@@ -20,7 +20,7 @@ void DistortionEffect::update(void)
             hp_m.process(sample);
             lp_m.process(sample);
             *inputSamplePtr = sample;
-            *inputSamplePtr++;
+            inputSamplePtr++;
         }
     }
     

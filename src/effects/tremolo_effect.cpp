@@ -1,4 +1,4 @@
-#include "tremolo_effect.h"
+#include "effects/tremolo_effect.h"
 
 void TremoloEffect::update(void)
 {
@@ -32,8 +32,8 @@ void TremoloEffect::update(void)
             g_m.process(sample);
 
             *inputSamplePtr = sample;
-            *inputSamplePtr++;
-            *lfoSamplePtr++;
+            inputSamplePtr++;
+            lfoSamplePtr++;
         }
     }
 
@@ -55,12 +55,14 @@ void TremoloEffect::setParamLevel(int index, uint16_t level) {
     switch(index) { 
         case 0:
         //change freq
-        lfo_m.setFrequency(value);
+        frequency = value;
+        lfo_m.setFrequency(frequency);
         break;
 
         case 1:
         //change shape
-        lfo_m.setShape((short) value);
+        shape = (short) value;
+        lfo_m.setShape(shape);
         break;
 
         case 2: 

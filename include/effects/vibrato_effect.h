@@ -4,12 +4,11 @@
 
 #include <Arduino.h>
 #include <AudioStream.h> 
-#include "CustomRange.h"
 #include "EffectAdapter.h"
-#include "LFO.h"
-#include "Utility.h"
-#include "HighPassFilter.h"
-#include "LowPassFilter.h"
+
+#include "modules/LFOModule.h"
+#include "modules/DelayLineModule.h"
+#include "modules/LowPassFilterModule.h"
 
 #define VIBRATO_BUFFER_LENGHT  (16*AUDIO_BLOCK_SAMPLES)
 
@@ -18,19 +17,18 @@ class VibratoEffect : public AudioStream, public EffectAdapter {
     VibratoEffect() : AudioStream(1, inputQueueArray), EffectAdapter({CustomRange(1, 10), CustomRange(1 , 220), CustomRange(2000, 12000), CustomRange(0, 1)}) {
 		ID = 3;
         
-        effectName = "Vibrato";
-        paramName = {"RT", "DPT", "TN", "---"};
-
         freq = 5;
+        //setup bipolar sine LFO
+        lfo_m.setAmplitude(1);
+        lfo_m.setFrequency(freq);
+        lfo_m.setShape(0);
+        lfo_m.setMode(0);
         depth = 132;
         
-        lp.setCutoff(7000);
+        lp_m.setCutoff(7000);
 
-        //setup bipolar sine LFO
-        lfo.setAmplitude(1);
-        lfo.setFrequency(8);
-        lfo.setShape(0);
-        lfo.setMode(0);
+        effectName = "Vibrato";
+        paramName = {"RT", "DPT", "TN", "---"};
 
         memset(sampleQueue, 0, sizeof(sampleQueue));
 	}
@@ -39,14 +37,15 @@ class VibratoEffect : public AudioStream, public EffectAdapter {
     AudioStream* getAudioStreamComponent() override {return this;}
 
     private:
-    uint16_t writeIndex = 0;
     uint16_t baseDelay = 330; //base distance (without LFO) in samples between read and write index
     int16_t* inputSamplePtr;
     int16_t* lfoSamplePtr;
 
     bool active = false;
-    LFO lfo;    //the LFO offset goes from 1 to 5 ms (roughly 44 to 220 samples)
-    LowPassFilter lp;
+
+    LFOModule lfo_m;
+    DelayLineModule dl_m;
+    LowPassFilterModule lp_m;
 
     uint16_t freq;
     uint16_t depth;
