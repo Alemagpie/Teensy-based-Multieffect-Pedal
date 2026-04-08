@@ -15,7 +15,7 @@
 class VibratoEffect : public AudioStream, public EffectAdapter {
     public:
     VibratoEffect() : AudioStream(1, inputQueueArray), EffectAdapter({CustomRange(1, 10), CustomRange(1 , 220), CustomRange(2000, 12000), CustomRange(0, 1)}) {
-		ID = 3;
+		ID = 4;
         
         freq = 5;
         //setup bipolar sine LFO

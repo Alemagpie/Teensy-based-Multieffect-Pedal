@@ -14,6 +14,7 @@
 #include "effects/bitcrusher_effect.h"
 #include "effects/vibrato_effect.h"
 #include "effects/chorus_effect.h"
+#include "effects/volume_effect.h"
 
 #define PARAM1_PIN A14
 #define PARAM2_PIN A15
@@ -45,10 +46,12 @@ TremoloEffect trem;
 BitCrusherEffect bitcrush;
 VibratoEffect vib;
 ChorusEffect ch;
+VolumeEffect vl;
 
-EffectAdapter* availableEffects[] = {&dist, &trem, &bitcrush, &vib, &ch};
+std::vector<EffectAdapter *> allEffects = {&dist, &trem, &bitcrush, &vib, &ch, &vl};
+std::vector<EffectAdapter *> availableEffects;
 
-EffectAdapter* effects[] = {&ch, &vib, &bitcrush, &dist, &trem};
+EffectAdapter* effects[5] = {&ch, &vib, &bitcrush, &dist, &trem};
 std::vector<bool> isOn = {false, false, false, false, false};
 int currentEffect = 0;
 int effectCount = 5;
@@ -98,6 +101,8 @@ void disableModify();
 void initAudioBoard();
 void initPins();
 void onEffectChange();
+void loadEffects();
+void connectEffects();
 
 void testPerformance() {
   currentEffect = 0;
@@ -205,6 +210,8 @@ void initAudioBoard() {
 
   s1.amplitude(0.5);
   s1.frequency(500);
+
+
 }
 
 void initPins() {
@@ -266,4 +273,52 @@ void onEffectChange() {
       *(effects[currentEffect]->getParamNames()), 
       isOn
     );
+}
+
+void loadEffects() {
+  __disable_irq();
+  svMan.loadSettings(saveIDs);
+
+  /*for(int i = 0; i < 5; i++) {
+    uint8_t id = saveIDs.effectIDs[i];
+    for(int j = i+1; j < 5; j++) {
+      if(saveIDs.effectIDs[j] == id) {
+        break;
+      }
+    }
+  }*/
+
+  //Populates available effects vector
+  std::copy(allEffects.begin(), (allEffects.begin() + allEffects.size()), availableEffects.begin());
+  for(int i = 0; i < 5; i++) {
+    uint8_t id = saveIDs.effectIDs[i];
+    for(int j = 0; j < availableEffects.size(); j++) {
+      if(availableEffects[j]->getEffectID() == id) {
+        availableEffects.erase(availableEffects.begin() + j);
+        break;
+      }
+    }
+  }
+
+  //Assigns effects
+  for(int i = 0; i < 5; i++) {
+    uint8_t id = saveIDs.effectIDs[i];
+    for(int j = 0; j < allEffects.size(); j++) {
+      if(allEffects[j]->getEffectID() == id) {
+        effects[i] = allEffects[j];
+        break;
+      }
+    }
+  }
+  
+}
+
+void connectEffects() {
+  ie1.connect(input, 0, *(effects[0]->getAudioStreamComponent()), 0);
+  e1e2.connect(*(effects[0]->getAudioStreamComponent()), 0, *(effects[1]->getAudioStreamComponent()), 0);
+  e2e3.connect(*(effects[1]->getAudioStreamComponent()), 0, *(effects[2]->getAudioStreamComponent()), 0);
+  e3e4.connect(*(effects[2]->getAudioStreamComponent()), 0, *(effects[3]->getAudioStreamComponent()), 0);
+  e4e5.connect(*(effects[3]->getAudioStreamComponent()), 0, *(effects[4]->getAudioStreamComponent()), 0);
+  e5o.connect(*(effects[4]->getAudioStreamComponent()), 0, output, 0);
+  __enable_irq();
 }

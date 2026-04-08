@@ -90,6 +90,12 @@ class ScreenManager {
             setParamNames(names);
             u8g2.sendBuffer();
         }
+
+        void drawSelection(const char *name) {
+            u8g2.clearBuffer();
+            
+            u8g2.sendBuffer();
+        }
 };
 
 #endif

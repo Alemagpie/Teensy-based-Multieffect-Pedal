@@ -22,6 +22,7 @@ class EffectAdapter {
     virtual AudioStream* getAudioStreamComponent() = 0;
 
     const char* getEffectName() { return effectName; }
+    const uint8_t getEffectID() { return ID; }
     std::vector<const char*>* getParamNames() { return &paramName; }
 
     protected:
