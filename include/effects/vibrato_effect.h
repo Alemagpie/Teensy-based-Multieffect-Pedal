@@ -10,8 +10,6 @@
 #include "modules/DelayLineModule.h"
 #include "modules/LowPassFilterModule.h"
 
-#define VIBRATO_BUFFER_LENGHT  (16*AUDIO_BLOCK_SAMPLES)
-
 class VibratoEffect : public AudioStream, public EffectAdapter {
     public:
     VibratoEffect() : AudioStream(1, inputQueueArray), EffectAdapter({CustomRange(1, 10), CustomRange(1 , 220), CustomRange(2000, 12000), CustomRange(0, 1)}) {
@@ -30,7 +28,6 @@ class VibratoEffect : public AudioStream, public EffectAdapter {
         effectName = "Vibrato";
         paramName = {"RT", "DPT", "TN", "---"};
 
-        memset(sampleQueue, 0, sizeof(sampleQueue));
 	}
 
     void setParamLevel(int index, uint16_t level) override;
@@ -50,7 +47,6 @@ class VibratoEffect : public AudioStream, public EffectAdapter {
     uint16_t freq;
     uint16_t depth;
 
-    int16_t sampleQueue[VIBRATO_BUFFER_LENGHT];
 	audio_block_t *inputQueueArray[1];
 
     virtual void update(void);

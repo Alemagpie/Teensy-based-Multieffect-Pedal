@@ -40,6 +40,7 @@ void VolumeEffect::setParamLevel(int index, uint16_t level) {
     switch(index) { 
         case 0:
         volume = (int16_t) value;
+        g_m.setGain(volume);
         break;
 
         case 1: case 2: case 3: default:

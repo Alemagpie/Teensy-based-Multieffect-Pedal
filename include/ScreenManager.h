@@ -31,6 +31,9 @@ uint8_t chain_padding_y = 20;
 uint8_t paramName_padding_x = 8;
 uint8_t paramName_padding_y = 60;
 uint8_t paramNameSize = 21;
+uint8_t effectSelect_padding_x = 13;
+uint8_t effectSelect_padding_y = 16;
+static char * selectText = "Change effect to:";
 
 class ScreenManager {
     public:
@@ -91,9 +94,10 @@ class ScreenManager {
             u8g2.sendBuffer();
         }
 
-        void drawSelection(const char *name) {
+        void drawSelection(const char *effectName) {
             u8g2.clearBuffer();
-            
+            u8g2.drawStr(effectSelect_padding_x, effectSelect_padding_y, selectText);
+            u8g2.drawStr(effectSelect_padding_x, 2 * effectSelect_padding_y, effectName);
             u8g2.sendBuffer();
         }
 };

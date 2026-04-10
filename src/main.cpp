@@ -15,6 +15,7 @@
 #include "effects/vibrato_effect.h"
 #include "effects/chorus_effect.h"
 #include "effects/volume_effect.h"
+#include "effects/reverse_read_effect.h"
 
 #define PARAM1_PIN A14
 #define PARAM2_PIN A15
@@ -47,11 +48,13 @@ BitCrusherEffect bitcrush;
 VibratoEffect vib;
 ChorusEffect ch;
 VolumeEffect vl;
+//ReverseReadEffect rev;
 
 std::vector<EffectAdapter *> allEffects = {&dist, &trem, &bitcrush, &vib, &ch, &vl};
-std::vector<EffectAdapter *> availableEffects;
+std::vector<EffectAdapter *> availableEffects = {&dist, &trem, &bitcrush, &vib, &ch, &vl};
+int selectedEffect = 0;
 
-EffectAdapter* effects[5] = {&ch, &vib, &bitcrush, &dist, &trem};
+EffectAdapter* effects[5] = {nullptr, nullptr, nullptr, nullptr, nullptr};
 std::vector<bool> isOn = {false, false, false, false, false};
 int currentEffect = 0;
 int effectCount = 5;
@@ -62,15 +65,15 @@ AudioSynthWaveformSine s1;
 #if DEBUG
 AudioConnection s1e1(s1, 0, *(effects[0]->getAudioStreamComponent()), 0);
 #else 
-AudioConnection ie1(input, 0, *(effects[0]->getAudioStreamComponent()), 0);
+AudioConnection* ie1 = nullptr;
 #endif
 
 //Connections
-AudioConnection e1e2(*(effects[0]->getAudioStreamComponent()), 0, *(effects[1]->getAudioStreamComponent()), 0);
-AudioConnection e2e3(*(effects[1]->getAudioStreamComponent()), 0, *(effects[2]->getAudioStreamComponent()), 0);
-AudioConnection e3e4(*(effects[2]->getAudioStreamComponent()), 0, *(effects[3]->getAudioStreamComponent()), 0);
-AudioConnection e4e5(*(effects[3]->getAudioStreamComponent()), 0, *(effects[4]->getAudioStreamComponent()), 0);
-AudioConnection e5o(*(effects[4]->getAudioStreamComponent()), 0, output, 0);
+AudioConnection* e1e2 = nullptr;
+AudioConnection* e2e3 = nullptr;
+AudioConnection* e3e4 = nullptr;
+AudioConnection* e4e5 = nullptr;
+AudioConnection* e5o = nullptr;
 
 
 bool isModifying = false;
@@ -102,7 +105,9 @@ void initAudioBoard();
 void initPins();
 void onEffectChange();
 void loadEffects();
+void saveEffects();
 void connectEffects();
+void onEditChange();
 
 void testPerformance() {
   currentEffect = 0;
@@ -126,6 +131,14 @@ void testPerformance() {
 }
 
 void setup() {
+  /*
+  //In case of effect fail, to reset all IDs stored 
+  for(int i = 0; i<5; i++) {
+    saveIDs.effectIDs[i] = i+1;
+  }
+  svMan.storeSettings(saveIDs);
+  */
+
   initAudioBoard();
   initPins();
   scrMan.start();
@@ -142,26 +155,52 @@ void loop() {
 
   L_EffectButton.update();
   if(L_EffectButton.risingEdge()) {
-    currentEffect--;
 
-    if(currentEffect < 0) {
-      currentEffect = effectCount - 1;  //last effect
+    if(currentState == PLAY) {
+      currentEffect--;
+
+      if(currentEffect < 0) {
+        currentEffect = effectCount - 1;  //last effect
+      }
+
+      onEffectChange();
+      disableModify();
+    } else if(currentState == EDIT) {
+      //previous selection effect
+      selectedEffect--;
+      
+      if(selectedEffect < 0) {
+        selectedEffect = availableEffects.size() - 1;
+      }
+
+      onEditChange();
     }
-
-    onEffectChange();
-    disableModify();
+    
   }
 
   R_EffectButton.update();
   if(R_EffectButton.risingEdge()) {
-    currentEffect++;
 
-    if(currentEffect > effectCount - 1) {
-      currentEffect = 0;  //1st effect
+    if(currentState == PLAY) {
+      currentEffect++;
+
+      if(currentEffect > effectCount - 1) {
+        currentEffect = 0;  //1st effect
+      }
+
+      onEffectChange();
+      disableModify();
+    } else if(currentState == EDIT) {
+      //next selection effect
+      selectedEffect++;
+
+      if(selectedEffect == availableEffects.size()) {
+        selectedEffect = 0;
+      }
+
+      onEditChange();
     }
-
-    onEffectChange();
-    disableModify();
+    
   }
 
   effectSwitchButton.update();
@@ -176,10 +215,28 @@ void loop() {
 
   if(switchPressed) {
     if(switchUp - switchDown <= SHORT_PRESS_TIME) {
-      isOn[currentEffect] = effects[currentEffect] -> toggleEnable();
-      onEffectChange();
+      if(currentState == PLAY) {
+        //if in play mode toggle current effect
+        isOn[currentEffect] = effects[currentEffect] -> toggleEnable();
+        onEffectChange();
+        Serial.println("Toggled effect");
+        for(int i = 0; i<5; i++) {
+          Serial.print(isOn[i]);
+          Serial.print(" ,");
+        }
+      } else if(currentState == EDIT) {
+        saveEffects();
+        Serial.println("Changed effect");
+      }
     } else {
-      Serial.println("EDIT MODE ON");
+      //Long press toglles between play and edit mode
+      if(currentState == PLAY) {
+        currentState = EDIT;
+        onEditChange();
+      } else if(currentState == EDIT) {
+        currentState = PLAY;
+        onEffectChange();
+      }
     }
 
     switchPressed = false;
@@ -211,7 +268,8 @@ void initAudioBoard() {
   s1.amplitude(0.5);
   s1.frequency(500);
 
-
+  loadEffects();
+  connectEffects();
 }
 
 void initPins() {
@@ -279,28 +337,7 @@ void loadEffects() {
   __disable_irq();
   svMan.loadSettings(saveIDs);
 
-  /*for(int i = 0; i < 5; i++) {
-    uint8_t id = saveIDs.effectIDs[i];
-    for(int j = i+1; j < 5; j++) {
-      if(saveIDs.effectIDs[j] == id) {
-        break;
-      }
-    }
-  }*/
-
-  //Populates available effects vector
-  std::copy(allEffects.begin(), (allEffects.begin() + allEffects.size()), availableEffects.begin());
-  for(int i = 0; i < 5; i++) {
-    uint8_t id = saveIDs.effectIDs[i];
-    for(int j = 0; j < availableEffects.size(); j++) {
-      if(availableEffects[j]->getEffectID() == id) {
-        availableEffects.erase(availableEffects.begin() + j);
-        break;
-      }
-    }
-  }
-
-  //Assigns effects
+  //Assign effects from saved IDs
   for(int i = 0; i < 5; i++) {
     uint8_t id = saveIDs.effectIDs[i];
     for(int j = 0; j < allEffects.size(); j++) {
@@ -310,15 +347,59 @@ void loadEffects() {
       }
     }
   }
-  
+
+  for(int j = 0; j < availableEffects.size(); j++)
+  Serial.println(availableEffects[j]->getEffectName());
+
+  //Leaves only available effects 
+  for(int i = 0; i < 5; i++) {
+    for(int j = 0; j < availableEffects.size(); j++) {
+      if(availableEffects[j] == effects[i]) {
+        availableEffects.erase(availableEffects.begin() + j);
+        break;
+      }
+    }
+  }
+
+  for(int j = 0; j < availableEffects.size(); j++)
+  Serial.println(availableEffects[j]->getEffectName());
+
+  __enable_irq();
+}
+
+void saveEffects() {
+  //if in edit mode, get new effect id, store it, reconnect effects, change back to play state and display new effect
+  saveIDs.effectIDs[currentEffect] = availableEffects[selectedEffect]->getEffectID();
+  isOn[currentEffect] = false;
+
+  svMan.storeSettings(saveIDs);
+
+  availableEffects.push_back(effects[currentEffect]);
+  effects[currentEffect] = availableEffects[selectedEffect];
+  availableEffects.erase(availableEffects.begin() + selectedEffect);
+  connectEffects();
+  currentState = PLAY;
+  selectedEffect = 0;
+  onEffectChange();
 }
 
 void connectEffects() {
-  ie1.connect(input, 0, *(effects[0]->getAudioStreamComponent()), 0);
-  e1e2.connect(*(effects[0]->getAudioStreamComponent()), 0, *(effects[1]->getAudioStreamComponent()), 0);
-  e2e3.connect(*(effects[1]->getAudioStreamComponent()), 0, *(effects[2]->getAudioStreamComponent()), 0);
-  e3e4.connect(*(effects[2]->getAudioStreamComponent()), 0, *(effects[3]->getAudioStreamComponent()), 0);
-  e4e5.connect(*(effects[3]->getAudioStreamComponent()), 0, *(effects[4]->getAudioStreamComponent()), 0);
-  e5o.connect(*(effects[4]->getAudioStreamComponent()), 0, output, 0);
+  __disable_irq();
+  delete(ie1);
+  ie1 = new AudioConnection(input, 0, *(effects[0]->getAudioStreamComponent()), 0);
+  delete(e1e2);
+  e1e2 = new AudioConnection(*(effects[0]->getAudioStreamComponent()), 0, *(effects[1]->getAudioStreamComponent()), 0);
+  delete(e2e3);
+  e2e3 = new AudioConnection(*(effects[1]->getAudioStreamComponent()), 0, *(effects[2]->getAudioStreamComponent()), 0);
+  delete(e3e4);
+  e3e4 = new AudioConnection(*(effects[2]->getAudioStreamComponent()), 0, *(effects[3]->getAudioStreamComponent()), 0);
+  delete(e4e5);
+  e4e5 = new AudioConnection(*(effects[3]->getAudioStreamComponent()), 0, *(effects[4]->getAudioStreamComponent()), 0);
+  delete(e5o);
+  e5o = new AudioConnection(*(effects[4]->getAudioStreamComponent()), 0, output, 0);
   __enable_irq();
+}
+
+void onEditChange() {
+  scrMan.drawSelection(availableEffects[selectedEffect]->getEffectName());
 }

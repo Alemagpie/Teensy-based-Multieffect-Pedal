@@ -9,7 +9,6 @@
 #include "modules/DelayLineModule.h"
 #include "modules/MixerModule.h"
 
-#define CHORUS_BUFFER_LENGHT  (20*AUDIO_BLOCK_SAMPLES)
 #define MAX_CHORUS_VOICES 4
 
 class ChorusEffect : public AudioStream, public EffectAdapter {
@@ -33,8 +32,6 @@ class ChorusEffect : public AudioStream, public EffectAdapter {
             lfos_m[i].setMode(0);
             lfos_m[i].setPhase(i * 90);
         }
-
-        memset(sampleQueue, 0, sizeof(sampleQueue));
 
         effectName = "Chorus";
         paramName = {"RT", "DPT", "VOC", "MIX"}; 
@@ -60,7 +57,6 @@ class ChorusEffect : public AudioStream, public EffectAdapter {
     uint8_t voices;
     uint8_t mix;
 
-    int16_t sampleQueue[CHORUS_BUFFER_LENGHT];
 	audio_block_t *inputQueueArray[1];
 
     virtual void update(void);

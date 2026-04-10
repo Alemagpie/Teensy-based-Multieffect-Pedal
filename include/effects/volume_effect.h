@@ -12,6 +12,9 @@ class VolumeEffect : public AudioStream, public EffectAdapter {
     VolumeEffect(void) : AudioStream(1, inputQueueArray), EffectAdapter({CustomRange(0, 32767), CustomRange(), CustomRange(), CustomRange()}) {
         ID = 6;
 
+        volume = 32767;
+        g_m.setGain(volume);
+
         effectName = "Volume";
         paramName = {"VOL", "---", "---", "---"}; 
     }
