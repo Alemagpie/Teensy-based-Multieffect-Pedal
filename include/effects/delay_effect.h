@@ -1,5 +1,5 @@
-#ifndef REV_READ_EFFECT_H
-#define REV_READ_EFFECT_H
+#ifndef DELAY_EFFECT_H
+#define DELAY_EFFECT_H
 
 #include <Arduino.h>
 #include <AudioStream.h> 
@@ -8,17 +8,15 @@
 #include "modules/DelayLineModule.h"
 #include "modules/MixerModule.h"
 
-
-class ReverseReadEffect : public AudioStream, public EffectAdapter {
-    public:
-    ReverseReadEffect() : AudioStream(1, inputQueueArray), EffectAdapter({CustomRange(0, 8), CustomRange(0, 256), CustomRange(), CustomRange()}) {
-		ID = 9999;
+class DelayEffect : public AudioStream, public EffectAdapter {
+    public: //the delay buffer isn't big enough, it should be at least 1370 * AUDIO_SAMPLE_BLOCK long
+    DelayEffect() : AudioStream(1, inputQueueArray), EffectAdapter({CustomRange(45, 176400), CustomRange(0, 256), CustomRange(), CustomRange()}) {
+		ID = 7;
         
-        reverseSamples = 1;
         mx_m.setGain(256 - mix, mix);
 
-        effectName = "Reverse Read";
-        paramName = {"REV", "MIX", "---", "---"};
+        effectName = "Delay";
+        paramName = {"TM", "REP", "MIX", "LPF"};
 
 	}
 
@@ -26,10 +24,9 @@ class ReverseReadEffect : public AudioStream, public EffectAdapter {
     AudioStream* getAudioStreamComponent() override {return this;}
 
     private:
-    uint8_t reverseSamples = 1;
     uint8_t mix = 128;
-    uint8_t reverseLeft = 1;
-    uint32_t baseDelay = 300;
+    int16_t feedback;
+    uint32_t time;
 
     bool active = false;
     DelayLineModule dl_m;

@@ -15,7 +15,6 @@
 #include "effects/vibrato_effect.h"
 #include "effects/chorus_effect.h"
 #include "effects/volume_effect.h"
-#include "effects/reverse_read_effect.h"
 
 #define PARAM1_PIN A14
 #define PARAM2_PIN A15
@@ -48,7 +47,6 @@ BitCrusherEffect bitcrush;
 VibratoEffect vib;
 ChorusEffect ch;
 VolumeEffect vl;
-//ReverseReadEffect rev;
 
 std::vector<EffectAdapter *> allEffects = {&dist, &trem, &bitcrush, &vib, &ch, &vl};
 std::vector<EffectAdapter *> availableEffects = {&dist, &trem, &bitcrush, &vib, &ch, &vl};
@@ -215,18 +213,18 @@ void loop() {
 
   if(switchPressed) {
     if(switchUp - switchDown <= SHORT_PRESS_TIME) {
-      if(currentState == PLAY) {
+      if(currentState == PLAY || currentState == MODIFY) {
         //if in play mode toggle current effect
         isOn[currentEffect] = effects[currentEffect] -> toggleEnable();
         onEffectChange();
-        Serial.println("Toggled effect");
+        /*Serial.println("Toggled effect");
         for(int i = 0; i<5; i++) {
           Serial.print(isOn[i]);
           Serial.print(" ,");
-        }
+        }*/
       } else if(currentState == EDIT) {
         saveEffects();
-        Serial.println("Changed effect");
+        //Serial.println("Changed effect");
       }
     } else {
       //Long press toglles between play and edit mode

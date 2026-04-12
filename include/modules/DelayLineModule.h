@@ -3,7 +3,7 @@
 
 #include "Module.h"
 
-#define DELAY_BUFFER_LENGHT  (16*AUDIO_BLOCK_SAMPLES)
+#define DELAY_BUFFER_LENGHT  (16*AUDIO_BLOCK_SAMPLES)   //for actual delay about 1370*AUDIO_BLOCK_SAMPLES is needed
 
 class DelayLineModule : Module {
     public:
@@ -15,7 +15,6 @@ class DelayLineModule : Module {
 
     private:
     uint16_t writeIndex = 0;
-    //uint16_t baseDelay = 330; //base distance (without LFO) in samples between read and write index
 
     int16_t sampleQueue[DELAY_BUFFER_LENGHT];
 };
