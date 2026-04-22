@@ -49,7 +49,7 @@ class ChorusEffect : public AudioStream, public EffectAdapter {
 
     bool active = false;
     LFOModule lfos_m[MAX_CHORUS_VOICES];    //the LFO offset goes from 1 to 5 ms (roughly 44 to 220 samples)
-    DelayLineModule dl_m;
+    DelayLineModule<16*AUDIO_BLOCK_SAMPLES> dl_m;
     MixerModule mx_m;
 
     float freq;

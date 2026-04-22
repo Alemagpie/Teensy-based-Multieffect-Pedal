@@ -41,7 +41,7 @@ class VibratoEffect : public AudioStream, public EffectAdapter {
     bool active = false;
 
     LFOModule lfo_m;
-    DelayLineModule dl_m;
+    DelayLineModule<16*AUDIO_BLOCK_SAMPLES> dl_m;
     LowPassFilterModule lp_m;
 
     uint16_t freq;

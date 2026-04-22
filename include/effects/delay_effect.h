@@ -17,7 +17,6 @@ class DelayEffect : public AudioStream, public EffectAdapter {
 
         effectName = "Delay";
         paramName = {"TM", "REP", "MIX", "LPF"};
-
 	}
 
     void setParamLevel(int index, uint16_t level) override;
@@ -29,7 +28,7 @@ class DelayEffect : public AudioStream, public EffectAdapter {
     uint32_t time;
 
     bool active = false;
-    DelayLineModule dl_m;
+    DelayLineModule<700*AUDIO_BLOCK_SAMPLES> dl_m;
     MixerModule mx_m;
 	audio_block_t *inputQueueArray[1];
     int16_t* inputSamplePtr;

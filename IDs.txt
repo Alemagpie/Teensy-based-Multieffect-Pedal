@@ -5,5 +5,5 @@
 5 - Chorus
 6 - Volume
 
-7 - Biquad filter
-8 - Delay
+7 - Delay
+8 - Biquad filter
