@@ -132,4 +132,3 @@ void BiquadFilterModule::process(int16_t& sample) {
 
 	sample = out;
 }
-

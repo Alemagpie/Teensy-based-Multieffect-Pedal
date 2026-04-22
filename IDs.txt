@@ -1,0 +1,9 @@
+1 - Soft-clip distortion
+2 - Tremolo
+3 - Bitcrusher
+4 - Vibrato
+5 - Chorus
+6 - Volume
+
+7 - Biquad filter
+8 - Delay
