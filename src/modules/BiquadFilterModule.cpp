@@ -72,35 +72,35 @@ void BiquadFilterModule::setCoeff(float f) {
 }
 
 void BiquadFilterModule::setHighPass(float f) {
-	b0 = (int32_t)(((1.0f + cosw0) / 2.0f) / a0 * SCALE);
-	b1 = (int32_t)(-(1.0f + cosw0) / a0 * SCALE);
+	b0 = floatToQ29Sat(((1.0f + cosw0) / 2.0f) / a0);
+	b1 = floatToQ29Sat(-(1.0f + cosw0) / a0);
 	b2 = b0;
-	a1 = (int32_t)((-2.0f * cosw0) / a0 * SCALE);
-	a2 = (int32_t)(( 1.0f - alpha) / a0 * SCALE);
+	a1 = floatToQ29Sat((-2.0f * cosw0) / a0);
+	a2 = floatToQ29Sat(( 1.0f - alpha) / a0);
 }
 
 void BiquadFilterModule::setLowPass(float f) {
-	b0 = (int32_t)(((1.0f - cosw0) / 2.0f) / a0 * SCALE);
-	b1 = (int32_t)(( 1.0f - cosw0) / a0 * SCALE);
+	b0 = floatToQ29Sat(((1.0f - cosw0) / 2.0f) / a0);
+	b1 = floatToQ29Sat(( 1.0f - cosw0) / a0);
 	b2 = b0;
-	a1 = (int32_t)((-2.0f * cosw0) / a0 * SCALE);
-	a2 = (int32_t)(( 1.0f - alpha) / a0 * SCALE);
+	a1 = floatToQ29Sat((-2.0f * cosw0) / a0);
+	a2 = floatToQ29Sat(( 1.0f - alpha) / a0);
 }
 
 void BiquadFilterModule::setNotch(float f) {
-	b0 = (int32_t)(1.0f/ a0 * SCALE);
-	b1 = (int32_t)((-2.0f * cosw0) / a0 * SCALE);
+	b0 = floatToQ29Sat(1.0f/ a0);
+	b1 = floatToQ29Sat((-2.0f * cosw0) / a0);
 	b2 = b0;
-	a1 = (int32_t)((-2.0f * cosw0) / a0 * SCALE);
-	a2 = (int32_t)(( 1.0f - alpha) / a0 * SCALE);
+	a1 = floatToQ29Sat((-2.0f * cosw0) / a0);
+	a2 = floatToQ29Sat(( 1.0f - alpha) / a0);
 }
 
 void BiquadFilterModule::setBandPass(float f) {
-	b0 = (int32_t)(( sinw0 / 2.0f) / a0 * SCALE);
+	b0 = floatToQ29Sat(( sinw0 / 2.0f) / a0);
 	b1 = 0;
-	b2 = (int32_t)((-sinw0 / 2.0f) / a0 * SCALE);
-	a1 = (int32_t)((-2.0f * cosw0) / a0 * SCALE);
-	a2 = (int32_t)(( 1.0f - alpha) / a0 * SCALE);
+	b2 = floatToQ29Sat((-sinw0 / 2.0f) / a0);
+	a1 = floatToQ29Sat((-2.0f * cosw0) / a0);
+	a2 = floatToQ29Sat(( 1.0f - alpha) / a0);
 }
 
 void BiquadFilterModule::setLowShelf(float f) {
@@ -122,8 +122,11 @@ void BiquadFilterModule::process(int16_t& sample) {
 	sum += (int64_t) b2 * prevPrevInput;
 	sum -= (int64_t) a1 * prevOutput;
 	sum -= (int64_t) a2 * prevPrevOutput;
-
-	out = signed_saturate_rshift(sum, 16, 29);
+ 
+	//out = signed_saturate_rshift(sum, 16, 29);
+	sum += (int64_t) 1 << 28;
+	int64_t shifted = sum >> 29;
+	out = saturate16(sum);		//WARNING: may not work due to the fact that saturate16 expects a 32b value, sum is 64b long
 
 	prevPrevInput = prevInput;
 	prevInput = sample;
@@ -131,4 +134,13 @@ void BiquadFilterModule::process(int16_t& sample) {
 	prevOutput = out;
 
 	sample = out;
+}
+
+static inline int32_t floatToQ29Sat(float val) {
+	float scaled = val * 536870912.0f;
+
+	//saturate32
+	if(scaled > 2147483647.0f) return 2147483647;
+	else if(scaled < -2147483648.0f) return -2147483648;
+	return (int32_t) scaled;
 }

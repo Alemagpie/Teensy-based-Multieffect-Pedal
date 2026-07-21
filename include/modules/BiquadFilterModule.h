@@ -17,17 +17,17 @@ class BiquadFilterModule : Module {
 	void setBandPass(float f);
 	void setLowShelf(float f);
 	void setHighShelf(float f);
-
+ 
 	void setMode(uint8_t m);
+	void setQ(float q) { Q = q; }
 
     void process(int16_t& sample);
-    inline void reset() override {  }
+    inline void reset() override { setQ(0.707f); }
 
     private:
 	int16_t prevPrevInput, prevInput, prevPrevOutput, prevOutput;
 	int32_t b0, b1, b2, a1, a2;
 	float w0, sinw0, cosw0, alpha, Q, S, dBGain, a0;
-	const float SCALE = 536870912.0f; 	//To go from float to Q29
 
 	enum mode {
 		LOWPASS = 0,
