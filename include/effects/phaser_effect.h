@@ -7,14 +7,35 @@
 
 #include "modules/LFOModule.h"
 #include "modules/AllPassFilterModule.h"
+#include "modules/MixerModule.h"
 
 class PhaserEffect : public AudioStream, public EffectAdapter {
     public:
-    PhaserEffect(void) : AudioStream(1, inputQueueArray), EffectAdapter({CustomRange(0, 20), CustomRange(0, 5), CustomRange(0, 1), CustomRange()}) {
-    
+    PhaserEffect(void) : AudioStream(1, inputQueueArray), EffectAdapter({CustomRange(0, 10), CustomRange(0, 1), CustomRange(0, 256), CustomRange(0, 1)}) {
+        ID = 9;
+        //The depth parameter must not be used directly (depth = value) but as an offset (depth = baseDepth + depth * value)
+
+        speed = 3;
+        mode = true;
+        depth = guitar_depth;
+
+        lfo_m.setAmplitude(0.5);
+        lfo_m.setFrequency(speed);
+        lfo_m.setMode(0);   //Bipolar
+        lfo_m.setShape(0);  //Sine
+
+        mix = 128;
+
+        effectName = "Phaser";
+        paramName = {"RT", "DPT", "MIX", "MD"};
     }
 
-    LFOModule lfo_m;    //All filters swept by the same lfo
+    void setParamLevel(int index, uint16_t level) override;
+    AudioStream* getAudioStreamComponent() override {return this;}
+
+    private:
+    MixerModule mx_m;
+    LFOModule lfo_m;    //All filters are swept by the same lfo
     AllPassFilterModule ap_m[4];    //Make sample go through modulated 4 all-pass filters, then combine with original
                                     //Notch frequencies are 
                                     //Frequency modulation has to be logarithmic: f = f_min * (f_max/f_min) ^ LFO
@@ -22,6 +43,10 @@ class PhaserEffect : public AudioStream, public EffectAdapter {
     uint16_t bass_depth = 700;
     uint16_t guitar_baseFrequency = 440;   //sweep range: 80Hz-800Hz -> center: 440Hz, delta: 360Hz
     uint16_t guitar_depth = 360;
+
+    uint16_t speed;
+    uint16_t depth;
+    uint8_t mix;
 
     bool mode = true;   //True for guitar, false for bass
 

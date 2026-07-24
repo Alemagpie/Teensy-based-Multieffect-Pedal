@@ -17,7 +17,10 @@ A simple, microcontroller-based, multieffect pedal for guitar. The processing is
 - simple UI
 
 #TO-DO:
-- Test the new modules
+- Test delay
+- Test phaser
+- Test biquad filter
+- Test envelope
 
 #ROADMAP:
 - Envelope module
