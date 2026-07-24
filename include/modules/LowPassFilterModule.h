@@ -11,6 +11,7 @@ class LowPassFilterModule : UnipolarFilterModule {
         void setCutoff(float freq) override;
         void reset() override;
         void process(int16_t &sample) override;
+        int16_t process_not_in_place(int16_t sample);
 };
 
 #endif

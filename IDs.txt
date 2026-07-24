@@ -7,3 +7,4 @@
 
 7 - Delay
 8 - Biquad filter
+9 - Phaser

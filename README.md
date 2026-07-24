@@ -1,4 +1,4 @@
-#Description:
+#DESCRIPTION:
 A simple, microcontroller-based, multieffect pedal for guitar. The processing is done with a Teensy 4.1 microcontroller paired with an Audio Shield extension card.
 
 #CURRENT PROGRESS:
@@ -22,6 +22,7 @@ A simple, microcontroller-based, multieffect pedal for guitar. The processing is
 #ROADMAP:
 - Envelope module
 - ADSR module
+- Allpass filter module
 
 #FUTURE EFFECTS:
 - Biquad filter
@@ -30,6 +31,7 @@ A simple, microcontroller-based, multieffect pedal for guitar. The processing is
 - LFO lp
 - Auto wah
 - ADSR pedal
+- Phaser
 - Reverb
 - Ambient drone
 - EQ
@@ -37,3 +39,5 @@ A simple, microcontroller-based, multieffect pedal for guitar. The processing is
 - Flanger
 - Octaver
 - Shimmer
+- Wavefolder
+- Granular

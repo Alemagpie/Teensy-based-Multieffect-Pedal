@@ -40,4 +40,13 @@ class BiquadFilterModule : Module {
 	mode status = LOWPASS;
 };
 
+static inline int32_t floatToQ29Sat(float val) {
+	float scaled = val * 536870912.0f;
+
+	//saturate32
+	if(scaled > 2147483647.0f) return 2147483647;
+	else if(scaled < -2147483648.0f) return -2147483648;
+	return (int32_t) scaled;
+}
+
 #endif

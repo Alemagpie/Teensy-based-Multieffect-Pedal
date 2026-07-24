@@ -126,7 +126,7 @@ void BiquadFilterModule::process(int16_t& sample) {
 	//out = signed_saturate_rshift(sum, 16, 29);
 	sum += (int64_t) 1 << 28;
 	int64_t shifted = sum >> 29;
-	out = saturate16(sum);		//WARNING: may not work due to the fact that saturate16 expects a 32b value, sum is 64b long
+	out = saturate16(shifted);		//WARNING: may not work due to the fact that saturate16 expects a 32b value, sum is 64b long
 
 	prevPrevInput = prevInput;
 	prevInput = sample;
@@ -134,13 +134,4 @@ void BiquadFilterModule::process(int16_t& sample) {
 	prevOutput = out;
 
 	sample = out;
-}
-
-static inline int32_t floatToQ29Sat(float val) {
-	float scaled = val * 536870912.0f;
-
-	//saturate32
-	if(scaled > 2147483647.0f) return 2147483647;
-	else if(scaled < -2147483648.0f) return -2147483648;
-	return (int32_t) scaled;
 }

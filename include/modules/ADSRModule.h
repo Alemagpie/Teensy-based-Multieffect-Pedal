@@ -4,6 +4,7 @@
 #include "Module.h"
 #include "EnvelopeModule.h"
 
+//Attack-Decay-Sustain-Release
 class ADSRModule : Module {
     public:
     ADSRModule() { env_m.setAttack(295); env_m.setRelease(6); }

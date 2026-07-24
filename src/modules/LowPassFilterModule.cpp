@@ -22,3 +22,15 @@ void LowPassFilterModule::process(int16_t &sample) {
     prev_input = curr_input;
     prev_output = curr_output;
 }
+
+int16_t LowPassFilterModule::process_not_in_place(int16_t sample) {
+    int16_t curr_input = sample;
+    int16_t curr_output = saturate16(prev_output + signed_saturate_rshift(
+        (int32_t)(curr_input - prev_output) * alpha, 16, 15
+    ));
+
+    prev_input = curr_input;
+    prev_output = curr_output;
+
+    return curr_output;
+}

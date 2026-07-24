@@ -13,7 +13,7 @@ class DelayEffect : public AudioStream, public EffectAdapter {
 		ID = 7;
         
         mx_m.setGain(dry, wet);
-        time = 22000;   //0.5s;
+        time = 22050;   //0.5s;
         feedback = 100;
 
         effectName = "Delay";
