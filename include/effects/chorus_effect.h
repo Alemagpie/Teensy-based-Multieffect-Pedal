@@ -30,7 +30,7 @@ class ChorusEffect : public AudioStream, public EffectAdapter {
             lfos_m[i].setFrequency(2.5f + random(-2, +2));
             lfos_m[i].setShape(0);
             lfos_m[i].setMode(0);
-            lfos_m[i].setPhase(i * 90);
+            lfos_m[i].setPhase(i * 35);
         }
 
         effectName = "Chorus";

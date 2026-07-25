@@ -35,11 +35,11 @@ void VolumeEffect::setParamLevel(int index, uint16_t level) {
     //update parameters levels
     levels[index] = level;
 
-    float value = Utility::calculateParamValueLin(ranges[index], (float) level / 65536.0f);
+    float valueLog = Utility::calculateParamValueLog(ranges[index], (float) level / 65536.0f);
 
     switch(index) { 
         case 0:
-        volume = (int16_t) value;
+        volume = (int16_t) valueLog;
         g_m.setGain(volume);
         break;
 

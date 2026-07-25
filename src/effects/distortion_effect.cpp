@@ -48,27 +48,28 @@ void DistortionEffect::setParamLevel(int index, uint16_t level) {
     //update parameters levels
     levels[index] = level;
 
-    int16_t value = (int16_t) Utility::calculateParamValueLin(ranges[index], (float)level/65536.0f );
+    int16_t valueLin = (int16_t) Utility::calculateParamValueLin(ranges[index], (float)level/65536.0f );
+    int16_t valueLog = (int16_t) Utility::calculateParamValueLog(ranges[index], (float)level/65536.0f );
 
     switch(index) {
         case 0:
         //change gain
-        gain = value;
+        gain = valueLog;
         d_m.setGain(gain);
         break;
 
         case 1:
         //change curve
-        bias = value;
+        bias = valueLin;
         d_m.setBias(bias);
         break;
 
         case 2: 
-        lp_m.setCutoff(value);
+        lp_m.setCutoff(valueLog);
         break;
 
         case 3: 
-        volume = value;
+        volume = valueLog;
         g_m.setGain(volume);
         break;
         

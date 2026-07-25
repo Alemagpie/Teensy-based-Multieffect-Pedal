@@ -44,20 +44,21 @@ void VibratoEffect::setParamLevel(int writeIndex, uint16_t level) {
     //update parameters levels
     levels[writeIndex] = level;
 
-    float value = Utility::calculateParamValueLin(ranges[writeIndex], (float)level/65536.0f );
+    float valueLin = Utility::calculateParamValueLin(ranges[writeIndex], (float)level/65536.0f );
+    float valueLog = Utility::calculateParamValueLog(ranges[writeIndex], (float)level/65536.0f );
 
     switch(writeIndex) {
         case 0:
-            freq = value;
+            freq = valueLog;
             lfo_m.setFrequency(freq);
         break;
 
         case 1:
-            depth = (uint16_t) value;
+            depth = (uint16_t) valueLin;
         break;
 
         case 2: 
-            lp_m.setCutoff(value);
+            lp_m.setCutoff(valueLog);
         break;
             
         case 3: 

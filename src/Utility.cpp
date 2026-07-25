@@ -36,21 +36,25 @@ int16_t Utility::fastSin(int16_t x)
   int32_t delta = (int32_t)sinLUT[index_int + 1] - (int32_t)sinLUT[index_int];
   int32_t interp = (delta * index_frac) >> 15;
 
-  return (int16_t)(sinLUT[index_int] + interp);
+  return saturate16(sinLUT[index_int] + interp);
 }
 
 int16_t Utility::fastExp(int16_t x) {
-  uint32_t idx = ((uint32_t)(uint16_t)x * (EXP_ENTRIES - 1));
+  // Precondition: x is always non-negative (Q15-style pot value, [0, 32767])
+  if (x < 0) x = 0; 
+
+  uint32_t idx = (uint32_t)(uint16_t)x * (EXP_ENTRIES - 1);
 
   uint16_t index_int  = idx >> 15;
   uint16_t index_frac = idx & 0x7FFF;
 
   if (index_int >= EXP_ENTRIES - 1) {
-    index_int = EXP_ENTRIES - 2;
+      index_int = EXP_ENTRIES - 2;
   }
 
-  int32_t delta = (int32_t)expLUT[index_int + 1] - (int32_t)expLUT[index_int];
-  int32_t interp = (delta * index_frac) >> 15;
+  int32_t delta  = (int32_t)expLUT[index_int + 1] - (int32_t)expLUT[index_int];
+  int32_t interp = (delta * (int32_t)index_frac) >> 15;
+  int32_t result = (int32_t)expLUT[index_int] + interp;
 
-  return (int16_t)(expLUT[index_int] + interp);
+  return saturate16(result);
 }

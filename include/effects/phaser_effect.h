@@ -4,6 +4,7 @@
 #include <Arduino.h>
 #include <AudioStream.h>
 #include "EffectAdapter.h"
+#include "Utility.h"
 
 #include "modules/LFOModule.h"
 #include "modules/AllPassFilterModule.h"

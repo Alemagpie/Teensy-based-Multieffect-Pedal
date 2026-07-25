@@ -50,24 +50,25 @@ void TremoloEffect::setParamLevel(int index, uint16_t level) {
     //update parameters levels
     levels[index] = level;
 
-    float value = Utility::calculateParamValueLin(ranges[index], (float) level / 65536.0f);
+    float valueLin = Utility::calculateParamValueLin(ranges[index], (float) level / 65536.0f);
+    float valueLog = Utility::calculateParamValueLog(ranges[index], (float) level / 65536.0f);
 
     switch(index) { 
         case 0:
         //change freq
-        frequency = value;
+        frequency = valueLog;
         lfo_m.setFrequency(frequency);
         break;
 
         case 1:
         //change shape
-        shape = (short) value;
+        shape = (short) valueLin;
         lfo_m.setShape(shape);
         break;
 
         case 2: 
         //change depth
-        depth = (int16_t) (value * 32767.0f);
+        depth = (int16_t) (valueLin * 32767.0f);
         break;
 
         case 3: default:

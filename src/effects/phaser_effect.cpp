@@ -2,7 +2,7 @@
 
 void PhaserEffect::update(void) {
     audio_block_t *block, *lfo_block;
-    int32_t lfoOffset;
+    int16_t lfoOffset;
 
     block = receiveWritable();
     lfo_block = lfo_m.getReadOnly();
@@ -16,7 +16,7 @@ void PhaserEffect::update(void) {
         lfoSamplePtr = lfo_block->data;
 
         for(int i = 0;i < AUDIO_BLOCK_SAMPLES;i++) {
-            lfoOffset = signed_saturate_rshift(*lfoSamplePtr * depth, 16, 15);
+            lfoOffset = signed_saturate_rshift(Utility::fastExp(*lfoSamplePtr) * depth, 16, 15);    //lfo sweep is mapped exponentially
             //Sweep the filters
             for(int i = 0; i < 4; i++) {
                 uint16_t base_freq = mode ? guitar_baseFrequency : bass_baseFrequency;
@@ -46,26 +46,27 @@ void PhaserEffect::setParamLevel(int writeIndex, uint16_t level) {
     //update parameters levels
     levels[writeIndex] = level;
 
-    float value = Utility::calculateParamValueLin(ranges[writeIndex], (float)level/65536.0f );
+    float valueLin = Utility::calculateParamValueLin(ranges[writeIndex], (float)level/65536.0f );
+    float valueLog = Utility::calculateParamValueLog(ranges[writeIndex], (float)level/65536.0f );
 
     switch(writeIndex) {
         case 0:
-            speed = value;
+            speed = valueLog;
             lfo_m.setFrequency(speed);
         break;
 
         case 1:
-            depth = (mode) ? (uint16_t) (guitar_depth * value) : (uint16_t) (bass_depth * value);
+            depth = (mode) ? (uint16_t) (guitar_depth * valueLin) : (uint16_t) (bass_depth * valueLin);
         break;
 
         case 2:
-            mix = value;
+            mix = valueLin;
             mx_m.setGain(0, 256 - mix);
             mx_m.setGain(1, mix);
         break;
 
         case 3:
-            mode = (value < 0.5f) ? true : false;
+            mode = (valueLin < 0.5f) ? true : false;
         break;
 
         default:

@@ -43,24 +43,25 @@ void DelayEffect::setParamLevel(int writeIndex, uint16_t level) {
     //update parameters levels
     levels[writeIndex] = level;
 
-    float value = Utility::calculateParamValueLin(ranges[writeIndex], (float)level/65536.0f );
+    float valueLin = Utility::calculateParamValueLin(ranges[writeIndex], (float)level/65536.0f );
+    float valueLog = Utility::calculateParamValueLog(ranges[writeIndex], (float)level/65536.0f );
 
     switch(writeIndex) {
         case 0:
-            time = (uint32_t) value;    //Value change needs to be smoothed, probably creates noise when modified
+            time = (uint32_t) valueLog;    //Value change needs to be smoothed, probably creates noise when modified
         break;
 
         case 1:
-            feedback = (uint8_t) value;
+            feedback = (uint8_t) valueLin;
         break;
 
         case 2: //dry
-            dry = (uint8_t) value;
+            dry = (uint8_t) valueLin;
             mx_m.setGain(0, dry);
         break;
 
         case 3: //wet
-            wet = (uint8_t) value;
+            wet = (uint8_t) valueLin;
             mx_m.setGain(1, wet);
         break;
         

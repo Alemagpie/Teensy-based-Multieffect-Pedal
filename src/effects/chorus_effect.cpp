@@ -55,11 +55,12 @@ void ChorusEffect::setParamLevel(int writeIndex, uint16_t level) {
     //update parameters levels
     levels[writeIndex] = level;
 
-    float value = Utility::calculateParamValueLin(ranges[writeIndex], (float)level/65536.0f );
+    float valueLin = Utility::calculateParamValueLin(ranges[writeIndex], (float)level/65536.0f );
+    float valueLog = Utility::calculateParamValueLog(ranges[writeIndex], (float)level/65536.0f );
 
     switch(writeIndex) {
         case 0:
-            freq = value + random(-2, +2);
+            freq = valueLog + random(-2, +2);
             for (auto &&i : lfos_m)
             {
                 i.setFrequency(freq);
@@ -67,15 +68,15 @@ void ChorusEffect::setParamLevel(int writeIndex, uint16_t level) {
         break;
 
         case 1:
-            depth = (uint8_t) value;
+            depth = (uint8_t) valueLin;
         break;
 
         case 2: 
-            voices = (uint8_t) value;
+            voices = (uint8_t) valueLin;
         break;
 
         case 3: 
-            mix = (uint8_t) value;
+            mix = (uint8_t) valueLin;
             mx_m.setGain(0, 256 - mix);
             mx_m.setGain(1, mix);
         break;
