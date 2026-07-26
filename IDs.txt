@@ -4,7 +4,7 @@
 4 - Vibrato
 5 - Chorus
 6 - Volume
-
 7 - Delay
 8 - Biquad filter
 9 - Phaser
+10 - Envelope filter

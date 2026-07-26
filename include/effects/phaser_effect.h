@@ -20,13 +20,14 @@ class PhaserEffect : public AudioStream, public EffectAdapter {
         mode = true;
         depth = guitar_depth;
 
-        lfo_m.setAmplitude(0.5);
+        lfo_m.setAmplitude(1);
         lfo_m.setFrequency(speed);
         lfo_m.setMode(1);   //Unipolar
         lfo_m.setShape(0);  //Sine
 
         mix = 128;
         mx_m.setGain(0, 256);
+        mx_m.setGain(1, 128);
 
         effectName = "Phaser";
         paramName = {"RT", "DPT", "MIX", "MD"};

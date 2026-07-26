@@ -17,23 +17,17 @@ A simple, microcontroller-based, multieffect pedal for guitar. The processing is
 - simple UI
 
 #TO-DO:
-- Test delay
-- Test phaser
-- Test biquad filter
+- Fix phaser
 - Test envelope
 
 #ROADMAP:
 - Envelope module
-- ADSR module
 - Allpass filter module
 
 #FUTURE EFFECTS:
-- Biquad filter
-- Delay 
 - Moog lp
 - LFO lp
 - Auto wah
-- ADSR pedal
 - Phaser
 - Reverb
 - Ambient drone

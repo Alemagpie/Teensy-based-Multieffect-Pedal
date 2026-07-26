@@ -7,7 +7,11 @@
 //y[n] = b0*x[n] + b1 * x[n-1] + b2* x[n-2] - a1 * y[n-1] - a2 * y[n-2]
 class BiquadFilterModule : Module {
     public:
-	BiquadFilterModule() { reset(); }
+	BiquadFilterModule() { 
+		reset(); 
+		setQ(0.707f);
+		setCutoff(10);
+	}
 
 	void setCutoff(float f);
 	void setCoeff(float f);
@@ -19,7 +23,11 @@ class BiquadFilterModule : Module {
 	void setHighShelf(float f);
  
 	void setMode(uint8_t m);
-	void setQ(float q) { Q = q; }
+	void setQ(float q) { 
+		if(q < 0.1f) q = 0.1;
+		if(q > 30) q = 30;
+		Q = q;
+	 }
 
     void process(int16_t& sample);
     inline void reset() override { setQ(0.707f); }
@@ -38,6 +46,7 @@ class BiquadFilterModule : Module {
 		HIGHSHELF = 5
 	};
 	mode status = LOWPASS;
+	float freq = 0;
 };
 
 static inline int32_t floatToQ29Sat(float val) {

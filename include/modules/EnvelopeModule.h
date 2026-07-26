@@ -24,6 +24,10 @@ class EnvelopeModule : Module {
         if(r > maxRelease_ms) r = maxRelease_ms;
         release = timeToQ15(r);
     }
+    void setThreshold(uint16_t t) {
+        if(t > maxThreshold) t = maxThreshold;
+        threshold = t;
+    }
 
     int16_t getEnvelope(int16_t &value) {
         int16_t sample = lp_m.process_not_in_place(value);
@@ -35,7 +39,7 @@ class EnvelopeModule : Module {
             env += signed_saturate_rshift(release * (pwr - env), 16, 15);
         }
 
-        if(env < threshold) { env = 0; }
+        //if(env < threshold) { env = 0; }
 
         return env;
     }
@@ -55,6 +59,7 @@ class EnvelopeModule : Module {
     uint16_t release = 3;  //260ms
 
     uint16_t threshold = 200;  //pure amplitude value in Q15
+    uint16_t maxThreshold = 1000;
 
     LowPassFilterModule lp_m;
     float signalCutoffFreq = 1500;

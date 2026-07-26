@@ -16,7 +16,9 @@
 #include "effects/chorus_effect.h"
 #include "effects/volume_effect.h"
 #include "effects/delay_effect.h"
+#include "effects/biquad_effect.h"
 #include "effects/phaser_effect.h"
+#include "effects/env_filter_effect.h"
 
 #define PARAM1_PIN A14
 #define PARAM2_PIN A15
@@ -50,10 +52,12 @@ VibratoEffect vib;
 ChorusEffect ch;
 VolumeEffect vl;
 DelayEffect de;
+BiquadEffect bq;
 PhaserEffect ph;
+EnvelopeFilterEffect envf;
 
-std::vector<EffectAdapter *> allEffects = {&dist, &trem, &bitcrush, &vib, &ch, &vl, &de, &ph};
-std::vector<EffectAdapter *> availableEffects = {&dist, &trem, &bitcrush, &vib, &ch, &vl, &de, &ph};
+std::vector<EffectAdapter *> allEffects = {&dist, &trem, &bitcrush, &vib, &ch, &vl, &de, &bq, &ph, &envf};
+std::vector<EffectAdapter *> availableEffects = {&dist, &trem, &bitcrush, &vib, &ch, &vl, &de, &bq, &ph, &envf};
 int selectedEffect = 0;
 
 EffectAdapter* effects[5] = {nullptr, nullptr, nullptr, nullptr, nullptr};

@@ -64,6 +64,7 @@ void BiquadFilterModule::setCutoff(float f) {
 }
 
 void BiquadFilterModule::setCoeff(float f) {
+	freq = f;
 	w0 = 2.0f * PI * f / AUDIO_SAMPLE_RATE;
 	sinw0 = sin(w0);
 	cosw0 = cos(w0);
