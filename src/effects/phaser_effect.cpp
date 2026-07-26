@@ -16,18 +16,21 @@ void PhaserEffect::update(void) {
         lfoSamplePtr = lfo_block->data;
 
         for(int i = 0;i < AUDIO_BLOCK_SAMPLES;i++) {
-            lfoOffset = signed_saturate_rshift(Utility::fastExp(*lfoSamplePtr) * depth, 16, 15);    //lfo sweep is mapped exponentially
+            //lfoOffset = *lfoSamplePtr;//signed_saturate_rshift(*lfoSamplePtr * depth, 16, 15);    //lfo sweep is mapped exponentially
             //Sweep the filters
-            for(int i = 0; i < 4; i++) {
-                uint16_t base_freq = mode ? guitar_baseFrequency : bass_baseFrequency;
-                ap_m[i].setCutoff(base_freq + lfoOffset);
+            uint16_t maxDepth = mode ? guitar_depth : bass_depth;
+            uint16_t base_freq = mode ? guitar_baseFrequency : bass_baseFrequency;
+            float f_min = (float)base_freq - (float)maxDepth;
+            float f_max = (float)base_freq + (float)maxDepth;
+            for(int j = 0; j < 4; j++) {
+                ap_m[j].setCutoff(f_min * powf(f_max / f_min, (float)*lfoSamplePtr / 32767.0f));
             }
 
             //Run the sample through the filters
             int16_t dry = *inputSamplePtr;
             int16_t wet = dry;
-            for(int i = 0; i < 4; i++) {
-                ap_m[i].process(wet);    //Right now the filtering is done in-place
+            for(int j = 0; j < 4; j++) {
+                ap_m[j].process(wet);    //Right now the filtering is done in-place
             }
 
             //Blend with original
@@ -36,6 +39,9 @@ void PhaserEffect::update(void) {
             lfoSamplePtr++;            
         }
     }
+
+    transmit(block);
+    release(block);
 }
 
 void PhaserEffect::setParamLevel(int writeIndex, uint16_t level) {
@@ -61,7 +67,6 @@ void PhaserEffect::setParamLevel(int writeIndex, uint16_t level) {
 
         case 2:
             mix = valueLin;
-            mx_m.setGain(0, 256 - mix);
             mx_m.setGain(1, mix);
         break;
 

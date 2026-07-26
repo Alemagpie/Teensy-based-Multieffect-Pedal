@@ -2,13 +2,13 @@
 
 void DelayEffect::update(void) {
     audio_block_t * block;
-
+ 
     block = receiveWritable();
 
     if(!block) {
         return;
     }
-
+ 
     if(enabled) {
         inputSamplePtr = block->data;
         for(int i = 0; i < AUDIO_BLOCK_SAMPLES; i++) {
@@ -18,8 +18,8 @@ void DelayEffect::update(void) {
             *inputSamplePtr = mx_m.process(*inputSamplePtr, feedbackSample);
 
             //Overwrite with scaled feedback
-            feedbackSample = signed_saturate_rshift(feedback * feedbackSample, 16, 15);
-            int16_t fullMix = mx_m.process(sample, feedbackSample);
+            feedbackSample = signed_saturate_rshift(feedback * feedbackSample, 16, 8);
+            int16_t fullMix = saturate16(sample + feedbackSample);
             dl_m.write(fullMix);
             inputSamplePtr++;
         }

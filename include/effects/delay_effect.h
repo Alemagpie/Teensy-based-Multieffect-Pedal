@@ -9,6 +9,7 @@
 #include "modules/MixerModule.h"
 
 class DelayEffect : public AudioStream, public EffectAdapter {
+    public:
     DelayEffect() : AudioStream(1, inputQueueArray), EffectAdapter({CustomRange(45, 88000), CustomRange(0, 230), CustomRange(0, 256), CustomRange(0, 256)}) {
 		ID = 7;
         

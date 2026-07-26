@@ -22,10 +22,11 @@ class PhaserEffect : public AudioStream, public EffectAdapter {
 
         lfo_m.setAmplitude(0.5);
         lfo_m.setFrequency(speed);
-        lfo_m.setMode(0);   //Bipolar
+        lfo_m.setMode(1);   //Unipolar
         lfo_m.setShape(0);  //Sine
 
         mix = 128;
+        mx_m.setGain(0, 256);
 
         effectName = "Phaser";
         paramName = {"RT", "DPT", "MIX", "MD"};

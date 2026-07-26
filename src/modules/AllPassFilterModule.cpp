@@ -17,3 +17,7 @@ void AllPassFilterModule::process(int16_t &sample) {
     prev_input = curr_input;
     prev_output = curr_output;
 }
+
+void AllPassFilterModule::reset() {
+    prev_input = prev_output = 0;
+}

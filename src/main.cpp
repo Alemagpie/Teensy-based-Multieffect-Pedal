@@ -15,6 +15,8 @@
 #include "effects/vibrato_effect.h"
 #include "effects/chorus_effect.h"
 #include "effects/volume_effect.h"
+#include "effects/delay_effect.h"
+#include "effects/phaser_effect.h"
 
 #define PARAM1_PIN A14
 #define PARAM2_PIN A15
@@ -47,9 +49,11 @@ BitCrusherEffect bitcrush;
 VibratoEffect vib;
 ChorusEffect ch;
 VolumeEffect vl;
+DelayEffect de;
+PhaserEffect ph;
 
-std::vector<EffectAdapter *> allEffects = {&dist, &trem, &bitcrush, &vib, &ch, &vl};
-std::vector<EffectAdapter *> availableEffects = {&dist, &trem, &bitcrush, &vib, &ch, &vl};
+std::vector<EffectAdapter *> allEffects = {&dist, &trem, &bitcrush, &vib, &ch, &vl, &de, &ph};
+std::vector<EffectAdapter *> availableEffects = {&dist, &trem, &bitcrush, &vib, &ch, &vl, &de, &ph};
 int selectedEffect = 0;
 
 EffectAdapter* effects[5] = {nullptr, nullptr, nullptr, nullptr, nullptr};
