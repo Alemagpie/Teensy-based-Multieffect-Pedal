@@ -1,0 +1,8 @@
+Serial monitor: 
+    pio device monitor
+
+Build:
+    pio run
+
+Upload:
+    pio run -t upload

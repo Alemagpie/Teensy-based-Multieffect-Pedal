@@ -4,9 +4,7 @@ void EnvelopeFilterEffect::update(void) {
     audio_block_t *block;
     int16_t sample, env;
     
-
     block = receiveWritable();
-
     if(!block) {
         return;
     }
@@ -17,16 +15,21 @@ void EnvelopeFilterEffect::update(void) {
         for(int i = 0;i < AUDIO_BLOCK_SAMPLES;i++) {
             sample = *inputSamplePtr;
             env = env_m.getEnvelope(sample);
-            float envNorm = sqrtf((float)env / 32767.0f);
-            float exponent = (mode == 2) ? (1.0f - envNorm) * sens : envNorm * sens;
 
-            //Get how much the filter is affected, if mode is 2 (lp down) make it the complement to 1
-            freq_amount = powf(f_max/f_min, exponent);
-            Serial.print(env);
-            Serial.print(" - ");
-            Serial.print(f_min * freq_amount);
-            Serial.print("\n");
-            bq_m.setCutoff(f_min * freq_amount);
+            if(sampleCount == 0) {
+                float envNorm = (float)env / 32767.0f;
+                float exponent = (mode == 2) ? (1.0f - envNorm) * sens : envNorm * sens;
+
+                //Get how much the filter is affected, if mode is 2 (lp down) make it the complement to 1
+                freq_amount = powf(f_max/f_min, exponent);
+                Serial.print(env);
+                Serial.print(" - ");
+                Serial.print(f_min * freq_amount);
+                Serial.print("\n");
+                bq_m.setCutoff(f_min * freq_amount);
+            }
+            sampleCount = (sampleCount + 1) % 4;
+
             bq_m.process(sample);
 
             *inputSamplePtr = sample;

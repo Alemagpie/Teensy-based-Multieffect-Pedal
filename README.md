@@ -18,16 +18,12 @@ A simple, microcontroller-based, multieffect pedal for guitar. The processing is
 
 #TO-DO:
 - Fix phaser
-- Test envelope
 
 #ROADMAP:
-- Envelope module
 - Allpass filter module
 
 #FUTURE EFFECTS:
-- Moog lp
 - LFO lp
-- Auto wah
 - Phaser
 - Reverb
 - Ambient drone

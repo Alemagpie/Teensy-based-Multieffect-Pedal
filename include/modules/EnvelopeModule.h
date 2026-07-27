@@ -6,11 +6,11 @@
 
 class EnvelopeModule : Module {
     public:
-    EnvelopeModule() { lp_m.setCutoff(signalCutoffFreq); }
+    EnvelopeModule() { }
     EnvelopeModule(uint16_t a, uint16_t r) {
-        lp_m.setCutoff(signalCutoffFreq);
         setAttack(a);
         setRelease(r);
+        setGain(10);
     }
 
     //If attack/release are out of bounds return a placeholder value
@@ -28,15 +28,18 @@ class EnvelopeModule : Module {
         if(t > maxThreshold) t = maxThreshold;
         threshold = t;
     }
+    void setGain(uint8_t g) {
+        if(g > maxGain) g = maxGain;
+        gain = g;
+    }
 
     int16_t getEnvelope(int16_t &value) {
-        int16_t sample = lp_m.process_not_in_place(value);
-        int16_t pwr = signed_saturate_rshift(sample * sample, 16, 15);
+        int16_t x = saturate16(gain * ((value < 0) ? -value : value));
         
-        if(pwr > env) {
-            env += signed_saturate_rshift(attack * (pwr - env), 16, 15);
+        if(x > env) {
+            env += signed_saturate_rshift(attack * (x - env), 16, 15);
         } else {
-            env += signed_saturate_rshift(release * (pwr - env), 16, 15);
+            env += signed_saturate_rshift(release * (x - env), 16, 15);
         }
 
         //if(env < threshold) { env = 0; }
@@ -46,6 +49,9 @@ class EnvelopeModule : Module {
 
     private:
     int16_t env = 0;
+
+    uint8_t gain = 1;
+    uint8_t maxGain = 20;
 
     //uint16_t maxAttack = 15;    //50ms
     float maxAttack_ms = 50;
@@ -60,9 +66,6 @@ class EnvelopeModule : Module {
 
     uint16_t threshold = 200;  //pure amplitude value in Q15
     uint16_t maxThreshold = 1000;
-
-    LowPassFilterModule lp_m;
-    float signalCutoffFreq = 1500;
 
     int16_t timeToQ15(float time_ms) {
         float tau = time_ms / 1000.0f;

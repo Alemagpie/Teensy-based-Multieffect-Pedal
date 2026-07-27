@@ -21,6 +21,7 @@ class EnvelopeFilterEffect : public AudioStream, public EffectAdapter {
         bq_m.setMode(mode);
         env_m.setAttack(15);
         env_m.setRelease(225);
+        env_m.setGain(17);  //Has to be higher for guitar
 
         effectName = "Env filter";
         paramName = {"SNS", " Q ", "A/R", "MD"};
@@ -33,8 +34,9 @@ class EnvelopeFilterEffect : public AudioStream, public EffectAdapter {
     BiquadFilterModule bq_m;
     EnvelopeModule env_m;
 
-    float f_min = 100;
-    float f_max = 5000; 
+    uint8_t sampleCount = 0;
+    float f_min = 50;   //100 for guitar
+    float f_max = 2000; //5000 for guitar
     float freq_amount = 0;
     //atk/rel in ms 
     uint16_t atk_min = 1;
