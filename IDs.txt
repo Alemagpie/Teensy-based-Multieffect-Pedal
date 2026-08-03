@@ -1,4 +1,4 @@
-1 - Soft-clip distortion
+1 - Distortion
 2 - Tremolo
 3 - Bitcrusher
 4 - Vibrato
@@ -8,3 +8,4 @@
 8 - Biquad filter
 9 - Phaser
 10 - Envelope filter
+11 - Squarer

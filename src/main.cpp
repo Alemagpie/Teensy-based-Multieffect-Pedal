@@ -19,6 +19,7 @@
 #include "effects/biquad_effect.h"
 #include "effects/phaser_effect.h"
 #include "effects/env_filter_effect.h"
+#include "effects/squarer_effect.h"
 
 #define PARAM1_PIN A14
 #define PARAM2_PIN A15
@@ -55,9 +56,14 @@ DelayEffect de;
 BiquadEffect bq;
 PhaserEffect ph;
 EnvelopeFilterEffect envf;
+SquarerEffect sqr;
 
-std::vector<EffectAdapter *> allEffects = {&dist, &trem, &bitcrush, &vib, &ch, &vl, &de, &bq, &ph, &envf};
-std::vector<EffectAdapter *> availableEffects = {&dist, &trem, &bitcrush, &vib, &ch, &vl, &de, &bq, &ph, &envf};
+std::vector<EffectAdapter*> allEffects = {
+  &dist, &trem, &bitcrush, &vib, &ch, &vl, &de, &bq, &ph, &envf, &sqr
+};
+std::vector<EffectAdapter*> availableEffects = {
+  &dist, &trem, &bitcrush, &vib, &ch, &vl, &de, &bq, &ph, &envf, &sqr
+};
 int selectedEffect = 0;
 
 EffectAdapter* effects[5] = {nullptr, nullptr, nullptr, nullptr, nullptr};

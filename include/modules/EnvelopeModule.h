@@ -51,7 +51,7 @@ class EnvelopeModule : Module {
     int16_t env = 0;
 
     uint8_t gain = 1;
-    uint8_t maxGain = 20;
+    uint8_t maxGain = 30;
 
     //uint16_t maxAttack = 15;    //50ms
     float maxAttack_ms = 50;
