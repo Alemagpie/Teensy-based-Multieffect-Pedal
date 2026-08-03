@@ -18,6 +18,7 @@ A simple, microcontroller-based, multieffect pedal for guitar. The processing is
 
 #TO-DO:
 - Fix phaser
+- Add makeup gain to all effects
 
 #ROADMAP:
 - Allpass filter module
