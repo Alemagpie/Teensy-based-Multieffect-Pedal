@@ -20,6 +20,7 @@
 #include "effects/phaser_effect.h"
 #include "effects/env_filter_effect.h"
 #include "effects/squarer_effect.h"
+#include "effects/ring_mod_effect.h"
 
 #define PARAM1_PIN A14
 #define PARAM2_PIN A15
@@ -57,12 +58,13 @@ BiquadEffect bq;
 PhaserEffect ph;
 EnvelopeFilterEffect envf;
 SquarerEffect sqr;
+RingModulatorEffect rngMd;
 
 std::vector<EffectAdapter*> allEffects = {
-  &dist, &trem, &bitcrush, &vib, &ch, &vl, &de, &bq, &ph, &envf, &sqr
+  &dist, &trem, &bitcrush, &vib, &ch, &vl, &de, &bq, &ph, &envf, &sqr, &rngMd
 };
 std::vector<EffectAdapter*> availableEffects = {
-  &dist, &trem, &bitcrush, &vib, &ch, &vl, &de, &bq, &ph, &envf, &sqr
+  &dist, &trem, &bitcrush, &vib, &ch, &vl, &de, &bq, &ph, &envf, &sqr, &rngMd
 };
 int selectedEffect = 0;
 

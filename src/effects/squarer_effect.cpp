@@ -2,8 +2,6 @@
 
 void SquarerEffect::update(void) {
     audio_block_t *block;
-    int32_t lfoOffset;
-    int32_t voicesSum;
 
     block = receiveWritable();
 
@@ -16,15 +14,18 @@ void SquarerEffect::update(void) {
         inputSamplePtr = block->data;
         for(int i = 0;i < AUDIO_BLOCK_SAMPLES;i++) {
             int16_t d, s1, s2, out;
+            d = s1 = s2 = 0;
 
             //Dry sample
             d = *inputSamplePtr;
 
             //Same octave square wave
             if(d > threshold && isNeg) {
+                isNeg = false;
                 s1 = 32767;
                 crossings++;
             } else if(d < -threshold && !isNeg) {
+                isNeg = true;
                 s1 = -32767;
                 crossings++;
             }
@@ -36,8 +37,9 @@ void SquarerEffect::update(void) {
                 s2 = dwnOctaveState ? 32767 : -32767;
             }
             
+            lp_m1.process(s1);
+            lp_m2.process(s2);
             out = saturate16(2 * mx_m.process(d, s1, s2));  //Makeup gain of 2
-            lp_m.process(out);
             *inputSamplePtr = out;
             inputSamplePtr++;
         }
@@ -75,7 +77,8 @@ void SquarerEffect::setParamLevel(int writeIndex, uint16_t level) {
         break;
 
         case 3: 
-            lp_m.setCutoff(valueLog);
+            lp_m1.setCutoff(valueLog);
+            lp_m2.setCutoff(valueLog);
         break;
         
         default:

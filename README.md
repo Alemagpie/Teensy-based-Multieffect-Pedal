@@ -10,6 +10,9 @@ A simple, microcontroller-based, multieffect pedal for guitar. The processing is
 - Vibrato effect with 3 parameters (speed, depth, tone)
 - Chorus effect with 4 parameters (speed, depth, voices, mix)
 - Delay with 4 parameters (time, feedback, dry, wet)
+- Envelope filter (QTron style) with 4 parameters (sensibility, resonance, attack/release, filter type)
+- Ring modulator with 4 parameters (frequency, shape, depth, mix)
+- Square wave octaver with 4 parameters (dry, same octave, down octave, low-pass filter)
 
 - Ability to chain multiple effects simultaneously
 - Ability to change parameters' values in real time
@@ -22,12 +25,18 @@ A simple, microcontroller-based, multieffect pedal for guitar. The processing is
 
 #ROADMAP:
 - Allpass filter module
+- Replace pots with rotary encoder
+- Add expression pedal input and parameter assign button
+- Use one of the main switches as a momentary hold switch
+- Add tap tempo 
 
 #FUTURE EFFECTS:
+- Ducking delay
 - LFO lp
 - Phaser
 - Reverb
-- Ambient drone
+- Ambient drone (pads)
+- ADSR envelope follower
 - EQ
 - Compressor
 - Flanger

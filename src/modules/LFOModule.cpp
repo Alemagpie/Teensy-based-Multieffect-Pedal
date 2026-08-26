@@ -45,7 +45,7 @@ audio_block_t* LFOModule::getReadOnly() {
 }
 
 void LFOModule::setFrequency(float f) {
-    if(f < 0.1f || f > 20.0f) {
+    if(f < 0.1f || f > AUDIO_SAMPLE_RATE_EXACT / 2.0f) {
         return;
     }
 

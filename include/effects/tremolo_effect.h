@@ -11,7 +11,7 @@
 
 class TremoloEffect : public AudioStream, public EffectAdapter {
     public:
-    TremoloEffect(void) : AudioStream(1, inputQueueArray), EffectAdapter({CustomRange(0, 20), CustomRange(0, 5), CustomRange(0, 1), CustomRange()}) {
+    TremoloEffect(void) : AudioStream(1, inputQueueArray), EffectAdapter({CustomRange(0, 20), CustomRange(0, 6), CustomRange(0, 1), CustomRange()}) {
         ID = 2;
         
         depth = 32767;

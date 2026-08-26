@@ -11,12 +11,15 @@
 class SquarerEffect : public AudioStream, public EffectAdapter
 {
     public:
-    SquarerEffect(void) : AudioStream(1, inputQueueArray), EffectAdapter({CustomRange(0, 256), CustomRange(0, 256), CustomRange(0, 256), CustomRange()}) {
+    SquarerEffect(void) : AudioStream(1, inputQueueArray), EffectAdapter({CustomRange(0, 256), CustomRange(0, 256), CustomRange(0, 256), CustomRange(160, 2000)}) {
         ID = 11;
         dry = sq1 = sq2 = 128;
         mx_m.setGain(0, dry);
         mx_m.setGain(1, sq1);
         mx_m.setGain(2, sq2);
+
+        lp_m1.setCutoff(500);
+        lp_m2.setCutoff(500);
 
         effectName = "Squarer";
         paramName = {"DRY", "SQ1", "SQ2", "LPF"};
@@ -28,7 +31,7 @@ class SquarerEffect : public AudioStream, public EffectAdapter
     private:
 
     MixerModule mx_m;
-    LowPassFilterModule lp_m;
+    LowPassFilterModule lp_m1, lp_m2;
 
     //Original sample, same octave square wave, octave below square wave
     uint8_t dry, sq1, sq2;  

@@ -9,3 +9,4 @@
 9 - Phaser
 10 - Envelope filter
 11 - Squarer
+12 - Ring modulator

@@ -34,7 +34,7 @@ class LFOModule : Module {
     uint16_t amplitude;
     short shapeSelect = 0;
     short modeSelect = 0;
-    uint32_t phase;
+    uint32_t phase = 0;
     uint32_t phaseStep;
     int16_t ph; //ph = phase >> 17;
     
