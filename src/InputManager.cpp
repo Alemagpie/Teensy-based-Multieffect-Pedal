@@ -1,25 +1,42 @@
 #include "InputManager.h"
 
 void InputManager::begin() {
-    xUp = xDown = leftUp = leftDown = rightUp = rightDown = centerUp = centerDown = 0;
-    xPressed = lPressed = rPressed = cPressed = 0;
+    for(int i = 0; i < 8; i++)
+        edges[i] = 0;
 }
 
 void InputManager::update() {
-    X_Button.update();
-    L_Button.update();
-    C_Button.update();
-    R_Button.update();
+    uint32_t now = millis();
 
-    if(X_Button.risingEdge()) xUp = millis();
-    if(X_Button.fallingEdge()) xDown = millis();
+    inputState.params[0] = analogRead(PARAM1_PIN)*65535/1023;
+    inputState.params[1] = analogRead(PARAM2_PIN)*65535/1023;
+    inputState.params[2] = analogRead(PARAM3_PIN)*65535/1023;
+    inputState.params[3] = analogRead(PARAM4_PIN)*65535/1023;
 
-    if(L_Button.risingEdge()) leftUp = millis();
-    if(L_Button.fallingEdge()) leftDown = millis();
+    for(int i = 0; i < 4; i++) {
+        buttons[i].update();
 
-    if(C_Button.risingEdge()) centerUp = millis();
-    if(C_Button.fallingEdge()) centerDown = millis();
+        if(buttons[i].risingEdge())
+            edges[2*i] = millis();
 
-    if(R_Button.risingEdge()) rightUp = millis();
-    if(R_Button.fallingEdge()) rightDown = millis();
+        if(buttons[i].fallingEdge()) 
+            edges[2*i+1] = millis();
+
+
+        if(edges[2*i] != 0 && edges[2*i+1] != 0) {
+            if(inputState.switches[i] != PressType::HOLD) {
+                inputState.switches[i] = (edges[2*i+1] - edges[2*i] < LONG_PRESS_TIME_MS) ? PressType::SHORT : PressType::LONG;
+            } else {
+                inputState.switches[i] = PressType::NONE;
+            }
+
+            edges[2*i+1] = edges[2*i] = 0;
+        } else {
+            if(edges[2*i] != 0 && edges[2*i+1] == 0 && (now - edges[2*i] > HOLD_PRESS_TIME_MS)) {
+                inputState.switches[i] = PressType::HOLD;
+            } else {
+                inputState.switches[i] = PressType::NONE;
+            }
+        }
+    }
 }

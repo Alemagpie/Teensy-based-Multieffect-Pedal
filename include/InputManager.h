@@ -3,16 +3,17 @@
 
 #include <Arduino.h>
 #include <Bounce.h>
+#include "InputState.h"
 
 #define PARAM1_PIN A14
 #define PARAM2_PIN A15
 #define PARAM3_PIN A16
 #define PARAM4_PIN A17
-#define MODIFY_B_PIN 33 
+#define SWITCH_X 33 
 #define MODIFY_L_PIN 34  
-#define EFFECT_L 28
-#define EFFECT_SWITCH 29
-#define EFFECT_R 30
+#define SWITCH_L 28
+#define SWITCH_C 29
+#define SWITCH_R 30
 #define MODE1_PIN 25
 #define MODE2_PIN 26
 
@@ -28,18 +29,26 @@ class InputManager {
     void rightShortPressed();
     void centerShortPressed();
 
+    InputState& returnInputState() { return inputState; }
 
     uint16_t getParam(uint8_t index);
 
     private:
     bool isModifying = false;
-    Bounce X_Button = Bounce(MODIFY_B_PIN, 15);
-    Bounce L_Button = Bounce(EFFECT_L, 30);
-    Bounce R_Button = Bounce(EFFECT_R, 30);
-    Bounce C_Button = Bounce(EFFECT_SWITCH, 30);
 
-    uint32_t xUp, xDown, leftUp, leftDown, rightUp, rightDown, centerUp, centerDown;
-    bool xPressed, lPressed, rPressed, cPressed;
+    Bounce buttons[4] = {
+        Bounce(SWITCH_L, 30), 
+        Bounce(SWITCH_C, 30), 
+        Bounce(SWITCH_R, 30), 
+        Bounce(SWITCH_X, 15)
+    };
+    
+    //In order: L rising edge, L falling edge, C, R, X
+    uint32_t edges[8] = {0, 0, 0, 0, 0, 0, 0, 0};
+
+    InputState inputState;
 };
+
+
 
 #endif
