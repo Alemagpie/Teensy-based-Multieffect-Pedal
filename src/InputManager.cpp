@@ -3,6 +3,19 @@
 void InputManager::begin() {
     for(int i = 0; i < 8; i++)
         edges[i] = 0;
+
+        
+    pinMode(SWITCH_X, INPUT_PULLDOWN);
+    pinMode(MODIFY_L_PIN, OUTPUT);
+
+    pinMode(PARAM1_PIN, INPUT);
+    pinMode(PARAM2_PIN, INPUT);
+    pinMode(PARAM3_PIN, INPUT);
+    pinMode(PARAM4_PIN, INPUT);
+
+    pinMode(SWITCH_L, INPUT_PULLDOWN);
+    pinMode(SWITCH_C, INPUT_PULLDOWN);
+    pinMode(SWITCH_R, INPUT_PULLDOWN);
 }
 
 void InputManager::update() {

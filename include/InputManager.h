@@ -25,13 +25,7 @@ class InputManager {
     void begin();
     void update();
 
-    void leftShortPressed();
-    void rightShortPressed();
-    void centerShortPressed();
-
-    InputState& returnInputState() { return inputState; }
-
-    uint16_t getParam(uint8_t index);
+    InputState& getInputState() { return inputState; }
 
     private:
     bool isModifying = false;

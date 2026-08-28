@@ -18,7 +18,7 @@ class EffectAdapter {
     /*
     //The parameter influenced by the tap tempo has to be set internally by the developer, not asssigned by the user
     virtual void setParamFromTapTempo(float tapTempo) {};
-    //The parameter influenced by the expr pedal has to be set internally by the developer, not asssigned by the user
+    //The parameter influenced by the expr pedal has to be asssigned by the user
     virtual void assignExprToParam(uint8_t paramIndex) {};
     //The parameter influenced by the hold press has to be set internally by the developer, not asssigned by the user
     virtual void setParamAsHold() {}; 
