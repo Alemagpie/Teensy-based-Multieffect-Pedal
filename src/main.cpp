@@ -1,5 +1,3 @@
-#include <Arduino.h>
-#include <Audio.h>
 #include "EffectChainManager.h"
 #include "InputManager.h"
 #include "PresetManager.h"
