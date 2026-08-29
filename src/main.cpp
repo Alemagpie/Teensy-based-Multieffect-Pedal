@@ -153,9 +153,9 @@ void setup() {
   svMan.storeSettings(saveIDs);
   */
 
-  initAudioBoard();
-  initPins();
-  scrMan.start();
+  initAudioBoard(); //EffectChainManager.initChain()
+  initPins(); //InputManager.begin()
+  scrMan.start(); //UIManager.start()
   delay(1000);
   onEffectChange();
 }
@@ -394,7 +394,7 @@ void saveEffects() {
   connectEffects();
   currentState = PLAY;
   selectedEffect = 0;
-  onEffectChange();
+  onEffectChange(); //UIManager.drawNewEffect()
 }
 
 void connectEffects() {

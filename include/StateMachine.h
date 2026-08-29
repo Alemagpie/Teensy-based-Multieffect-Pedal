@@ -3,14 +3,17 @@
 
 #define EXTRA_LED_PIN 34
 
+#define PARAM_UPDATE_TIMER_MS 100
+
 #include "InputState.h"
 #include "UIManager.h"
 #include "EffectChainManager.h"
+#include "PresetManager.h"
 
 class StateMachine {
     public: 
-    StateMachine(InputState& in, UIManager& u, EffectChainManager& e) 
-        : input(in), ui(u), chain(e) {};
+    StateMachine(InputState& in, UIManager& u, EffectChainManager& e, PresetManager& m) 
+        : input(in), ui(u), chain(e), preset(m) {};
 
     enum SystemState {
         PLAY,
@@ -18,13 +21,18 @@ class StateMachine {
         EDIT
     };
     SystemState getState() { return currentState; }
+    //Handles state transitions based on the values in the shared input state
     void handleInput();
 
     private:
-    SystemState currentState;
+    SystemState currentState = SystemState::PLAY;
+    bool isModifying = false;
     InputState& input;
     UIManager& ui;
     EffectChainManager& chain;
+    PresetManager& preset;
+
+    unsigned long lastUpdate = 0;
 };
 
 #endif

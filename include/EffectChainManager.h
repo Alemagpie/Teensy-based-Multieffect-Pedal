@@ -38,27 +38,34 @@ RingModulatorEffect rngMd;
 class EffectChainManager {
     public:
     EffectChainManager(AudioInputI2S in, AudioOutputI2S out, AudioControlSGTL5000 ctrl) : input(in), output(out), sgtl5000(ctrl) {
-        AudioMemory(20);
-        sgtl5000.enable();
-        sgtl5000.volume(0.8);      
-        sgtl5000.lineInLevel(8);
-        sgtl5000.lineOutLevel(8); 
+    
     };
 
+    //Advances in the current effect chain
     void nextChainEffect();
+    //Goes back in the current effect chain
     void previousChainEffect();
+    //Turns on/off effect at the current slot
     void toggleChainEffect();
 
+    //Gets next possible selection
     void nextAvailableEffect();
+    //Gets previous possible selection
     void previousAvailableEffect();
+    //Confirms new effect selection
     void selectAvailableEffect();
 
     void setParameters(InputState& in);
+    uint8_t getSlotPosition() { return currentSlot; }
+    uint8_t getSelectionIndex() { return effectCandidateIndex; }
 
     void initChain();
+    //Updates the IDs in effect vector
     void updateChain(Save s);
+    //Updates the actual available effects and reconnects effects
     void saveEffects();
 
+    //Triggers effect reconnection
     void connectEffects();
 
     EffectAdapter* effects[5] = {nullptr, nullptr, nullptr, nullptr, nullptr};

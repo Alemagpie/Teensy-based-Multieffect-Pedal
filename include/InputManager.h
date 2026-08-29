@@ -23,6 +23,7 @@
 class InputManager {
     public:
     void begin();
+    //Has to be called once per frame, updates the shared input state
     void update();
 
     InputState& getInputState() { return inputState; }
