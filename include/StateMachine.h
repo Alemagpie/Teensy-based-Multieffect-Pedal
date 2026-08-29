@@ -12,12 +12,16 @@
 
 class StateMachine {
     public: 
-    StateMachine(InputState& in, UIManager& u, EffectChainManager& e, PresetManager& m) 
-        : input(in), ui(u), chain(e), preset(m) {};
+    //Instantiates the other managers' ptrs
+    void setup(InputState* in, UIManager* u, EffectChainManager* e, PresetManager* m) {
+        input = in;
+        ui = u;
+        chain = e;
+        preset = m;
+    }
 
     enum SystemState {
         PLAY,
-        MODIFY,
         EDIT
     };
     SystemState getState() { return currentState; }
@@ -27,10 +31,10 @@ class StateMachine {
     private:
     SystemState currentState = SystemState::PLAY;
     bool isModifying = false;
-    InputState& input;
-    UIManager& ui;
-    EffectChainManager& chain;
-    PresetManager& preset;
+    InputState* input;
+    UIManager* ui;
+    EffectChainManager* chain;
+    PresetManager* preset;
 
     unsigned long lastUpdate = 0;
 };

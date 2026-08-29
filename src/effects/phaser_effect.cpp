@@ -2,7 +2,6 @@
 
 void PhaserEffect::update(void) {
     audio_block_t *block, *lfo_block;
-    int16_t lfoOffset;
 
     block = receiveWritable();
     lfo_block = lfo_m.getReadOnly();

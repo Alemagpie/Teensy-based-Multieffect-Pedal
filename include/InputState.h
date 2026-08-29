@@ -1,3 +1,6 @@
+#ifndef INPUT_STATE
+#define INPUT_STATE
+
 #include <Arduino.h>
 
 enum class PressType : uint8_t { NONE, SHORT, LONG, HOLD };
@@ -8,3 +11,5 @@ struct InputState {
     uint16_t params[4] = {0, 0, 0, 0};
     //float tapTempo;
 };
+
+#endif

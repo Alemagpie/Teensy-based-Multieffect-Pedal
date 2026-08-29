@@ -10,7 +10,7 @@
 
 class DelayEffect : public AudioStream, public EffectAdapter {
     public:
-    DelayEffect() : AudioStream(1, inputQueueArray), EffectAdapter({CustomRange(45, 88000), CustomRange(0, 230), CustomRange(0, 256), CustomRange(0, 256)}) {
+    DelayEffect() : AudioStream(1, inputQueueArray), EffectAdapter({CustomRange(45, 88000), CustomRange(0, 230), CustomRange(0, 255), CustomRange(0, 255)}) {
 		ID = 7;
         
         mx_m.setGain(dry, wet);
@@ -25,7 +25,7 @@ class DelayEffect : public AudioStream, public EffectAdapter {
     AudioStream* getAudioStreamComponent() override {return this;}
 
     private:
-    uint8_t dry = 256;
+    uint8_t dry = 255;
     uint8_t wet = 128;
     uint8_t feedback;
     uint32_t time;

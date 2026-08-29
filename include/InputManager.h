@@ -22,6 +22,7 @@
 
 class InputManager {
     public:
+    //Resets data and sets up pins
     void begin();
     //Has to be called once per frame, updates the shared input state
     void update();

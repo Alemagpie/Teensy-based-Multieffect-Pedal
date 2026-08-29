@@ -12,7 +12,7 @@
 
 class PhaserEffect : public AudioStream, public EffectAdapter {
     public:
-    PhaserEffect(void) : AudioStream(1, inputQueueArray), EffectAdapter({CustomRange(0, 10), CustomRange(0, 1), CustomRange(0, 256), CustomRange(0, 1)}) {
+    PhaserEffect(void) : AudioStream(1, inputQueueArray), EffectAdapter({CustomRange(0, 10), CustomRange(0, 1), CustomRange(0, 255), CustomRange(0, 1)}) {
         ID = 9;
         //The depth parameter must not be used directly (depth = value) but as an offset (depth = baseDepth + depth * value)
 
@@ -26,7 +26,7 @@ class PhaserEffect : public AudioStream, public EffectAdapter {
         lfo_m.setShape(0);  //Sine
 
         mix = 128;
-        mx_m.setGain(0, 256);
+        mx_m.setGain(0, 255);
         mx_m.setGain(1, 128);
 
         effectName = "Phaser";

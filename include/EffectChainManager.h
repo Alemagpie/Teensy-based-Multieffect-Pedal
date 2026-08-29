@@ -5,42 +5,12 @@
 #include "InputState.h"
 #include "SaveManager.h"
 
-#include "effects/distortion_effect.h"
-#include "effects/tremolo_effect.h"
-#include "effects/bitcrusher_effect.h"
-#include "effects/vibrato_effect.h"
-#include "effects/chorus_effect.h"
-#include "effects/volume_effect.h"
-#include "effects/delay_effect.h"
-#include "effects/biquad_effect.h"
-#include "effects/phaser_effect.h"
-#include "effects/env_filter_effect.h"
-#include "effects/squarer_effect.h"
-#include "effects/ring_mod_effect.h"
-
-
-//Effects
-DistortionEffect dist;
-TremoloEffect trem;
-BitCrusherEffect bitcrush;
-VibratoEffect vib;
-ChorusEffect ch;
-VolumeEffect vl;
-DelayEffect de;
-BiquadEffect bq;
-PhaserEffect ph;
-EnvelopeFilterEffect envf;
-SquarerEffect sqr;
-RingModulatorEffect rngMd;
-
-
+#include "Effects.h"
 
 class EffectChainManager {
     public:
-    EffectChainManager(AudioInputI2S in, AudioOutputI2S out, AudioControlSGTL5000 ctrl) : input(in), output(out), sgtl5000(ctrl) {
-    
-    };
-
+    //Sets up codec as well as chain's input and output
+    void setup(AudioInputI2S* in, AudioOutputI2S* out, AudioControlSGTL5000* ctrl);
     //Advances in the current effect chain
     void nextChainEffect();
     //Goes back in the current effect chain
@@ -59,7 +29,6 @@ class EffectChainManager {
     uint8_t getSlotPosition() { return currentSlot; }
     uint8_t getSelectionIndex() { return effectCandidateIndex; }
 
-    void initChain();
     //Updates the IDs in effect vector
     void updateChain(Save s);
     //Updates the actual available effects and reconnects effects
@@ -78,11 +47,11 @@ class EffectChainManager {
     };
 
     private:
-    AudioInputI2S& input;
-    AudioOutputI2S& output;
-    AudioControlSGTL5000& sgtl5000;
+    AudioInputI2S* input = nullptr;
+    AudioOutputI2S* output = nullptr;
+    AudioControlSGTL5000* sgtl5000 = nullptr;
 
-    int effectCount = 5;
+    const int effectCount = 5;
     uint8_t currentSlot = 0;
     uint8_t effectCandidateIndex = 0;
 

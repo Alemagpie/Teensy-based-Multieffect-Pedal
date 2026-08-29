@@ -29,6 +29,7 @@ audio_block_t* LFOModule::getReadOnly() {
             break;
 
             default:
+            sample = 0;
             break;
         }
 

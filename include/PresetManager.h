@@ -9,13 +9,13 @@
 
 class PresetManager {
     public:
-    PresetManager(EffectChainManager& e) : chain(e) {};
-
+    //Assigns EffectChainManager ptr
+    void setup(EffectChainManager *e) { chain = e; }
     void loadEffects();
     void saveEffects();
 
     private:
-    EffectChainManager& chain;
+    EffectChainManager *chain;
     SaveManager svMan;
     Save saveIDs;
 };

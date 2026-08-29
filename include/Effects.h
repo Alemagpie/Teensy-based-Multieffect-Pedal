@@ -1,7 +1,6 @@
-#ifndef EFFECT_REGISTRY_H
-#define EFFECT_REGISTRY_H
+#ifndef EFFECTS_H
+#define EFFECTS_H
 
-#include "EffectAdapter.h"
 #include "effects/distortion_effect.h"
 #include "effects/tremolo_effect.h"
 #include "effects/bitcrusher_effect.h"
@@ -15,7 +14,17 @@
 #include "effects/squarer_effect.h"
 #include "effects/ring_mod_effect.h"
 
-class EffectRegistry {
+extern DistortionEffect dist;
+extern TremoloEffect trem;
+extern BitCrusherEffect bitcrush;
+extern VibratoEffect vib;
+extern ChorusEffect ch;
+extern VolumeEffect vl;
+extern DelayEffect de;
+extern BiquadEffect bq;
+extern PhaserEffect ph;
+extern EnvelopeFilterEffect envf;
+extern SquarerEffect sqr;
+extern RingModulatorEffect rngMd;
 
-};
 #endif
