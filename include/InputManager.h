@@ -17,8 +17,8 @@
 #define MODE1_PIN 25
 #define MODE2_PIN 26
 
-#define LONG_PRESS_TIME_MS 1000
-#define HOLD_PRESS_TIME_MS 2000
+#define LONG_PRESS_TIME_MS 800
+#define HOLD_PRESS_TIME_MS 2500
 
 class InputManager {
     public:

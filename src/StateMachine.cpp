@@ -9,7 +9,7 @@ void StateMachine::handleInput() {
                 //Redraw new effect
                 uint8_t position = chain->getSlotPosition();
                 ui->drawNewEffect(
-                    position, 
+                    position + 1, 
                     chain->effects[position]->getEffectName(),
                     chain->effects[position]->getParamNames(),
                     chain->isOn
@@ -23,7 +23,7 @@ void StateMachine::handleInput() {
                 //Redraw new effect
                 uint8_t position = chain->getSlotPosition();
                 ui->drawNewEffect(
-                    position, 
+                    position + 1, 
                     chain->effects[position]->getEffectName(),
                     chain->effects[position]->getParamNames(),
                     chain->isOn
@@ -37,7 +37,7 @@ void StateMachine::handleInput() {
                 chain->toggleChainEffect();
                 uint8_t position = chain->getSlotPosition();
                 ui->drawNewEffect(
-                    position, 
+                    position + 1, 
                     chain->effects[position]->getEffectName(),
                     chain->effects[position]->getParamNames(),
                     chain->isOn
@@ -46,7 +46,7 @@ void StateMachine::handleInput() {
             //Center long press (enter edit mode)
             if(input->switches[1] == PressType::LONG) {
                 currentState = EDIT;
-                ui->drawCandidateEffect(chain->effects[chain->getSelectionIndex()]->getEffectName());
+                ui->drawCandidateEffect(chain->availableEffects[chain->getSelectionIndex()]->getEffectName());
             }
 
             //Toggle mod
@@ -63,25 +63,33 @@ void StateMachine::handleInput() {
             if(input->switches[0] == PressType::SHORT) {
                 chain->previousAvailableEffect();
                 uint8_t index = chain->getSelectionIndex();
-                ui->drawCandidateEffect(chain->effects[index]->getEffectName());
+                ui->drawCandidateEffect(chain->availableEffects[index]->getEffectName());
             }
             //Right press
             if(input->switches[2] == PressType::SHORT) {
                 chain->nextAvailableEffect();
                 uint8_t index = chain->getSelectionIndex();
-                ui->drawCandidateEffect(chain->effects[index]->getEffectName());
+                ui->drawCandidateEffect(chain->availableEffects[index]->getEffectName());
             }
 
             //Center short press (confirm effect selection)
             if(input->switches[1] == PressType::SHORT) {
                 preset->saveEffects();
+                currentState = PLAY;
+                uint8_t position = chain->getSlotPosition();
+                ui->drawNewEffect(
+                    position + 1, 
+                    chain->effects[position]->getEffectName(),
+                    chain->effects[position]->getParamNames(),
+                    chain->isOn
+                );
             }
             //Center long press (exit edit mode)
             if(input->switches[1] == PressType::LONG) {
                 currentState = PLAY;
                 uint8_t position = chain->getSlotPosition();
                 ui->drawNewEffect(
-                    position, 
+                    position + 1, 
                     chain->effects[position]->getEffectName(),
                     chain->effects[position]->getParamNames(),
                     chain->isOn

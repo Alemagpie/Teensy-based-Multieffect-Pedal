@@ -26,8 +26,8 @@ class EffectChainManager {
     void selectAvailableEffect();
 
     void setParameters(InputState& in);
-    uint8_t getSlotPosition() { return currentSlot; }
-    uint8_t getSelectionIndex() { return effectCandidateIndex; }
+    int8_t getSlotPosition() { return currentSlot; }
+    int8_t getSelectionIndex() { return effectCandidateIndex; }
 
     //Updates the IDs in effect vector
     void updateChain(Save s);
@@ -52,8 +52,8 @@ class EffectChainManager {
     AudioControlSGTL5000* sgtl5000 = nullptr;
 
     const int effectCount = 5;
-    uint8_t currentSlot = 0;
-    uint8_t effectCandidateIndex = 0;
+    int8_t currentSlot = 0;
+    int8_t effectCandidateIndex = 0;
 
     //Connections
     AudioConnection* ie1 = nullptr;

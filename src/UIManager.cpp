@@ -2,6 +2,8 @@
 
 void UIManager::start() {
     scrMan.start();
+
+    
 }
 
 void UIManager::drawNewEffect(uint8_t index, const char* name, std::vector<const char *> * params, std::vector<bool> status) {

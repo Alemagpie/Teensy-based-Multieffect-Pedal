@@ -10,7 +10,11 @@
 class PresetManager {
     public:
     //Assigns EffectChainManager ptr
-    void setup(EffectChainManager *e) { chain = e; }
+    void setup(EffectChainManager *e) { 
+        chain = e; 
+        loadEffects();
+        saveEffects();
+    }
     void loadEffects();
     void saveEffects();
 

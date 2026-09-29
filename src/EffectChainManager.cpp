@@ -10,6 +10,7 @@ void EffectChainManager::setup(AudioInputI2S* in, AudioOutputI2S* out, AudioCont
     sgtl5000->volume(0.8);      
     sgtl5000->lineInLevel(8);
     sgtl5000->lineOutLevel(8); 
+    //connectEffects();
 }
 
 void EffectChainManager::updateChain(Save s) {

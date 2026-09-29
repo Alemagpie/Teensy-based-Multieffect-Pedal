@@ -18,6 +18,15 @@ class StateMachine {
         ui = u;
         chain = e;
         preset = m;
+
+        delay(1000);    //It is supposed to block the thread (gives the user the impression of actual loading)
+
+        ui->drawNewEffect(
+            1, 
+            chain->effects[0]->getEffectName(),
+            chain->effects[0]->getParamNames(),
+            chain->isOn
+        );
     }
 
     enum SystemState {
