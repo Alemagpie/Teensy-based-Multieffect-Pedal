@@ -13,7 +13,6 @@ class PresetManager {
     void setup(EffectChainManager *e) { 
         chain = e; 
         loadEffects();
-        saveEffects();
     }
     void loadEffects();
     void saveEffects();

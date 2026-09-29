@@ -13,7 +13,7 @@ void EffectChainManager::setup(AudioInputI2S* in, AudioOutputI2S* out, AudioCont
     //connectEffects();
 }
 
-void EffectChainManager::updateChain(Save s) {
+void EffectChainManager::updateChain(Save& s) {
     s.effectIDs[currentSlot] = availableEffects[effectCandidateIndex]->getEffectID();
     isOn[currentSlot] = false;
 }
@@ -22,8 +22,12 @@ void EffectChainManager::saveEffects() {
     availableEffects.push_back(effects[currentSlot]);
     effects[currentSlot] = availableEffects[effectCandidateIndex];
     availableEffects.erase(availableEffects.begin() + effectCandidateIndex);
-    connectEffects();
+
+    //s.effectIDs[currentSlot] = effects[currentSlot]->getEffectID();
+    //isOn[currentSlot] = false;
+
     effectCandidateIndex = 0;
+    connectEffects();
 }
 
 void EffectChainManager::connectEffects() {

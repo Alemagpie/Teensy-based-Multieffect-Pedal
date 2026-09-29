@@ -7,6 +7,7 @@ void PresetManager::loadEffects() {
     //Assign effects from saved IDs
     for(int i = 0; i < 5; i++) {
         uint8_t id = saveIDs.effectIDs[i];
+        Serial.println(id);
         for(unsigned int j = 0; j < chain->allEffects.size(); j++) {
             if(chain->allEffects[j]->getEffectID() == id) {
                 chain->effects[i] = chain->allEffects[j];
@@ -15,8 +16,8 @@ void PresetManager::loadEffects() {
         }
     }
 
-    for(unsigned int j = 0; j < chain->availableEffects.size(); j++)
-    Serial.println(chain->availableEffects[j]->getEffectName());
+    //for(unsigned int j = 0; j < chain->availableEffects.size(); j++)
+    //Serial.println(chain->availableEffects[j]->getEffectName());
 
     //Leaves only available effects 
     for(unsigned int i = 0; i < 5; i++) {

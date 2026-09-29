@@ -30,7 +30,7 @@ class EffectChainManager {
     int8_t getSelectionIndex() { return effectCandidateIndex; }
 
     //Updates the IDs in effect vector
-    void updateChain(Save s);
+    void updateChain(Save& s);
     //Updates the actual available effects and reconnects effects
     void saveEffects();
 

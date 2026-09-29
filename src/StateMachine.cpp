@@ -75,6 +75,7 @@ void StateMachine::handleInput() {
             //Center short press (confirm effect selection)
             if(input->switches[1] == PressType::SHORT) {
                 preset->saveEffects();
+                preset->loadEffects();
                 currentState = PLAY;
                 uint8_t position = chain->getSlotPosition();
                 ui->drawNewEffect(
