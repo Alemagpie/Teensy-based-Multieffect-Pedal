@@ -1,0 +1,4 @@
+- Implement rotary encoder input
+- Adapt parameter modifying to new inputs (scrolling, UI)
+- Implement multiple (>4) parameters handling and UI
+- Implement expression pedal input (assignment + control)

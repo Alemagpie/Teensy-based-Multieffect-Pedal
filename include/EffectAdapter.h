@@ -33,6 +33,10 @@ class EffectAdapter {
     const char* getEffectName() { return effectName; }
     const uint8_t getEffectID() { return ID; }
     std::vector<const char*>* getParamNames() { return &paramName; }
+    uint8_t getParamCount() { return parameterCount; }
+
+    virtual void assignExprToParam(uint8_t index);
+    virtual void disableExpParam();
 
     protected:
     uint8_t ID;
@@ -40,9 +44,11 @@ class EffectAdapter {
     std::vector<uint16_t> levels = {0, 0, 0, 0};
     const char* effectName;
     std::vector<const char*> paramName;
+    std::vector<const char*> paramFullName;
     std::vector<bool> isParamLog = {0, 0, 0, 0};
     bool enabled = false;
-    static const int parameterCount = 4;
+    uint8_t parameterCount = 4;
+    int expParamIndex = -1;
 };
 
 #endif

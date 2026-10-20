@@ -54,6 +54,7 @@ class EffectChainManager {
     const int effectCount = 5;
     int8_t currentSlot = 0;
     int8_t effectCandidateIndex = 0;
+    int8_t currentParamIndex = -1;
 
     //Connections
     AudioConnection* ie1 = nullptr;
