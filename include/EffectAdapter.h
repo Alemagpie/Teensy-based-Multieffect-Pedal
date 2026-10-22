@@ -14,6 +14,8 @@ class EffectAdapter {
 
     float getParamLevel(int index) const {return (index < 0 || index > parameterCount - 1) ? 0 : levels[index];}
     virtual void setParamLevel(int index, uint16_t level) = 0;
+    //virtual void incrementParamLevel(uint8_t index, int8_t delta) = 0;    //increase/decrease by a fixed amount, based on if lin or log
+    //virtual void decrementParamLevel(uint8_t index, int8_t delta) = 0;
 
     /*
     //The parameter influenced by the tap tempo has to be set internally by the developer, not asssigned by the user
@@ -41,7 +43,7 @@ class EffectAdapter {
     protected:
     uint8_t ID;
     std::vector<CustomRange> ranges;
-    std::vector<uint16_t> levels = {0, 0, 0, 0};
+    std::vector<uint8_t> levels = {0, 0, 0, 0};
     const char* effectName;
     std::vector<const char*> paramName;
     std::vector<const char*> paramFullName;

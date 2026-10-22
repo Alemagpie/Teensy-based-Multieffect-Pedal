@@ -50,13 +50,11 @@ void StateMachine::handleInput() {
             }
 
             //Toggle mod
-            if(input->switches[3] == PressType::SHORT){
-                isModifying = !isModifying;
+            if(input->switches[5] == PressType::SHORT){
+                currentState = PARAM_MODIFY;
+                isModifying = true;
             }
         break;
-
-        /*case MODIFY:
-            break;*/
 
         case EDIT:
             //Left press
@@ -97,9 +95,11 @@ void StateMachine::handleInput() {
                 );
             }
         break;
-    }
 
-    digitalWrite(EXTRA_LED_PIN, isModifying ? HIGH : LOW);
+        case PARAM_MODIFY:
+
+        break;
+    }
 
     //Allow param updates every 100ms
     if(isModifying) {
@@ -108,7 +108,7 @@ void StateMachine::handleInput() {
             lastUpdate = now;
             for(int i = 0; i < 4; i++) {
                 uint8_t position = chain->getSlotPosition();
-                chain->effects[position] -> setParamLevel(i, input->params[i]);
+                chain->effects[position] -> setParamLevel(i, input->params[i]); //chagne to increase/decrease level
             }
         }
     }

@@ -20,6 +20,9 @@
 #define LONG_PRESS_TIME_MS 800
 #define HOLD_PRESS_TIME_MS 2500
 
+#define MAX_TAP_TEMPO_MS 0
+
+
 class InputManager {
     public:
     //Resets data and sets up pins
@@ -32,15 +35,20 @@ class InputManager {
     private:
     bool isModifying = false;
 
-    Bounce buttons[4] = {
+    //Left, Center, Right, Tap tempo, Expression Assign, Encoder push button
+    Bounce buttons[6] = {
         Bounce(SWITCH_L, 30), 
         Bounce(SWITCH_C, 30), 
         Bounce(SWITCH_R, 30), 
-        Bounce(SWITCH_X, 15)
+        Bounce(SWITCH_X, 15),
+        Bounce(PARAM3_PIN, 15),
+        Bounce(PARAM1_PIN, 15)
     };
     
     //In order: L rising edge, L falling edge, C, R, X
-    uint32_t edges[8] = {0, 0, 0, 0, 0, 0, 0, 0};
+    uint32_t edges[12] = {0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0};
+
+    uint8_t prev_CLK_state, CLK_state;
 
     InputState inputState;
 };

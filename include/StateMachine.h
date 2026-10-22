@@ -31,7 +31,8 @@ class StateMachine {
 
     enum SystemState {
         PLAY,
-        EDIT
+        EDIT,
+        PARAM_MODIFY
     };
     SystemState getState() { return currentState; }
     //Handles state transitions based on the values in the shared input state
