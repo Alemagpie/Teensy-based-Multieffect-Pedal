@@ -7,15 +7,16 @@
 #include "CustomRange.h"
 #include <initializer_list>
 
+#define ROTARY_ENCODER_PARAM_INCREMENT 5
+
 class EffectAdapter {
     public:
     EffectAdapter();
     EffectAdapter(std::initializer_list<CustomRange> r) : ranges(r) {};
 
     float getParamLevel(int index) const {return (index < 0 || index > parameterCount - 1) ? 0 : levels[index];}
-    virtual void setParamLevel(int index, uint16_t level) = 0;
-    //virtual void incrementParamLevel(uint8_t index, int8_t delta) = 0;    //increase/decrease by a fixed amount, based on if lin or log
-    //virtual void decrementParamLevel(uint8_t index, int8_t delta) = 0;
+    //virtual void setParamLevel(int index, uint16_t level) = 0;
+    virtual void setParamLevel(uint8_t index, int8_t delta) = 0;    //increase/decrease by a fixed amount, based on if lin or log
 
     /*
     //The parameter influenced by the tap tempo has to be set internally by the developer, not asssigned by the user

@@ -50,6 +50,7 @@ class ScreenManager {
         void drawChainUI(std::vector<bool> &effectsState);
         void drawUI(uint8_t index, const char *name, std::vector<const char*> &names, std::vector<bool> &states);
         void drawSelection(const char *effectName);
+        void drawParam(const char *fullName, uint8_t level);
 };
 
 #endif

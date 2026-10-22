@@ -46,6 +46,8 @@ class StateMachine {
     EffectChainManager* chain;
     PresetManager* preset;
 
+    uint8_t totalEncoderDelta = 0;
+
     unsigned long lastUpdate = 0;
 };
 

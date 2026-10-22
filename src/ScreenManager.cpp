@@ -91,3 +91,11 @@ void ScreenManager::drawSelection(const char *effectName) {
     u8g2.drawStr(2 * effectSelect_padding_x, 12 + effectSelectArrows_padding_y, effectName);
     u8g2.sendBuffer();
 }
+
+void ScreenManager::drawParam(const char *fullName, uint8_t level) {
+    u8g2.clearBuffer();
+    u8g2.drawStr(0,0, fullName);
+    u8g2.drawFrame(0, 0, 10, 5);  //start-x, start-y, width, height                 //fullParam_x, fullParam_y, fullParam_width, fullParam_height
+    u8g2.drawBox(0, 0, 10 * level / 255, 5);  //start-x, start-y, width, height
+    u8g2.sendBuffer();
+}

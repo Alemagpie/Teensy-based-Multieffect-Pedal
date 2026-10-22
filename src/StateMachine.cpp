@@ -52,7 +52,6 @@ void StateMachine::handleInput() {
             //Toggle mod
             if(input->switches[5] == PressType::SHORT){
                 currentState = PARAM_MODIFY;
-                isModifying = true;
             }
         break;
 
@@ -98,18 +97,39 @@ void StateMachine::handleInput() {
 
         case PARAM_MODIFY:
 
+            //rot enc short press
+            if(input->switches[5] == PressType::SHORT) {
+                //paramIndex = ...
+                isModifying = !isModifying;
+                //ui->drawParam(...)
+            }
+
+            //rot enc long press
+            if(input->switches[5] == PressType::LONG && !isModifying) {
+                currentState = PLAY;
+            }
+
+            //Allow param updates every 100ms
+            if(input->encoderDelta != 0) {
+                //Change parameter value
+                if(isModifying) {
+                    unsigned long now = millis();
+                    if(now - lastUpdate >= PARAM_UPDATE_TIMER_MS) {
+                        lastUpdate = now;
+                        for(int i = 0; i < 4; i++) {
+                            uint8_t position = chain->getSlotPosition();
+                            chain->effects[position] -> setParamLevel(i, input->encoderDelta);
+                            ui->drawParam(chain->effects[position]->getParamNames()->at(i), chain->effects[position]->getParamLevel(i));
+                        }
+                    }
+                }
+            } else {
+                //Go to next/previous paramter
+                //paramIndex = ...
+                //ui->drawParam(...)
+            }
+            
         break;
     }
 
-    //Allow param updates every 100ms
-    if(isModifying) {
-        unsigned long now = millis();
-        if(now - lastUpdate >= PARAM_UPDATE_TIMER_MS) {
-            lastUpdate = now;
-            for(int i = 0; i < 4; i++) {
-                uint8_t position = chain->getSlotPosition();
-                chain->effects[position] -> setParamLevel(i, input->params[i]); //chagne to increase/decrease level
-            }
-        }
-    }
 }
