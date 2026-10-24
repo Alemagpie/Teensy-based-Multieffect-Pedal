@@ -66,6 +66,7 @@ void InputManager::update() {
         }
     }
 
+    //Encoder movement
     CLK_state = digitalRead(MODE1_PIN);
     if(CLK_state != prev_CLK_state && CLK_state == LOW) {
        inputState.encoderDelta = (digitalRead(MODE2_PIN) == LOW) ? 1 : -1;

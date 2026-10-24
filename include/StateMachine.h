@@ -46,7 +46,14 @@ class StateMachine {
     EffectChainManager* chain;
     PresetManager* preset;
 
-    uint8_t totalEncoderDelta = 0;
+    //Which parameter is currently being viewed/modified
+    int8_t paramIndex = -1;
+    //Index to display groups of 4 parameters at a time
+    uint8_t paramDisplayGroupIndex = 0;
+    //How much the encoder increases/decreases
+    float paramDelta = 0.025;
+    //Starting value of parameter to modify
+    float paramLevel = 0;
 
     unsigned long lastUpdate = 0;
 };

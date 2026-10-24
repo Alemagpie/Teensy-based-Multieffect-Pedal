@@ -53,6 +53,12 @@ void StateMachine::handleInput() {
             if(input->switches[5] == PressType::SHORT){
                 currentState = PARAM_MODIFY;
             }
+
+            //Display parameter abbreviatinos in groups of four
+            if(input->encoderDelta != 0) {
+                //display new set
+                //when the effect changes: paramDisplayGroupIndex = 0;
+            }
         break;
 
         case EDIT:
@@ -97,16 +103,29 @@ void StateMachine::handleInput() {
 
         case PARAM_MODIFY:
 
+            //ui->drawParam(...)     //add another parameter (bool isModifying), to draw something to tell that it's actually modifying (ex. bar above level slider)
+
             //rot enc short press
             if(input->switches[5] == PressType::SHORT) {
-                //paramIndex = ...
-                isModifying = !isModifying;
-                //ui->drawParam(...)
+                if(!isModifying) {
+                    //paramIndex = (paramIndex == -1) ? 0 : ...
+                    //paramLevel = (float)get parameter / 65536.0f 
+                }
+
+                isModifying = !isModifying; 
             }
 
-            //rot enc long press
+            //rot enc long press to stop editing parameters
             if(input->switches[5] == PressType::LONG && !isModifying) {
+                //paramIndex = -1;
                 currentState = PLAY;
+            }
+
+            //Expression button pressed
+            if(input->switches[4] == PressType::SHORT) {
+                //use assignExprToParam function
+
+                //could this be moved just to use a long press when isModifying = true?
             }
 
             //Allow param updates every 100ms
@@ -116,18 +135,24 @@ void StateMachine::handleInput() {
                     unsigned long now = millis();
                     if(now - lastUpdate >= PARAM_UPDATE_TIMER_MS) {
                         lastUpdate = now;
-                        for(int i = 0; i < 4; i++) {
+
+                        //paramLevel += (input->encoderDelta > 0) ? paramDelta : -paramDelta;  
+                        //if(paramLevel > 1.0f) paramLevel = 1.0f;
+                        //if(paramLevel < 0.0f) paramLevel = 0.0f;
+
+                        //set effect's parameter level to (uint16_t)paramLevel*65536.0f
+
+                        /*for(int i = 0; i < 4; i++) {
                             uint8_t position = chain->getSlotPosition();
                             chain->effects[position] -> setParamLevel(i, input->encoderDelta);
                             ui->drawParam(chain->effects[position]->getParamNames()->at(i), chain->effects[position]->getParamLevel(i));
-                        }
+                        }*/
                     }
+                } else {
+                    //Go to next/previous paramter, within [0, parameterCount - 1]
+                    //paramIndex = ...
                 }
-            } else {
-                //Go to next/previous paramter
-                //paramIndex = ...
-                //ui->drawParam(...)
-            }
+            } 
             
         break;
     }
