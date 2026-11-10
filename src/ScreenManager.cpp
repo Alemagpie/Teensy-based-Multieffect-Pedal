@@ -56,7 +56,7 @@ void ScreenManager::setEffectName(const char *name) {
 }
 
 void ScreenManager::setParamNames(std::vector<const char*> &names) {
-    for (uint8_t i = 0; i < names.size(); i++) {
+    for (uint8_t i = 0; i < 4; i++) {       //Only four parameters at a time
         u8g2.drawStr(paramName_padding_x * (i + 1) + paramNameSize * i, paramName_padding_y, names[i]);
     }
 }
@@ -73,12 +73,12 @@ void ScreenManager::drawChainUI(std::vector<bool> &effectsState) {
     }
 }
 
-void ScreenManager::drawUI(uint8_t index, const char *name, std::vector<const char*> &names, std::vector<bool> &states) {
+void ScreenManager::drawUI(uint8_t index, const char *name, std::vector<const char*> *names, std::vector<bool> &states) {
     u8g2.clearBuffer();
     setEffectNumber(index);
     setEffectName(name);
     drawChainUI(states);
-    setParamNames(names);
+    setParamNames(*names);
     u8g2.sendBuffer();
 }
 
@@ -92,10 +92,13 @@ void ScreenManager::drawSelection(const char *effectName) {
     u8g2.sendBuffer();
 }
 
-void ScreenManager::drawParam(const char *fullName, uint8_t level) {
+void ScreenManager::drawParam(const char *fullName, uint8_t level, bool isMod) {
     u8g2.clearBuffer();
     u8g2.drawStr(0,0, fullName);
     u8g2.drawFrame(0, 0, 10, 5);  //start-x, start-y, width, height                 //fullParam_x, fullParam_y, fullParam_width, fullParam_height
     u8g2.drawBox(0, 0, 10 * level / 255, 5);  //start-x, start-y, width, height
+    if(isMod) {
+        //Draw arrow at the level
+    }
     u8g2.sendBuffer();
 }

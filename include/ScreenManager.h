@@ -48,9 +48,9 @@ class ScreenManager {
         void setEffectName(const char *name);
         void setParamNames(std::vector<const char*> &names);
         void drawChainUI(std::vector<bool> &effectsState);
-        void drawUI(uint8_t index, const char *name, std::vector<const char*> &names, std::vector<bool> &states);
+        void drawUI(uint8_t index, const char *name, std::vector<const char*> *names, std::vector<bool> &states);
         void drawSelection(const char *effectName);
-        void drawParam(const char *fullName, uint8_t level);
+        void drawParam(const char *fullName, uint8_t level, bool isMod);
 };
 
 #endif

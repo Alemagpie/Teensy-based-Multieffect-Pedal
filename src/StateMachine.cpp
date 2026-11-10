@@ -6,28 +6,14 @@ void StateMachine::handleInput() {
             //Left press
             if(input->switches[0] == PressType::SHORT) {
                 chain->previousChainEffect();
-                //Redraw new effect
-                uint8_t position = chain->getSlotPosition();
-                ui->drawNewEffect(
-                    position + 1, 
-                    chain->effects[position]->getEffectName(),
-                    chain->effects[position]->getParamNames(),
-                    chain->isOn
-                );
+                onEffectChange();
                 //When switching effects, disable mod
                 isModifying = false;
             }
             //Right press
             if(input->switches[2] == PressType::SHORT) {
                 chain->nextChainEffect();
-                //Redraw new effect
-                uint8_t position = chain->getSlotPosition();
-                ui->drawNewEffect(
-                    position + 1, 
-                    chain->effects[position]->getEffectName(),
-                    chain->effects[position]->getParamNames(),
-                    chain->isOn
-                );
+                onEffectChange();
                 //When switching effects, disable mod
                 isModifying = false;
             }
@@ -49,7 +35,7 @@ void StateMachine::handleInput() {
                 ui->drawCandidateEffect(chain->availableEffects[chain->getSelectionIndex()]->getEffectName());
             }
 
-            //Toggle mod
+            //Toggle mod with short rot enc pb press
             if(input->switches[5] == PressType::SHORT){
                 currentState = PARAM_MODIFY;
             }
@@ -57,7 +43,18 @@ void StateMachine::handleInput() {
             //Display parameter abbreviatinos in groups of four
             if(input->encoderDelta != 0) {
                 //display new set
-                //when the effect changes: paramDisplayGroupIndex = 0;
+                paramDisplayGroupIndex += input->encoderDelta;
+                if(paramDisplayGroupIndex < 0) paramDisplayGroupIndex = 0;
+                if(paramDisplayGroupIndex > maxParamDisplayIndex - 1) paramDisplayGroupIndex = maxParamDisplayIndex - 1;
+
+                uint8_t position = chain->getSlotPosition();
+                ui->drawNewEffect(
+                    position + 1, 
+                    chain->effects[position]->getEffectName(),
+                    chain->effects[position]->getParamNames(),
+                    paramDisplayGroupIndex,
+                    chain->isOn
+                );
             }
         break;
 
@@ -80,13 +77,7 @@ void StateMachine::handleInput() {
                 preset->saveEffects();
                 preset->loadEffects();
                 currentState = PLAY;
-                uint8_t position = chain->getSlotPosition();
-                ui->drawNewEffect(
-                    position + 1, 
-                    chain->effects[position]->getEffectName(),
-                    chain->effects[position]->getParamNames(),
-                    chain->isOn
-                );
+                onEffectChange();
             }
             //Center long press (exit edit mode)
             if(input->switches[1] == PressType::LONG) {
@@ -102,14 +93,17 @@ void StateMachine::handleInput() {
         break;
 
         case PARAM_MODIFY:
+            //Once entered, rot enc scrolls through the effects, pb starts modifying the current parameter -> short press to go back to scrolling, long press exits modifying
+            
+            paramIndex = 4 * paramDisplayGroupIndex;
 
             //ui->drawParam(...)     //add another parameter (bool isModifying), to draw something to tell that it's actually modifying (ex. bar above level slider)
 
             //rot enc short press
             if(input->switches[5] == PressType::SHORT) {
                 if(!isModifying) {
-                    //paramIndex = (paramIndex == -1) ? 0 : ...
                     //paramLevel = (float)get parameter / 65536.0f 
+                    //ui->drawParam(...)
                 }
 
                 isModifying = !isModifying; 
@@ -117,21 +111,21 @@ void StateMachine::handleInput() {
 
             //rot enc long press to stop editing parameters
             if(input->switches[5] == PressType::LONG && !isModifying) {
-                //paramIndex = -1;
+                //No param is being directly modified
+                paramIndex = -1;
                 currentState = PLAY;
             }
 
             //Expression button pressed
             if(input->switches[4] == PressType::SHORT) {
                 //use assignExprToParam function
-
-                //could this be moved just to use a long press when isModifying = true?
             }
 
             //Allow param updates every 100ms
             if(input->encoderDelta != 0) {
                 //Change parameter value
                 if(isModifying) {
+                    //Increase/decrease parameter value
                     unsigned long now = millis();
                     if(now - lastUpdate >= PARAM_UPDATE_TIMER_MS) {
                         lastUpdate = now;
@@ -149,8 +143,10 @@ void StateMachine::handleInput() {
                         }*/
                     }
                 } else {
-                    //Go to next/previous paramter, within [0, parameterCount - 1]
-                    //paramIndex = ...
+                    //Go to next/previous paramter, within [0, maxParamIndex - 1]
+                    paramIndex += input->encoderDelta;
+                    if(paramIndex < 0) paramIndex = 0;
+                    if(paramIndex > maxParamIndex - 1) paramIndex = maxParamIndex - 1;
                 }
             } 
             

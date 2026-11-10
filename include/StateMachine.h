@@ -27,6 +27,8 @@ class StateMachine {
             chain->effects[0]->getParamNames(),
             chain->isOn
         );
+
+        calculateMaxParamDisplayIndex();
     }
 
     enum SystemState {
@@ -35,6 +37,32 @@ class StateMachine {
         PARAM_MODIFY
     };
     SystemState getState() { return currentState; }
+    void calculateMaxParamDisplayIndex() { 
+        uint8_t position = chain->getSlotPosition();
+        uint8_t count = chain->effects[position]->getParamCount();
+        maxParamDisplayIndex = (count >> 2 + count%4); 
+    }
+
+    void onEffectChange() {
+        //Calculate max param display index
+        uint8_t position = chain->getSlotPosition();
+        uint8_t count = chain->effects[position]->getParamCount();
+        maxParamDisplayIndex = (count >> 2 + count%4); 
+
+        //Reset which group of 4 parameters is displayed
+        paramDisplayGroupIndex = 0;
+
+        //Get max number of parameters
+        maxParamIndex = count;
+
+        //Display new effect
+        ui->drawNewEffect(
+            position + 1, 
+            chain->effects[position]->getEffectName(),
+            chain->effects[position]->getParamNames(),
+            chain->isOn
+        );
+    }
     //Handles state transitions based on the values in the shared input state
     void handleInput();
 
@@ -48,8 +76,10 @@ class StateMachine {
 
     //Which parameter is currently being viewed/modified
     int8_t paramIndex = -1;
+    uint8_t maxParamIndex;
     //Index to display groups of 4 parameters at a time
-    uint8_t paramDisplayGroupIndex = 0;
+    uint8_t maxParamDisplayIndex = 0;
+    int8_t paramDisplayGroupIndex = 0;
     //How much the encoder increases/decreases
     float paramDelta = 0.025;
     //Starting value of parameter to modify
